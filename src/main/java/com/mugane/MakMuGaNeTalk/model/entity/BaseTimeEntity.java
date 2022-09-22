@@ -1,4 +1,4 @@
-package com.mugane.MakMuGaNeTalk.entity;
+package com.mugane.MakMuGaNeTalk.model.entity;
 
 import java.time.LocalDateTime;
 import javax.persistence.EntityListeners;

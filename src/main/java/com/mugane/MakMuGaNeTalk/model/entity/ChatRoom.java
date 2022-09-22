@@ -1,19 +1,14 @@
-package com.mugane.MakMuGaNeTalk.entity;
+package com.mugane.MakMuGaNeTalk.model.entity;
 
 import com.mugane.MakMuGaNeTalk.enums.ChatRoomType;
+import lombok.Builder;
+import lombok.Getter;
+
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Entity
+@Getter
 public class ChatRoom extends BaseTimeEntity {
 
     @Id
@@ -38,7 +33,15 @@ public class ChatRoom extends BaseTimeEntity {
     @JoinColumn(name = "MESSAGE_ID")
     private List<Message> messageList;
 
+    @Builder.Default
+    private Integer likeCnt = 0;
+
     private Long createdBy;
     private Long updatedBy;
 
+    @Transient
+    boolean isLiked;
+
+    @Transient
+    boolean isLBoss;
 }

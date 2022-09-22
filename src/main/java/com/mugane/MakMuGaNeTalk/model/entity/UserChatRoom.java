@@ -1,4 +1,4 @@
-package com.mugane.MakMuGaNeTalk.entity;
+package com.mugane.MakMuGaNeTalk.model.entity;
 
 import com.mugane.MakMuGaNeTalk.enums.UserType;
 import javax.persistence.Entity;

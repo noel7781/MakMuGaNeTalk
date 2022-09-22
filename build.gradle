@@ -18,14 +18,31 @@ repositories {
 	mavenCentral()
 }
 
+ext {
+	set('springCloudVersion', "2020.0.4")
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'mysql:mysql-connector-java'
+
+	// QueryDSL
+	implementation 'com.querydsl:querydsl-jpa:5.0.0'
+	annotationProcessor 'javax.persistence:javax.persistence-api'
+	annotationProcessor 'javax.annotation:javax.annotation-api'
+	annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jpa'
+
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
 }
 
 tasks.named('test') {

@@ -1,4 +1,4 @@
-package com.mugane.MakMuGaNeTalk.entity;
+package com.mugane.MakMuGaNeTalk.model.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,18 +9,18 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 @Entity
-public class Message extends BaseTimeEntity {
+public class UserBan extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "MESSAGE_ID")
+    @Column(name = "USER_BAN_ID")
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "USER_ID")
-    private User user;
+    @JoinColumn(referencedColumnName = "USER_ID", name = "BAN_USER_ID")
+    private User banUser;
+
     @OneToOne
-    @JoinColumn(name = "CHAT_ROOM_ID")
-    private ChatRoom chatRoom;
-    private String content;
+    @JoinColumn(referencedColumnName = "USER_ID", name = "BANNED_USER_ID")
+    private User bannedUser;
 }
