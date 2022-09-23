@@ -13,7 +13,7 @@ import javax.persistence.OneToOne;
 public class ChatRoomInvitation extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CHAT_ROOM_INVITATION_ID")
     private Long id;
     @OneToOne
