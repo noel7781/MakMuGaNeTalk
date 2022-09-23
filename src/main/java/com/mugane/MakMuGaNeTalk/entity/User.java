@@ -1,4 +1,4 @@
-package com.mugane.MakMuGaNeTalk.model.entity;
+package com.mugane.MakMuGaNeTalk.entity;
 
 import java.util.List;
 import javax.persistence.Column;

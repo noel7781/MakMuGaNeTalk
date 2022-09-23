@@ -1,7 +1,7 @@
 package com.mugane.MakMuGaNeTalk.service;
 
-import com.mugane.MakMuGaNeTalk.model.entity.ChatRoom;
-import com.mugane.MakMuGaNeTalk.model.req.ReqChatRoomList;
+import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
+import com.mugane.MakMuGaNeTalk.dto.request.ChatRoomListRequestDto;
 import com.mugane.MakMuGaNeTalk.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ public class ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
 
-    public List<ChatRoom> getChatRoomList(ReqChatRoomList req) {
+    public List<ChatRoom> getChatRoomList(ChatRoomListRequestDto req) {
         return chatRoomRepository.findAll(
                 req.getTagList(),
                 req.getKeyword(),

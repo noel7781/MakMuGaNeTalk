@@ -1,6 +1,6 @@
 package com.mugane.MakMuGaNeTalk.repository;
 
-import com.mugane.MakMuGaNeTalk.model.entity.ChatRoom;
+import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
 import com.mugane.MakMuGaNeTalk.model.entity.QChatRoom;
 import com.mugane.MakMuGaNeTalk.model.entity.QChatRoomTag;
 import com.querydsl.core.types.Predicate;

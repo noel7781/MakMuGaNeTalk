@@ -1,11 +1,11 @@
-package com.mugane.MakMuGaNeTalk.model.req;
+package com.mugane.MakMuGaNeTalk.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ReqList {
+public class ListRequestDto {
 
     // TODO validation check
     private Long prevLastSeq;

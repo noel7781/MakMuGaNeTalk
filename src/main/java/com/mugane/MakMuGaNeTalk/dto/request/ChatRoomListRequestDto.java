@@ -1,13 +1,13 @@
-package com.mugane.MakMuGaNeTalk.model.req;
+package com.mugane.MakMuGaNeTalk.dto.request;
 
 import lombok.Getter;
 
 import java.util.List;
 
 @Getter
-public class ReqChatRoomList {
+public class ChatRoomListRequestDto {
 
     private List<String> tagList;
     private String keyword;
-    private ReqList reqList;
+    private ListRequestDto reqList;
 }

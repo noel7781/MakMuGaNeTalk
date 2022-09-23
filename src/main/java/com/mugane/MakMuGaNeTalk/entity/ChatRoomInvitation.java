@@ -1,4 +1,4 @@
-package com.mugane.MakMuGaNeTalk.model.entity;
+package com.mugane.MakMuGaNeTalk.entity;
 
 import com.mugane.MakMuGaNeTalk.enums.InvitationState;
 import javax.persistence.Column;

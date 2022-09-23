@@ -1,8 +1,7 @@
 package com.mugane.MakMuGaNeTalk.controller;
 
-import com.mugane.MakMuGaNeTalk.model.req.ReqChatRoomList;
-import com.mugane.MakMuGaNeTalk.model.res.ResChatRoomList;
-import com.mugane.MakMuGaNeTalk.repository.ChatRoomRepository;
+import com.mugane.MakMuGaNeTalk.dto.request.ChatRoomListRequestDto;
+import com.mugane.MakMuGaNeTalk.dto.response.ChatRoomListResponseDto;
 import com.mugane.MakMuGaNeTalk.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,12 +19,12 @@ public class ChatRoomController {
     private final ChatRoomService chatRoomService;
 
     @GetMapping("v1/chat-rooms")
-    public List<ResChatRoomList> getChatRoomList(
-        ReqChatRoomList req
+    public List<ChatRoomListResponseDto> getChatRoomList(
+        ChatRoomListRequestDto req
     ) {
         return chatRoomService.getChatRoomList(req)
                 .stream()
-                .map(ResChatRoomList::of)
+                .map(ChatRoomListResponseDto::of)
                 .collect(Collectors.toList());
     }
 }

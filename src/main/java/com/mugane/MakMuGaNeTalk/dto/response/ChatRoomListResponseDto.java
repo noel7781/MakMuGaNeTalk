@@ -1,11 +1,11 @@
-package com.mugane.MakMuGaNeTalk.model.res;
+package com.mugane.MakMuGaNeTalk.dto.response;
 
-import com.mugane.MakMuGaNeTalk.model.entity.ChatRoom;
+import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
 import com.mugane.MakMuGaNeTalk.enums.ChatRoomType;
 
 import java.time.LocalDateTime;
 
-public class ResChatRoomList {
+public class ChatRoomListResponseDto {
 
     private final Long id;
     private final ChatRoomType type;
@@ -15,7 +15,7 @@ public class ResChatRoomList {
     private final boolean isLiked;
     private final boolean isBoss;
 
-    private ResChatRoomList(ChatRoom chatRoom) {
+    private ChatRoomListResponseDto(ChatRoom chatRoom) {
         this.id = chatRoom.getId();
         this.type = chatRoom.getType();
         this.title = chatRoom.getTitle();
@@ -25,7 +25,7 @@ public class ResChatRoomList {
         this.isBoss = chatRoom.isLBoss();
     }
 
-    public static ResChatRoomList of(ChatRoom chatRoom) {
-        return new ResChatRoomList(chatRoom);
+    public static ChatRoomListResponseDto of(ChatRoom chatRoom) {
+        return new ChatRoomListResponseDto(chatRoom);
     }
 }
