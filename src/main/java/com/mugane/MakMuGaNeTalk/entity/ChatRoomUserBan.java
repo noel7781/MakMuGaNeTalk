@@ -12,7 +12,7 @@ import javax.persistence.OneToOne;
 public class ChatRoomUserBan extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CHAT_ROOM_USER_BAN_ID")
     private Long id;
     @OneToOne

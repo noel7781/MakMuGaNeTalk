@@ -1,7 +1,7 @@
 plugins {
-	id 'org.springframework.boot' version '2.7.3'
-	id 'io.spring.dependency-management' version '1.0.13.RELEASE'
-	id 'java'
+    id 'org.springframework.boot' version '2.7.3'
+    id 'io.spring.dependency-management' version '1.0.13.RELEASE'
+    id 'java'
 }
 
 group = 'com.mugane'
@@ -9,13 +9,13 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 ext {
@@ -37,6 +37,10 @@ dependencies {
 
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.security:spring-security-test'
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
 }
 
 dependencyManagement {
@@ -46,5 +50,5 @@ dependencyManagement {
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }

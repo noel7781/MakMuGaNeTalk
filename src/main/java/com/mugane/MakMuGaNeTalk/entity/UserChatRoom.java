@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 public class UserChatRoom extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private UserType userType;
