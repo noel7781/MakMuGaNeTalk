@@ -1,4 +1,4 @@
-package com.mugane.MakMuGaNeTalk.global;
+package com.mugane.MakMuGaNeTalk.common;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;

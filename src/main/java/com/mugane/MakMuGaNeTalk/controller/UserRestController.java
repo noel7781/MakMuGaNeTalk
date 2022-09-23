@@ -1,11 +1,11 @@
 package com.mugane.MakMuGaNeTalk.controller;
 
+import com.mugane.MakMuGaNeTalk.common.ApiResponse;
 import com.mugane.MakMuGaNeTalk.dto.TokenDto;
 import com.mugane.MakMuGaNeTalk.dto.request.SignInRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.SignUpRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.TokenRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.response.SignInResponseDto;
-import com.mugane.MakMuGaNeTalk.global.ApiResponse;
 import com.mugane.MakMuGaNeTalk.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
