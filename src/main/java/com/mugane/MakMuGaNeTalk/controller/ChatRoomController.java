@@ -23,7 +23,7 @@ public class ChatRoomController {
     public List<ResChatRoomList> getChatRoomList(
         ReqChatRoomList req
     ) {
-        return chatRoomService.getChatRoomList()
+        return chatRoomService.getChatRoomList(req)
                 .stream()
                 .map(ResChatRoomList::of)
                 .collect(Collectors.toList());

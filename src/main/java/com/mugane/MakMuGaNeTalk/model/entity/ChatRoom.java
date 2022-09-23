@@ -1,14 +1,19 @@
 package com.mugane.MakMuGaNeTalk.model.entity;
 
 import com.mugane.MakMuGaNeTalk.enums.ChatRoomType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import javax.persistence.*;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChatRoom extends BaseTimeEntity {
 
     @Id
@@ -44,4 +49,8 @@ public class ChatRoom extends BaseTimeEntity {
 
     @Transient
     boolean isLBoss;
+
+    @OneToMany
+    @JoinColumn(name="CHAT_ROOM_ID")
+    private List<ChatRoomTag> chatRoomTagList;
 }
