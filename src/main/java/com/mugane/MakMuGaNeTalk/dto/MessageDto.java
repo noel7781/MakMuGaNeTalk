@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 public class MessageDto {
 
-    private String username;
+    private String nickname;
     private String chatRoomTitle;
     private String content;
 
