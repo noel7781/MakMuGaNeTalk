@@ -28,6 +28,7 @@ public class ChatService {
     public void sendMessage(Long chatRoomId, MessageRequestDto messageRequestDto) {
         try {
             String content = messageRequestDto.getContent();
+            // TODO : User nickname 변경
             MessageResponseDto messageResponseDto = MessageResponseDto.builder()
                 .nickname("username")
                 .content(content)
@@ -44,7 +45,7 @@ public class ChatService {
         try {
             ChatRoom chatRoom = chatRoomService
                 .findById(chatRoomId);
-            // Todo : USER조회 ID정보로 변경
+            // TODO : USER조회 ID정보로 변경
             User user = userService.findUserByNickname("username");
 
             Message message = Message.builder()
