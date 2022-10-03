@@ -1,6 +1,6 @@
 package com.mugane.MakMuGaNeTalk.controller;
 
-import com.mugane.MakMuGaNeTalk.dto.MessageDto;
+import com.mugane.MakMuGaNeTalk.dto.request.MessageRequestDto;
 import com.mugane.MakMuGaNeTalk.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +16,11 @@ public class ChatController {
     private final ChatService chatService;
 
 
-    @MessageMapping("/chat/{chatRoomTitle}")
-    public void chat(@DestinationVariable("chatRoomTitle") String chatRoomTitle, MessageDto message)
+    @MessageMapping("/chat/{chatRoomId}")
+    public void chat(@DestinationVariable("chatRoomId") Long chatRoomId,
+        MessageRequestDto messageRequestDto)
         throws Exception {
-        chatService.sendMessage(chatRoomTitle, message);
+        chatService.sendMessage(chatRoomId, messageRequestDto);
     }
 
 }
