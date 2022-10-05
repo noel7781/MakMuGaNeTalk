@@ -84,4 +84,9 @@ public class UserService {
 
         return newCreatedToken;
     }
+
+    public User findUserByNickname(String nickname) {
+        return userRepository.findByNickname(nickname)
+            .orElseThrow(() -> new IllegalArgumentException("해당 닉네임을 가지는 회원이 없습니다."));
+    }
 }
