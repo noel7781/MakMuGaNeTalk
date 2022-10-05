@@ -44,12 +44,6 @@ public class ChatRoom extends BaseTimeEntity {
     private Long createdBy;
     private Long updatedBy;
 
-    @Transient
-    boolean isLiked;
-
-    @Transient
-    boolean isLBoss;
-
     @OneToMany
     @JoinColumn(name="CHAT_ROOM_ID")
     private List<ChatRoomTag> chatRoomTagList;

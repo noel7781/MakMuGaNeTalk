@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class ChatRoomController {
     private final ChatRoomService chatRoomService;
 
-    @GetMapping("v1/chat-rooms")
+    @GetMapping("/v1/chat-rooms")
     public List<ChatRoomListResponseDto> getChatRoomList(
         ChatRoomListRequestDto req
     ) {

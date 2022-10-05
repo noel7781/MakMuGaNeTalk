@@ -1,8 +1,8 @@
 package com.mugane.MakMuGaNeTalk.repository;
 
 import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
-import com.mugane.MakMuGaNeTalk.model.entity.QChatRoom;
-import com.mugane.MakMuGaNeTalk.model.entity.QChatRoomTag;
+import com.mugane.MakMuGaNeTalk.entity.QChatRoom;
+import com.mugane.MakMuGaNeTalk.entity.QChatRoomTag;
 import com.querydsl.core.types.Predicate;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
@@ -28,7 +28,7 @@ public class ChatRoomSupportImpl extends QuerydslRepositorySupport implements Ch
     ) {
         final Predicate[] predicates = new Predicate[]{
                 predicateOptional(qChatRoom.id::lt, prevLastPostSeq),
-                predicateOptional(qChatRoomTag.content::in, tagList),
+                predicateOptional(qChatRoomTag.tag.content::in, tagList),
                 keyword != null ? predicateOptional(qChatRoom.title::like, '%' + keyword + '%') : null
         };
 

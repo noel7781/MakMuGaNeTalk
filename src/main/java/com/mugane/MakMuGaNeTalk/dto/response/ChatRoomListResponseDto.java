@@ -12,8 +12,6 @@ public class ChatRoomListResponseDto {
     private final String title;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
-    private final boolean isLiked;
-    private final boolean isBoss;
 
     private ChatRoomListResponseDto(ChatRoom chatRoom) {
         this.id = chatRoom.getId();
@@ -21,8 +19,6 @@ public class ChatRoomListResponseDto {
         this.title = chatRoom.getTitle();
         this.createdAt = chatRoom.getCreatedAt();
         this.updatedAt = chatRoom.getUpdatedAt();
-        this.isLiked = chatRoom.isLiked();
-        this.isBoss = chatRoom.isLBoss();
     }
 
     public static ChatRoomListResponseDto of(ChatRoom chatRoom) {
