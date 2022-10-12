@@ -34,6 +34,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'org.springframework.boot:spring-boot-starter-reactor-netty:2.7.4'
 }
 
 tasks.named('test') {
