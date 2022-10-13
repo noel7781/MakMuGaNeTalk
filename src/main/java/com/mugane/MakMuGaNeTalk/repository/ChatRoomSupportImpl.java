@@ -19,15 +19,13 @@ public class ChatRoomSupportImpl extends QuerydslRepositorySupport implements Ch
     }
 
     @Override
-    public List<ChatRoom> findAll(
-//            TODO Add Long userSeq,
+    public List<ChatRoom> findAllByKeywordAndTagsAndPaging(
             List<String> tagList,
             String keyword,
             Integer pageSize,
-            Long prevLastPostSeq
+            Integer pageNumber
     ) {
         final Predicate[] predicates = new Predicate[]{
-                predicateOptional(qChatRoom.id::lt, prevLastPostSeq),
                 predicateOptional(qChatRoomTag.tag.content::in, tagList),
                 keyword != null ? predicateOptional(qChatRoom.title::like, '%' + keyword + '%') : null
         };
@@ -37,6 +35,7 @@ public class ChatRoomSupportImpl extends QuerydslRepositorySupport implements Ch
                 .orderBy(qChatRoom.id.desc()) // 챗룸 생성기준 최신순 정렬
                 .where(predicates)
                 .limit(pageSize)
+                .offset(pageNumber)
                 .fetch();
     }
 

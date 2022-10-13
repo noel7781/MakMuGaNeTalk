@@ -5,11 +5,10 @@ import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
 import java.util.List;
 
 public interface ChatRoomSupport {
-    List<ChatRoom> findAll(
-//            TODO Add Long userSeq,
+    List<ChatRoom> findAllByKeywordAndTagsAndPaging(
             List<String> tagList,
             String keyword,
             Integer pageSize,
-            Long prevLastPostSeq
+            Integer pageNumber
     );
 }

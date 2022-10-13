@@ -19,6 +19,7 @@ public class Message extends BaseTimeEntity {
     @OneToOne
     @JoinColumn(name = "USER_ID")
     private User user;
+
     @OneToOne
     @JoinColumn(name = "CHAT_ROOM_ID")
     private ChatRoom chatRoom;

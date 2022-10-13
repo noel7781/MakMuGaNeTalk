@@ -15,9 +15,11 @@ public class ChatRoomUserBan extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CHAT_ROOM_USER_BAN_ID")
     private Long id;
+
     @OneToOne
     @JoinColumn(referencedColumnName = "USER_ID", name = "BAN_USER_ID")
     private User banUser;
+
     @OneToOne
     @JoinColumn(referencedColumnName = "USER_ID", name = "BANNED_USER_ID")
     private User bannedUser;

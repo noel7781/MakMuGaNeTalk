@@ -16,9 +16,11 @@ public class ChatRoomInvitation extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CHAT_ROOM_INVITATION_ID")
     private Long id;
+
     @OneToOne
     @JoinColumn(referencedColumnName = "USER_ID", name = "HOST_USER_ID")
     private User hostUser;
+
     @OneToOne
     @JoinColumn(referencedColumnName = "USER_ID", name = "GUEST_USER_ID")
     private User guestUser;

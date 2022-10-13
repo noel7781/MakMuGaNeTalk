@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -20,7 +20,7 @@ public class ChatRoomController {
 
     @GetMapping("/v1/chat-rooms")
     public List<ChatRoomListResponseDto> getChatRoomList(
-        ChatRoomListRequestDto req
+            ChatRoomListRequestDto req
     ) {
         return chatRoomService.getChatRoomList(req)
                 .stream()

@@ -25,11 +25,17 @@ public class ChatRoom extends BaseTimeEntity {
     private ChatRoomType type;
 
     private String title;
+
     @OneToOne
     @JoinColumn(referencedColumnName = "USER_ID", name = "OWNER_USER_ID")
-    private User ownerUserId;
-    private String password;
+    private User ownerUser;
 
+    @Builder.Default
+    private String password = "";
+
+    private Long createdBy;
+
+    private Long updatedBy;
 
     @OneToMany(mappedBy = "chatRoom")
     private List<UserChatRoom> userChatRoomList;
@@ -37,9 +43,6 @@ public class ChatRoom extends BaseTimeEntity {
     @OneToMany
     @JoinColumn(name = "MESSAGE_ID")
     private List<Message> messageList;
-
-    private Long createdBy;
-    private Long updatedBy;
 
     @OneToMany
     @JoinColumn(name="CHAT_ROOM_ID")

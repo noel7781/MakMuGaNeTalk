@@ -34,6 +34,7 @@ public class User extends BaseTimeEntity implements UserDetails {
     private Long id;
 
     private String password;
+
     private String nickname;
     private String email;
 

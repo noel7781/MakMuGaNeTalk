@@ -7,8 +7,7 @@ import lombok.Setter;
 @Setter
 public class ListRequestDto {
 
-    // TODO validation check
-    private Long prevLastSeq;
-
     private Integer pageSize = 20;
+
+    private Integer pageNumber = 1;
 }
