@@ -38,9 +38,6 @@ public class ChatRoom extends BaseTimeEntity {
     @JoinColumn(name = "MESSAGE_ID")
     private List<Message> messageList;
 
-    @Builder.Default
-    private Integer likeCnt = 0;
-
     private Long createdBy;
     private Long updatedBy;
 
