@@ -22,8 +22,6 @@ public class ChatService {
     private final MessageRepository messageRepository;
     private final UserChatRoomRepository userChatRoomRepository;
     private final RabbitTemplate rabbitTemplate;
-    private final static String CHAT_EXCHANGE_NAME = "chat.exchange";
-    private final static String CHAT_QUEUE_NAME = "chat.queue";
 
     @Transactional
     public void sendMessage(Long chatRoomId, MessageRequestDto messageRequestDto) {
