@@ -24,6 +24,10 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
+    public User findById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalStateException("User Not Found"));
+    }
 
     public void signUp(SignUpRequestDto signUpRequest) throws Exception {
         try {

@@ -8,6 +8,5 @@ import lombok.Setter;
 public class ListRequestDto {
 
     private Integer pageSize = 20;
-
     private Integer pageNumber = 1;
 }

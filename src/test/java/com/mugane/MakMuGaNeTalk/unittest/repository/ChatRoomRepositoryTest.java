@@ -22,6 +22,6 @@ public class ChatRoomRepositoryTest {
     public void should_find_no_chatRooms_if_repository_is_empty() {
         List<ChatRoom> chatRooms = chatRoomRepository.findAll();
 
-        assertThat(chatRooms.size(), is(3));
+        assertThat(chatRooms.isEmpty(), is(true));
     }
 }

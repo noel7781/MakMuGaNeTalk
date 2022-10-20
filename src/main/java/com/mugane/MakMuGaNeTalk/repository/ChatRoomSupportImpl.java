@@ -3,6 +3,7 @@ package com.mugane.MakMuGaNeTalk.repository;
 import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
 import com.mugane.MakMuGaNeTalk.entity.QChatRoom;
 import com.mugane.MakMuGaNeTalk.entity.QChatRoomTag;
+import com.mugane.MakMuGaNeTalk.entity.QTag;
 import com.querydsl.core.types.Predicate;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
@@ -13,6 +14,7 @@ public class ChatRoomSupportImpl extends QuerydslRepositorySupport implements Ch
 
     private final QChatRoom qChatRoom = QChatRoom.chatRoom;
     private final QChatRoomTag qChatRoomTag = QChatRoomTag.chatRoomTag;
+    private final QTag qTag = QTag.tag;
 
     public ChatRoomSupportImpl() {
         super(ChatRoom.class);
@@ -31,7 +33,8 @@ public class ChatRoomSupportImpl extends QuerydslRepositorySupport implements Ch
         };
 
         return from(qChatRoom)
-                .leftJoin(qChatRoom.chatRoomTagList, qChatRoomTag).fetchJoin()
+                .innerJoin(qChatRoom.chatRoomTagList, qChatRoomTag).fetchJoin()
+                .innerJoin(qChatRoomTag.tag, qTag).fetchJoin()
                 .orderBy(qChatRoom.id.desc()) // 챗룸 생성기준 최신순 정렬
                 .where(predicates)
                 .limit(pageSize)

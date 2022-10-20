@@ -1,7 +1,16 @@
 package com.mugane.MakMuGaNeTalk.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
 @Entity
 public class ChatRoomTag extends BaseTimeEntity {
 
@@ -13,7 +22,7 @@ public class ChatRoomTag extends BaseTimeEntity {
     private Integer turn;
 
     @ManyToOne
-    @JoinColumn(name = "tag_id")
+    @JoinColumn(name = "TAG_ID")
     private Tag tag;
 
     @ManyToOne

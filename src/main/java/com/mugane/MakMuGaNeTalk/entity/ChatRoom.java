@@ -33,9 +33,13 @@ public class ChatRoom extends BaseTimeEntity {
     @Builder.Default
     private String password = "";
 
-    private Long createdBy;
+    @OneToOne
+    @JoinColumn(referencedColumnName = "USER_ID", name = "CREATED_BY")
+    private User createdBy;
 
-    private Long updatedBy;
+    @OneToOne
+    @JoinColumn(referencedColumnName = "USER_ID", name = "UPDATED_BY")
+    private User updatedBy;
 
     @OneToMany(mappedBy = "chatRoom")
     private List<UserChatRoom> userChatRoomList;
