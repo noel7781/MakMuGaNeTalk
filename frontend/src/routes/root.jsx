@@ -4,7 +4,6 @@ const Root = () => {
   return (
     <div>
       <h1>MakMuGaNe Talk</h1>
-      Root
       <Outlet />
     </div>
   );

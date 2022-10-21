@@ -23,8 +23,21 @@ export const signIn = async (email, password) => {
   return response;
 };
 
+export const signUp = async (nickname, userId, email, password) => {
+  const response = await AxiosClient({
+    method: "post",
+    url: "/users/signup",
+    data: { password, nickname, email },
+  })
+    .then((resp) => {
+      console.log(resp);
+    })
+    .catch((e) => {
+      console.log("error", e);
+    });
+};
+
 export const reissue = async (refreshToken) => {
-  console.log("reissue: ", refreshToken);
   const oldAceessToken = localStorage.getItem("accessToken");
   const response = await AxiosClient({
     method: "post",
@@ -44,6 +57,36 @@ export const reissue = async (refreshToken) => {
       redirect("/");
     });
   return response;
+};
+
+export const checkNicknameDuplicate = async (nickname) => {
+  const response = await AxiosClient({
+    method: "get",
+    url: "/users/nickname-check",
+    params: { nickname: nickname },
+  })
+    .then((resp) => {
+      return resp;
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+  return response.data.data;
+};
+
+export const checkEmailDuplicate = async (email) => {
+  const response = await AxiosClient({
+    method: "get",
+    url: "/users/email-check",
+    params: { email: email },
+  })
+    .then((resp) => {
+      return resp;
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+  return response.data.data;
 };
 
 export const reissueErrorHandler = (e) => {

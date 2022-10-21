@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -27,9 +28,8 @@ public class UserRestController {
     @PostMapping("/signup")
     public ApiResponse<?> signUp(@RequestBody SignUpRequestDto user) {
         try {
+            log.warn("user :" + user.getNickname());
             userService.signUp(user);
-//            SignUpResponseDto signUpResponse = SignUpResponseDto.builder().build();
-//            return ApiResponse.success(signUpResponse);
             return ApiResponse.success();
         } catch (Exception e) {
             return ApiResponse.error("X", "Register Failed");
@@ -52,6 +52,16 @@ public class UserRestController {
     @PostMapping("/reissue")
     public ApiResponse<?> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
         return ApiResponse.success(userService.reissue(tokenRequestDto));
+    }
+
+    @GetMapping("/nickname-check")
+    public ApiResponse<?> checkNickname(@RequestParam String nickname) {
+        return ApiResponse.success(userService.checkNickname(nickname));
+    }
+
+    @GetMapping("/email-check")
+    public ApiResponse<?> checkEmail(@RequestParam String email) {
+        return ApiResponse.success(userService.checkEmail(email));
     }
 
     @GetMapping("/test")

@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Form } from "react-router-dom";
+import { Form, useNavigate } from "react-router-dom";
 
 const Index = () => {
+  const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
 
   const [email, setEmail] = useState("");
@@ -47,7 +48,11 @@ const Index = () => {
           <button type="submit" style={{ border: "2px solid blue" }}>
             Login
           </button>
-          <button type="button" style={{ border: "2px solid blue" }}>
+          <button
+            type="button"
+            onClick={() => navigate("/signup")}
+            style={{ border: "2px solid blue" }}
+          >
             회원가입
           </button>
         </Form>

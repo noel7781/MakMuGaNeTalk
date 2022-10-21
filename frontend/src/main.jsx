@@ -7,6 +7,8 @@ import Index from "./routes";
 import Main from "./routes/main";
 import { action as signInAction } from "./routes/signIn";
 import { CookiesProvider } from "react-cookie";
+import Register from "./routes/signup";
+import SignUp from "./routes/signup";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +28,10 @@ const router = createBrowserRouter([
           {
             path: "main",
             element: <Main />,
+          },
+          {
+            path: "signup",
+            element: <SignUp />,
           },
         ],
       },
