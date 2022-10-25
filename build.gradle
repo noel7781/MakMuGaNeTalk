@@ -36,6 +36,8 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
     implementation 'org.springframework.boot:spring-boot-starter-reactor-netty:2.7.4'
+
+    runtimeOnly 'com.h2database:h2:1.4.199'
 }
 
 tasks.named('test') {
