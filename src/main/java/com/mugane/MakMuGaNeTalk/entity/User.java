@@ -34,8 +34,11 @@ public class User extends BaseTimeEntity implements UserDetails {
     private Long id;
 
     private String password;
+
+    @Column(unique = true)
     private String nickname;
-    
+
+    @Column(unique = true)
     private String email;
 
     @OneToMany(mappedBy = "user")
