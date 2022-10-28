@@ -2,6 +2,7 @@ package com.mugane.MakMuGaNeTalk.config.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -31,19 +32,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .httpBasic().disable()
-                .csrf().disable()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers("/api/v1/users/signin", "/api/v1/users/signup", "/api/v1/users/reissue")
-                .permitAll()
-                .antMatchers("/api/v1/users/**").hasRole("USER")
-                .antMatchers("/api/v1/admin/**").hasRole("ADMIN")
-                .anyRequest().permitAll()
-                .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
-                        UsernamePasswordAuthenticationFilter.class);
+            .httpBasic().disable()
+            .csrf().disable()
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .authorizeRequests()
+            .antMatchers(HttpMethod.OPTIONS, "/**/*").permitAll()
+            .antMatchers("/api/v1/users/signin", "/api/v1/users/signup", "/api/v1/users/reissue",
+                "/api/v1/users/nickname-check", "/api/v1/users/email-check")
+            .permitAll()
+            .antMatchers("/api/v1/users/**").hasRole("USER")
+            .antMatchers("/api/v1/admin/**").hasRole("ADMIN")
+            .anyRequest().permitAll()
+            .and()
+            .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+                UsernamePasswordAuthenticationFilter.class);
     }
 }

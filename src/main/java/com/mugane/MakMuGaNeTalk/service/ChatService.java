@@ -9,7 +9,7 @@ import com.mugane.MakMuGaNeTalk.entity.UserChatRoom;
 import com.mugane.MakMuGaNeTalk.repository.MessageRepository;
 import com.mugane.MakMuGaNeTalk.repository.UserChatRoomRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +21,7 @@ public class ChatService {
     private ChatRoomService chatRoomService;
     private final MessageRepository messageRepository;
     private final UserChatRoomRepository userChatRoomRepository;
-    private final SimpMessagingTemplate simpMessagingTemplate;
-
+    private final RabbitTemplate rabbitTemplate;
 
     @Transactional
     public void sendMessage(Long chatRoomId, MessageRequestDto messageRequestDto) {
@@ -33,7 +32,7 @@ public class ChatService {
                 .nickname("username")
                 .content(content)
                 .build();
-            simpMessagingTemplate.convertAndSend("/topic/" + chatRoomId + "/messages",
+            rabbitTemplate.convertAndSend("amq.topic", "room." + chatRoomId,
                 messageResponseDto);
             saveMessage(chatRoomId, content);
         } catch (Exception e) {

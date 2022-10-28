@@ -7,8 +7,12 @@ import com.mugane.MakMuGaNeTalk.dto.request.SignUpRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.TokenRequestDto;
 import com.mugane.MakMuGaNeTalk.entity.RefreshToken;
 import com.mugane.MakMuGaNeTalk.entity.User;
+import com.mugane.MakMuGaNeTalk.exception.CustomException;
+import com.mugane.MakMuGaNeTalk.exception.ErrorCode;
 import com.mugane.MakMuGaNeTalk.repository.RefreshTokenRepository;
 import com.mugane.MakMuGaNeTalk.repository.UserRepository;
+import java.util.Collections;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,7 +33,7 @@ public class UserService {
                 .orElseThrow(() -> new IllegalStateException("User Not Found"));
     }
 
-    public void signUp(SignUpRequestDto signUpRequest) throws Exception {
+    public Long signUp(SignUpRequestDto signUpRequest) throws CustomException {
         try {
             User user = User.builder()
                     .email(signUpRequest.getEmail())
@@ -38,8 +42,9 @@ public class UserService {
                     .roles(Collections.singletonList("ROLE_USER"))
                     .build();
             userRepository.save(user);
+            return user.getId();
         } catch (Exception e) {
-            throw new Exception("Register Failed");
+            throw new CustomException(ErrorCode.BAD_REQUEST);
         }
     }
 
@@ -93,5 +98,15 @@ public class UserService {
     public User findUserByNickname(String nickname) {
         return userRepository.findByNickname(nickname)
             .orElseThrow(() -> new IllegalArgumentException("해당 닉네임을 가지는 회원이 없습니다."));
+    }
+
+    public boolean checkNickname(String nickname) {
+        Optional<User> user = userRepository.findByNickname(nickname);
+        return user.isPresent();
+    }
+
+    public boolean checkEmail(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        return user.isPresent();
     }
 }

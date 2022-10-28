@@ -58,6 +58,10 @@ dependencyManagement {
 	imports {
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
 	}
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'org.springframework.boot:spring-boot-starter-reactor-netty:2.7.4'
+
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 
 test {
