@@ -33,10 +33,9 @@ public class ChatRoomSupportImpl extends QuerydslRepositorySupport implements Ch
         };
 
         return from(qChatRoom)
-                .innerJoin(qChatRoom.chatRoomTagList, qChatRoomTag).fetchJoin()
-                .innerJoin(qChatRoomTag.tag, qTag).fetchJoin()
-                .orderBy(qChatRoom.id.desc()) // 챗룸 생성기준 최신순 정렬
+                .innerJoin(qChatRoomTag).on(qChatRoom.id.eq(qChatRoomTag.chatRoom.id)).fetchJoin()
                 .where(predicates)
+                .orderBy(qChatRoom.id.desc()) // 챗룸 생성기준 최신순 정렬
                 .limit(pageSize)
                 .offset(pageNumber)
                 .fetch();
