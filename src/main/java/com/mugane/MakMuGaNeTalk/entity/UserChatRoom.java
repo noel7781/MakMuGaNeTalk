@@ -1,6 +1,7 @@
 package com.mugane.MakMuGaNeTalk.entity;
 
 import com.mugane.MakMuGaNeTalk.enums.UserType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,6 +20,7 @@ public class UserChatRoom extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "USER_CHAT_ROOM_ID")
     private Long id;
 
     private UserType userType;

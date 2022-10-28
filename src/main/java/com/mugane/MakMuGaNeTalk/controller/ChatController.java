@@ -16,10 +16,9 @@ public class ChatController {
     private final ChatService chatService;
 
 
-    @MessageMapping("/chat/{chatRoomId}")
+    @MessageMapping("chat.message.{chatRoomId}")
     public void chat(@DestinationVariable("chatRoomId") Long chatRoomId,
-        MessageRequestDto messageRequestDto)
-        throws Exception {
+        MessageRequestDto messageRequestDto) {
         chatService.sendMessage(chatRoomId, messageRequestDto);
     }
 
