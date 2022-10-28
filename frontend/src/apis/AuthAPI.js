@@ -18,7 +18,7 @@ export const signIn = async (email, password) => {
     .catch((e) => {
       console.log("error", e);
       alert("LOGIN FAILED");
-      redirect("/");
+      return e;
     });
   return response;
 };
@@ -54,7 +54,6 @@ export const reissue = async (refreshToken) => {
     .catch((e) => {
       console.log("error", e);
       alert("reissue failed");
-      redirect("/");
     });
   return response;
 };
@@ -69,9 +68,9 @@ export const checkNicknameDuplicate = async (nickname) => {
       return resp;
     })
     .catch((e) => {
-      console.log(e);
+      return e.response;
     });
-  return response.data.data;
+  return response;
 };
 
 export const checkEmailDuplicate = async (email) => {
@@ -81,12 +80,13 @@ export const checkEmailDuplicate = async (email) => {
     params: { email: email },
   })
     .then((resp) => {
+      console.log(resp);
       return resp;
     })
     .catch((e) => {
-      console.log(e);
+      return e.response;
     });
-  return response.data.data;
+  return response;
 };
 
 export const reissueErrorHandler = (e) => {

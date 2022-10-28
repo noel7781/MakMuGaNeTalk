@@ -4,6 +4,9 @@ import { signIn } from "../apis/AuthAPI";
 export async function action({ request }) {
   const formData = await request.formData();
   const { email, password } = Object.fromEntries(formData);
-  await signIn(email, password);
+  const response = await signIn(email, password);
+  if (response.status !== 200) {
+    return redirect("/");
+  }
   return redirect("/main");
 }

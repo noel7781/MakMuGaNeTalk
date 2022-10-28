@@ -48,19 +48,24 @@ const SignUp = () => {
   };
   const checkNickname = async () => {
     const response = await checkNicknameDuplicate(nickname);
-    if (!response) {
+    if (response.status == 200 && !response.data) {
+      alert("해당 닉네임을 사용할 수 있습니다.");
       setErrorStatus({ ...errorStatus, nickname: false });
     } else {
       alert("중복된 닉네임 입니다.");
     }
   };
-  const checkUserId = async () => {};
   const checkEmail = async () => {
     const response = await checkEmailDuplicate(email);
-    if (!response) {
-      setErrorStatus({ ...errorStatus, email: false });
+    if (response.status == 200) {
+      if (!response.data) {
+        alert("해당 이메일을 사용할 수 있습니다.");
+        setErrorStatus({ ...errorStatus, email: false });
+      } else {
+        alert("중복된 이메일입니다.");
+      }
     } else {
-      alert("중복된 이메일 입니다.");
+      alert("올바른 이메일 형식이 아닙니다.");
     }
   };
 
@@ -84,19 +89,6 @@ const SignUp = () => {
             중복확인
           </button>
         </div>
-        {/* <div>
-          <label name="userId">아이디</label>
-          <input
-            type="text"
-            name="userId"
-            placeholder="아이디"
-            defaultValue={userId}
-            onChange={handleChangeUserId}
-          />
-          <button type="button" onClick={checkUserId}>
-            중복확인
-          </button>
-        </div> */}
         <div>
           <label name="email">이메일</label>
           <input
