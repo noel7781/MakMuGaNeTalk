@@ -9,7 +9,7 @@ export const signIn = async (email, password) => {
     data: { email, password },
   })
     .then((resp) => {
-      const { accessToken, refreshToken } = resp.data.data;
+      const { accessToken, refreshToken } = resp.data;
       AxiosClient.defaults.headers.common["Authorization"] = accessToken;
       localStorage.setItem("accessToken", accessToken);
       setRefreshToken(refreshToken);

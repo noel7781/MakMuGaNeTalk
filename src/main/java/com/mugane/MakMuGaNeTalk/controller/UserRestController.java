@@ -1,14 +1,19 @@
 package com.mugane.MakMuGaNeTalk.controller;
 
-import com.mugane.MakMuGaNeTalk.common.ApiResponse;
 import com.mugane.MakMuGaNeTalk.dto.TokenDto;
 import com.mugane.MakMuGaNeTalk.dto.request.SignInRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.SignUpRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.TokenRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.response.SignInResponseDto;
+import com.mugane.MakMuGaNeTalk.exception.CustomException;
+import com.mugane.MakMuGaNeTalk.exception.ErrorCode;
 import com.mugane.MakMuGaNeTalk.service.UserService;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,42 +31,44 @@ public class UserRestController {
 
     // 회원가입
     @PostMapping("/signup")
-    public ApiResponse<?> signUp(@RequestBody SignUpRequestDto user) {
-        try {
-            log.warn("user :" + user.getNickname());
-            userService.signUp(user);
-            return ApiResponse.success();
-        } catch (Exception e) {
-            return ApiResponse.error("X", "Register Failed");
+    public ResponseEntity<Long> signUp(@Valid @RequestBody SignUpRequestDto user, Errors errors)
+        throws Exception {
+        if (errors.hasErrors()) {
+            throw new CustomException(ErrorCode.BAD_REQUEST);
         }
+        Long userId = userService.signUp(user);
+        return ResponseEntity.status(HttpStatus.OK).body(userId);
     }
 
     // 로그인
     @PostMapping("/signin")
-    public ApiResponse<?> signIn(@RequestBody SignInRequestDto user) {
-        log.warn("email :" + user.getEmail());
-        log.warn("password :" + user.getPassword());
+    public ResponseEntity<SignInResponseDto> signIn(@Valid @RequestBody SignInRequestDto user,
+        Errors errors)
+        throws Exception {
+        if (errors.hasErrors()) {
+            throw new CustomException(ErrorCode.BAD_REQUEST);
+        }
         TokenDto tokenDto = userService.signIn(user);
         SignInResponseDto signInResponse = SignInResponseDto.builder()
             .accessToken(tokenDto.getAccessToken())
             .refreshToken(tokenDto.getRefreshToken())
             .build();
-        return ApiResponse.success(signInResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(signInResponse);
     }
 
     @PostMapping("/reissue")
-    public ApiResponse<?> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
-        return ApiResponse.success(userService.reissue(tokenRequestDto));
+    public ResponseEntity<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.reissue(tokenRequestDto));
     }
 
     @GetMapping("/nickname-check")
-    public ApiResponse<?> checkNickname(@RequestParam String nickname) {
-        return ApiResponse.success(userService.checkNickname(nickname));
+    public ResponseEntity<Boolean> checkNickname(@RequestParam String nickname) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.checkNickname(nickname));
     }
 
     @GetMapping("/email-check")
-    public ApiResponse<?> checkEmail(@RequestParam String email) {
-        return ApiResponse.success(userService.checkEmail(email));
+    public ResponseEntity<Boolean> checkEmail(@RequestParam String email) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.checkEmail(email));
     }
 
     @GetMapping("/test")
