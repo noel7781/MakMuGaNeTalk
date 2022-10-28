@@ -1,19 +1,19 @@
 package com.mugane.MakMuGaNeTalk.entity;
 
 import com.mugane.MakMuGaNeTalk.enums.ChatRoomType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Entity
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChatRoom extends BaseTimeEntity {
 
     @Id
@@ -25,11 +25,21 @@ public class ChatRoom extends BaseTimeEntity {
     private ChatRoomType type;
 
     private String title;
+
     @OneToOne
     @JoinColumn(referencedColumnName = "USER_ID", name = "OWNER_USER_ID")
-    private User ownerUserId;
-    private String password;
+    private User ownerUser;
 
+    @Builder.Default
+    private String password = "";
+
+    @OneToOne
+    @JoinColumn(referencedColumnName = "USER_ID", name = "CREATED_BY")
+    private User createdBy;
+
+    @OneToOne
+    @JoinColumn(referencedColumnName = "USER_ID", name = "UPDATED_BY")
+    private User updatedBy;
 
     @OneToMany(mappedBy = "chatRoom")
     private List<UserChatRoom> userChatRoomList;
@@ -38,7 +48,7 @@ public class ChatRoom extends BaseTimeEntity {
     @JoinColumn(name = "MESSAGE_ID")
     private List<Message> messageList;
 
-    private Long createdBy;
-    private Long updatedBy;
-
+    @OneToMany
+    @JoinColumn(name="CHAT_ROOM_ID")
+    private List<ChatRoomTag> chatRoomTagList;
 }
