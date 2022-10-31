@@ -1,19 +1,27 @@
 package com.mugane.MakMuGaNeTalk.service;
 
 import com.mugane.MakMuGaNeTalk.dto.request.ChatRoomListRequestDto;
-import com.mugane.MakMuGaNeTalk.entity.*;
+import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
+import com.mugane.MakMuGaNeTalk.entity.ChatRoomInvitation;
+import com.mugane.MakMuGaNeTalk.entity.ChatRoomTag;
+import com.mugane.MakMuGaNeTalk.entity.Tag;
+import com.mugane.MakMuGaNeTalk.entity.User;
+import com.mugane.MakMuGaNeTalk.entity.UserChatRoom;
 import com.mugane.MakMuGaNeTalk.enums.ChatRoomType;
 import com.mugane.MakMuGaNeTalk.enums.InvitationState;
 import com.mugane.MakMuGaNeTalk.enums.UserType;
-import com.mugane.MakMuGaNeTalk.repository.*;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.mugane.MakMuGaNeTalk.repository.ChatRoomInvitationRepository;
+import com.mugane.MakMuGaNeTalk.repository.ChatRoomRepository;
+import com.mugane.MakMuGaNeTalk.repository.ChatRoomTagRepository;
+import com.mugane.MakMuGaNeTalk.repository.TagRepository;
+import com.mugane.MakMuGaNeTalk.repository.UserChatRoomRepository;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,31 +36,32 @@ public class ChatRoomService {
 
     public ChatRoom getChatRoomById(Long chatRoomId) {
         return chatRoomRepository.findById(chatRoomId)
-                .orElseThrow(() -> new IllegalStateException("Chat Room Not Found"));
+            .orElseThrow(() -> new IllegalStateException("Chat Room Not Found"));
     }
 
     public List<ChatRoom> getChatRoomList(ChatRoomListRequestDto req) {
 
         return chatRoomRepository.findAllByKeywordAndTagsAndPaging(
-                req.getTagList(),
-                req.getKeyword(),
-                req.getReqList().getPageSize(),
-                req.getReqList().getPageNumber()
+            req.getTagList(),
+            req.getKeyword(),
+            req.getReqList().getPageSize(),
+            req.getReqList().getPageNumber()
         );
     }
 
     @Transactional
-    public void createGroupChatRoom(Long userId, ChatRoomType chatRoomType, String title, String password, List<String> tagContentList) {
+    public void createGroupChatRoom(Long userId, ChatRoomType chatRoomType, String title,
+        String password, List<String> tagContentList) {
 
         User user = userService.findById(userId);
 
         final ChatRoom chatRoom = ChatRoom.builder()
-                .type(chatRoomType)
-                .title(title)
-                .password(password)
-                .createdBy(user)
-                .updatedBy(user)
-                .build();
+            .type(chatRoomType)
+            .title(title)
+            .password(password)
+            .createdBy(user)
+            .updatedBy(user)
+            .build();
         ChatRoom savedChatRoom = chatRoomRepository.saveAndFlush(chatRoom);
 
         List<Tag> tagList = createTagList(tagContentList);
@@ -60,10 +69,10 @@ public class ChatRoomService {
         createChatRoomTagList(savedChatRoom, tagList);
 
         UserChatRoom userChatRoom = UserChatRoom.builder()
-                .user(user)
-                .chatRoom(chatRoom)
-                .userType(UserType.OWNER)
-                .build();
+            .user(user)
+            .chatRoom(chatRoom)
+            .userType(UserType.OWNER)
+            .build();
 
         userChatRoomRepository.save(userChatRoom);
     }
@@ -80,10 +89,10 @@ public class ChatRoomService {
         int turn = 1;
         for (Tag tag : tagList) {
             ChatRoomTag chatRoomTag = ChatRoomTag.builder()
-                    .turn(turn++)
-                    .chatRoom(chatRoom)
-                    .tag(tag)
-                    .build();
+                .turn(turn++)
+                .chatRoom(chatRoom)
+                .tag(tag)
+                .build();
             chatRoomTagList.add(chatRoomTag);
         }
 
@@ -117,22 +126,17 @@ public class ChatRoomService {
         User questUser = userService.findById(guestUserId);
 
         ChatRoomInvitation chatRoomInvitation = ChatRoomInvitation.builder()
-                .hostUser(hostUser)
-                .guestUser(questUser)
-                .firstMessage(firstMessage)
-                .state(InvitationState.WAITING)
-                .build();
+            .hostUser(hostUser)
+            .guestUser(questUser)
+            .firstMessage(firstMessage)
+            .state(InvitationState.WAITING)
+            .build();
 
         chatRoomInvitationRepository.save(chatRoomInvitation);
     }
 
-    public ChatRoom findById(Long id) {
-        return chatRoomRepository
-            .findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("해당 아이디를 가지는 채팅방이 존재하지 않습니다."));
-    }
 
-    public ChatRoom findByTitle(String title) {
+    public ChatRoom getChatRoomByTitle(String title) {
         return chatRoomRepository
             .findByTitle(title)
             .orElseThrow(() -> new IllegalArgumentException("해당 이름을 가지는 채팅방이 존재하지 않습니다."));

@@ -30,7 +30,7 @@ public class ChatRoomController {
 
     @GetMapping("/v1/chat-rooms")
     public ResponseEntity<List<ChatRoomListResponseDto>> getChatRoomList(
-        @RequestParam ChatRoomListRequestDto req
+        @RequestParam(required = false) ChatRoomListRequestDto req
     ) {
 
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -44,8 +44,6 @@ public class ChatRoomController {
     public ResponseEntity<?> createChatRoom(
         @RequestBody CreateChatRoomRequestDto req
     ) {
-
-        log.info("req : " + req.toString());
 
         ChatRoomType chatRoomType = req.getChatRoomType();
 
@@ -63,7 +61,7 @@ public class ChatRoomController {
             }
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body();
+        return ResponseEntity.status(HttpStatus.OK).body("success");
     }
 
     @PostMapping("/v1/chat-room-invitations")
@@ -73,7 +71,7 @@ public class ChatRoomController {
 
         chatRoomService.createChatRoomInvitation(req.getHostUserId(), req.getGuestUserId(),
             req.getFirstMessage());
-        return ResponseEntity.status(HttpStatus.OK).body();
+        return ResponseEntity.status(HttpStatus.OK).body("success");
     }
 
 
