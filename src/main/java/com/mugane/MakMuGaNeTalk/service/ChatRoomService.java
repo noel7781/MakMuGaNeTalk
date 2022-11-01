@@ -1,6 +1,7 @@
 package com.mugane.MakMuGaNeTalk.service;
 
 import com.mugane.MakMuGaNeTalk.dto.request.ChatRoomListRequestDto;
+import com.mugane.MakMuGaNeTalk.dto.request.CreateChatRoomRequestDto;
 import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
 import com.mugane.MakMuGaNeTalk.entity.ChatRoomInvitation;
 import com.mugane.MakMuGaNeTalk.entity.ChatRoomTag;
@@ -19,10 +20,13 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChatRoomService {
@@ -50,7 +54,19 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public void createGroupChatRoom(Long userId, ChatRoomType chatRoomType, String title,
+    public Long createChatRoom(CreateChatRoomRequestDto req) {
+        Set<String> reqTag = req.getTagList();
+        List<String> tagList = reqTag == null ? new ArrayList<>() : new ArrayList<>(reqTag);
+        return createChatRoom(
+            req.getUserId(),
+            req.getChatRoomType(),
+            req.getTitle(),
+            req.getPassword(),
+            tagList
+        );
+    }
+
+    public Long createChatRoom(Long userId, ChatRoomType chatRoomType, String title,
         String password, List<String> tagContentList) {
 
         User user = userService.findById(userId);
@@ -60,7 +76,9 @@ public class ChatRoomService {
             .title(title)
             .password(password)
             .createdBy(user)
+            .ownerUser(user)
             .updatedBy(user)
+            .messageList(new ArrayList<>())
             .build();
         ChatRoom savedChatRoom = chatRoomRepository.saveAndFlush(chatRoom);
 
@@ -75,12 +93,7 @@ public class ChatRoomService {
             .build();
 
         userChatRoomRepository.save(userChatRoom);
-    }
-
-    @Transactional
-    public void createOneChatRoom() {
-
-        // TODO
+        return savedChatRoom.getId();
     }
 
     private void createChatRoomTagList(ChatRoom chatRoom, List<Tag> tagList) {
