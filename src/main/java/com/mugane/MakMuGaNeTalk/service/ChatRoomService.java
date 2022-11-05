@@ -80,7 +80,9 @@ public class ChatRoomService {
             .updatedBy(user)
             .messageList(new ArrayList<>())
             .build();
-        ChatRoom savedChatRoom = chatRoomRepository.saveAndFlush(chatRoom);
+
+//         TODO: saveAndFlush 찾아보기
+        ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
 
         List<Tag> tagList = createTagList(tagContentList);
 

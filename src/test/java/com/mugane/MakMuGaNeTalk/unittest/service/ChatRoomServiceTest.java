@@ -1,7 +1,7 @@
 package com.mugane.MakMuGaNeTalk.unittest.service;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
 import com.mugane.MakMuGaNeTalk.entity.ChatRoomTag;
@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest
-public class ChatRoomServiceTest {
+class ChatRoomServiceTest {
 
     @Autowired
     ChatRoomService chatRoomService;
@@ -55,9 +55,9 @@ public class ChatRoomServiceTest {
 
         List<ChatRoomTag> chatRoomTagList = chatRoom.getChatRoomTagList();
 
-        assertThat(chatRoomTagList.get(0).getTag().getContent(), is("TAG1"));
-        assertThat(chatRoomTagList.get(1).getTag().getContent(), is("TAG2"));
-        assertThat(chatRoomTagList.get(2).getTag().getContent(), is("TAG3"));
+        assertThat(chatRoomTagList.get(0).getTag().getContent()).isEqualTo("TAG1");
+        assertThat(chatRoomTagList.get(1).getTag().getContent()).isEqualTo("TAG2");
+        assertThat(chatRoomTagList.get(2).getTag().getContent()).isEqualTo("TAG3");
     }
 
     @Test
@@ -65,6 +65,6 @@ public class ChatRoomServiceTest {
         List<ChatRoom> chatRoomList = chatRoomRepository.findAllByKeywordAndTagsAndPaging(null,
             null, 10, 0);
 
-        assertThat(chatRoomList.size(), is(1));
+        assertThat(chatRoomList.size()).isEqualTo(1);
     }
 }

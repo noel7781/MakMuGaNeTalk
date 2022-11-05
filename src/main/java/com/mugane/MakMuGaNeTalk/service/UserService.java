@@ -18,8 +18,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -28,21 +26,21 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
+
     public User findById(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalStateException("User Not Found"));
+            .orElseThrow(() -> new IllegalStateException("User Not Found"));
     }
 
-    public Long signUp(SignUpRequestDto signUpRequest) throws CustomException {
+    public User signUp(SignUpRequestDto signUpRequest) throws CustomException {
         try {
             User user = User.builder()
-                    .email(signUpRequest.getEmail())
-                    .nickname(signUpRequest.getNickname())
-                    .password(passwordEncoder.encode(signUpRequest.getPassword()))
-                    .roles(Collections.singletonList("ROLE_USER"))
-                    .build();
-            userRepository.save(user);
-            return user.getId();
+                .email(signUpRequest.getEmail())
+                .nickname(signUpRequest.getNickname())
+                .password(passwordEncoder.encode(signUpRequest.getPassword()))
+                .roles(Collections.singletonList("ROLE_USER"))
+                .build();
+            return userRepository.save(user);
         } catch (Exception e) {
             throw new CustomException(ErrorCode.BAD_REQUEST);
         }
@@ -50,7 +48,7 @@ public class UserService {
 
     public TokenDto signIn(SignInRequestDto signInRequest) {
         User user = userRepository.findByEmail(signInRequest.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 email 입니다."));
+            .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 email 입니다."));
 
         if (!passwordEncoder.matches(signInRequest.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("잘못된 비밀번호입니다.");
@@ -59,9 +57,9 @@ public class UserService {
         TokenDto tokenDto = jwtTokenProvider.createTokenDto(user.getUsername(), user.getRoles());
 
         RefreshToken refreshToken = RefreshToken.builder()
-                .userId(user.getId())
-                .token(tokenDto.getRefreshToken())
-                .build();
+            .userId(user.getId())
+            .token(tokenDto.getRefreshToken())
+            .build();
 
         refreshTokenRepository.save(refreshToken);
         return tokenDto;
@@ -77,17 +75,17 @@ public class UserService {
         Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
 
         User user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new IllegalStateException("User Not Found"));
+            .orElseThrow(() -> new IllegalStateException("User Not Found"));
 
         RefreshToken refreshToken = refreshTokenRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new IllegalStateException("Refresh Token Not Found"));
+            .orElseThrow(() -> new IllegalStateException("Refresh Token Not Found"));
 
         if (!refreshToken.getToken().equals(tokenRequestDto.getRefreshToken())) {
             throw new IllegalArgumentException("Refresh Token Not Match");
         }
 
         TokenDto newCreatedToken = jwtTokenProvider.createTokenDto(String.valueOf(user.getId()),
-                user.getRoles());
+            user.getRoles());
 
         RefreshToken updatedToken = refreshToken.updateToken(newCreatedToken.getRefreshToken());
         refreshTokenRepository.save(updatedToken);
