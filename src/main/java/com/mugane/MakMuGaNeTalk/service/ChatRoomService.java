@@ -79,6 +79,7 @@ public class ChatRoomService {
             .ownerUser(user)
             .updatedBy(user)
             .messageList(new ArrayList<>())
+            .chatRoomTagList(new ArrayList<>())
             .build();
 
 //         TODO: saveAndFlush 찾아보기
