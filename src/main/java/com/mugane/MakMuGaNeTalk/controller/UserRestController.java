@@ -8,11 +8,9 @@ import com.mugane.MakMuGaNeTalk.dto.response.SignInResponseDto;
 import com.mugane.MakMuGaNeTalk.exception.CustomException;
 import com.mugane.MakMuGaNeTalk.exception.ErrorCode;
 import com.mugane.MakMuGaNeTalk.service.UserService;
-import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,8 +34,8 @@ public class UserRestController {
 
     // 회원가입
     @PostMapping("/signup")
-    public ResponseEntity<Long> signUp(@Valid @RequestBody SignUpRequestDto user, Errors errors)
-        throws Exception {
+    public ResponseEntity<Long> signUp(@Validated @RequestBody SignUpRequestDto user,
+        Errors errors) {
         if (errors.hasErrors()) {
             throw new CustomException(ErrorCode.BAD_REQUEST);
         }
@@ -47,9 +45,8 @@ public class UserRestController {
 
     // 로그인
     @PostMapping("/signin")
-    public ResponseEntity<SignInResponseDto> signIn(@Valid @RequestBody SignInRequestDto user,
-        Errors errors)
-        throws Exception {
+    public ResponseEntity<SignInResponseDto> signIn(@Validated @RequestBody SignInRequestDto user,
+        Errors errors) {
         if (errors.hasErrors()) {
             throw new CustomException(ErrorCode.BAD_REQUEST);
         }
