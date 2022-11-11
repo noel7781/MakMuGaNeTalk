@@ -63,10 +63,10 @@ public class ChatRoomService {
             req.getTitle(),
             req.getPassword(),
             tagList
-        );
+        ).getId();
     }
 
-    public Long createChatRoom(Long userId, ChatRoomType chatRoomType, String title,
+    public ChatRoom createChatRoom(Long userId, ChatRoomType chatRoomType, String title,
         String password, List<String> tagContentList) {
 
         User user = userService.findById(userId);
@@ -96,7 +96,7 @@ public class ChatRoomService {
             .build();
 
         userChatRoomRepository.save(userChatRoom);
-        return savedChatRoom.getId();
+        return savedChatRoom;
     }
 
     private void createChatRoomTagList(ChatRoom chatRoom, List<Tag> tagList) {
@@ -122,13 +122,11 @@ public class ChatRoomService {
         for (String tagContent : tagContentList) {
             Tag newTag = null;
             Optional<Tag> tag = tagRepository.findByContent(tagContent);
-            if (!tag.isPresent()) {
+            if (tag.isEmpty()) {
                 newTag = tagRepository.saveAndFlush(Tag.builder().content(tagContent).build());
                 tagList.add(newTag);
                 continue;
             }
-//            Tag tag = tagRepository.findByContent(tagContent)
-//                    .orElseGet(() -> tagRepository.saveAndFlush(Tag.builder().content(tagContent).build()));
             tagList.add(tag.get());
         }
 
