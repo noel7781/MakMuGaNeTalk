@@ -98,9 +98,12 @@ public class UserService {
             .orElseThrow(() -> new IllegalArgumentException("해당 닉네임을 가지는 회원이 없습니다."));
     }
 
-    public boolean checkNickname(String nickname) {
+    public Long checkNickname(String nickname) {
         Optional<User> user = userRepository.findByNickname(nickname);
-        return user.isPresent();
+        if (user.isPresent()) {
+            return user.get().getId();
+        }
+        return 0L;
     }
 
     public boolean checkEmail(String email) {
