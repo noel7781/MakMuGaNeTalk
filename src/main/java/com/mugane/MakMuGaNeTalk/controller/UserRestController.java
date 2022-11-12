@@ -63,17 +63,12 @@ public class UserRestController {
     }
 
     @GetMapping("/nickname-check")
-    public ResponseEntity<Boolean> checkNickname(@RequestParam String nickname) {
+    public ResponseEntity<Long> checkNickname(@RequestParam String nickname) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.checkNickname(nickname));
     }
 
     @GetMapping("/email-check")
     public ResponseEntity<Boolean> checkEmail(@RequestParam @Email @NotBlank String email) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.checkEmail(email));
-    }
-
-    @GetMapping("/test")
-    public String test() {
-        return "<h1>성공</h1>";
     }
 }
