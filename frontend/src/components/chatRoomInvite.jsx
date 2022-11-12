@@ -4,8 +4,8 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { useState } from "react";
-import { Checkbox, TextField } from "@mui/material";
-import { createChatRoom } from "../apis/ChatRoomAPI";
+import { TextField } from "@mui/material";
+import { inviteChatRoom } from "../apis/ChatRoomAPI";
 
 const style = {
   position: "absolute",
@@ -21,11 +21,11 @@ const style = {
 };
 
 const ChatRoomInvite = ({ open, handleClose }) => {
-  const [userId, setUserId] = useState("");
-  const [inviteMessage, setInviteMessage] = useState("");
+  const [userNickname, setUserNickname] = useState("first");
+  const [inviteMessage, setInviteMessage] = useState("hihiyo");
 
   const handleInviteChatRoom = async () => {
-    const response = await inviteChatRoom(userId, inviteMessage);
+    const response = await inviteChatRoom(userNickname, inviteMessage);
     console.log(response);
     handleClose();
   };
@@ -37,11 +37,11 @@ const ChatRoomInvite = ({ open, handleClose }) => {
         </Typography>
         <div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography sx={{ mt: 2 }}>유저</Typography>
+            <Typography sx={{ mt: 2 }}>유저 닉네임</Typography>
             <TextField
               type="text"
-              value={userId}
-              onChange={(e) => setUserId(e.target.value)}
+              value={userNickname}
+              onChange={(e) => setUserNickname(e.target.value)}
             />
           </div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
