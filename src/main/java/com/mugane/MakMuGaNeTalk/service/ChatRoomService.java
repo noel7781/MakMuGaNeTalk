@@ -54,11 +54,11 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public Long createChatRoom(CreateChatRoomRequestDto req) {
+    public Long createChatRoom(CreateChatRoomRequestDto req, Long userId) {
         Set<String> reqTag = req.getTagList();
         List<String> tagList = reqTag == null ? new ArrayList<>() : new ArrayList<>(reqTag);
         return createChatRoom(
-            req.getUserId(),
+            userId,
             req.getChatRoomType(),
             req.getTitle(),
             req.getPassword(),
@@ -134,13 +134,13 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public void createChatRoomInvitation(Long hostUserId, Long guestUserId, String firstMessage) {
+    public void createChatRoomInvitation(User user, Long guestUserId,
+        String firstMessage) {
 
-        User hostUser = userService.findById(hostUserId);
         User questUser = userService.findById(guestUserId);
 
         ChatRoomInvitation chatRoomInvitation = ChatRoomInvitation.builder()
-            .hostUser(hostUser)
+            .hostUser(user)
             .guestUser(questUser)
             .firstMessage(firstMessage)
             .state(InvitationState.WAITING)

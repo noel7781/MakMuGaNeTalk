@@ -1,13 +1,12 @@
 import AxiosClient from "./AxiosClient";
 
 export const createChatRoom = async (title, tagList, isPublic, password) => {
-  const userId = 1;
   const chatRoomType = isPublic ? "OPEN_CHAT" : "PRIVATE_CHAT";
   password = isPublic ? "" : password;
   const response = await AxiosClient({
     method: "post",
     url: "/chat-rooms",
-    data: { userId, title, tagList, chatRoomType, password },
+    data: { title, tagList, chatRoomType, password },
   })
     .then((resp) => {
       console.log(resp);
@@ -18,8 +17,6 @@ export const createChatRoom = async (title, tagList, isPublic, password) => {
 };
 
 export const inviteChatRoom = async (userNickname, inviteMessage) => {
-  const myId = 4;
-  console.log(userNickname, inviteMessage);
   const inviteResponse = await AxiosClient({
     method: "get",
     url: "/users/nickname-check",
@@ -33,7 +30,6 @@ export const inviteChatRoom = async (userNickname, inviteMessage) => {
     method: "post",
     url: "/chat-room-invitations",
     data: {
-      hostUserId: myId,
       guestUserId: inviteUserId,
       firstMessage: inviteMessage,
     },

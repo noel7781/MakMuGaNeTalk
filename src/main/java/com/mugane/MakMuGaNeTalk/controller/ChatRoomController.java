@@ -5,6 +5,7 @@ import com.mugane.MakMuGaNeTalk.dto.request.CreateChatRoomInvitationRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.CreateChatRoomRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.response.ChatRoomResponseDto;
 import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
+import com.mugane.MakMuGaNeTalk.entity.User;
 import com.mugane.MakMuGaNeTalk.enums.ChatRoomType;
 import com.mugane.MakMuGaNeTalk.service.ChatRoomService;
 import java.util.List;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +32,7 @@ public class ChatRoomController {
 
     @GetMapping("/v1/chat-rooms")
     public ResponseEntity<List<ChatRoomResponseDto>> getChatRoomList(
-        ChatRoomListRequestDto req
+        ChatRoomListRequestDto req, @AuthenticationPrincipal User user
     ) {
         if (req == null) {
             req = new ChatRoomListRequestDto();
@@ -47,13 +49,14 @@ public class ChatRoomController {
 
     @PostMapping("/v1/chat-rooms")
     public ResponseEntity<?> createChatRoom(
-        @RequestBody CreateChatRoomRequestDto req
+        @RequestBody CreateChatRoomRequestDto req, @AuthenticationPrincipal User user
     ) {
 
+        log.warn("user : {}", user);
         ChatRoomType chatRoomType = req.getChatRoomType();
 
         if (chatRoomType == ChatRoomType.ONEONONE_CHAT) {
-            Long chatRoomId = chatRoomService.createChatRoom(req);
+            Long chatRoomId = chatRoomService.createChatRoom(req, user.getId());
 
             return ResponseEntity.status(HttpStatus.OK).body(chatRoomId);
         }
@@ -64,18 +67,17 @@ public class ChatRoomController {
             throw new IllegalArgumentException("채팅방 제목이 없습니다.");
         }
 
-        Long chatRoomId = chatRoomService.createChatRoom(req);
+        Long chatRoomId = chatRoomService.createChatRoom(req, user.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(chatRoomId);
     }
 
     @PostMapping("/v1/chat-room-invitations")
     public ResponseEntity<?> createChatRoom(
-        @RequestBody CreateChatRoomInvitationRequestDto req
+        @RequestBody CreateChatRoomInvitationRequestDto req, @AuthenticationPrincipal User user
     ) {
 
-        chatRoomService.createChatRoomInvitation(req.getHostUserId(), req.getGuestUserId(),
-            req.getFirstMessage());
+        chatRoomService.createChatRoomInvitation(user, req.getGuestUserId(), req.getFirstMessage());
         return ResponseEntity.status(HttpStatus.OK).body("success");
     }
 
