@@ -17,35 +17,31 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ChatService {
 
-    private UserService userService;
-    private ChatRoomService chatRoomService;
+    private final ChatRoomService chatRoomService;
     private final MessageRepository messageRepository;
     private final UserChatRoomRepository userChatRoomRepository;
     private final RabbitTemplate rabbitTemplate;
 
     @Transactional
-    public void sendMessage(Long chatRoomId, MessageRequestDto messageRequestDto) {
+    public void sendMessage(Long chatRoomId, User user, MessageRequestDto messageRequestDto) {
         try {
             String content = messageRequestDto.getContent();
-            // TODO : User nickname 변경
             MessageResponseDto messageResponseDto = MessageResponseDto.builder()
-                .nickname("username")
+                .nickname(user.getNickname())
                 .content(content)
                 .build();
             rabbitTemplate.convertAndSend("amq.topic", "room." + chatRoomId,
                 messageResponseDto);
-            saveMessage(chatRoomId, content);
+            saveMessage(chatRoomId, user, content);
         } catch (Exception e) {
             throw new IllegalStateException("메시지를 전송할 수 없습니다.", e);
         }
     }
 
-    private void saveMessage(Long chatRoomId, String content) throws Exception {
+    private void saveMessage(Long chatRoomId, User user, String content) {
         try {
             ChatRoom chatRoom = chatRoomService
                 .findById(chatRoomId);
-            // TODO : USER조회 ID정보로 변경
-            User user = userService.findUserByNickname("username");
 
             Message message = Message.builder()
                 .user(user)
@@ -60,6 +56,7 @@ public class ChatService {
             messageRepository.save(message);
             userChatRoomRepository.save(userChatRoom);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new IllegalStateException("에러가 발생했습니다. ", e);
         }
     }
