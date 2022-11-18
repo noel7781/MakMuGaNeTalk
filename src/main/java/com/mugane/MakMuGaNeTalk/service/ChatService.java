@@ -43,7 +43,7 @@ public class ChatService {
     private void saveMessage(Long chatRoomId, String content) throws Exception {
         try {
             ChatRoom chatRoom = chatRoomService
-                .findById(chatRoomId);
+                .getChatRoomById(chatRoomId);
             // TODO : USER조회 ID정보로 변경
             User user = userService.findUserByNickname("username");
 
