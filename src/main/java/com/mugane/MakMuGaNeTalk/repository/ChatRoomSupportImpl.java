@@ -5,11 +5,12 @@ import com.mugane.MakMuGaNeTalk.entity.QChatRoom;
 import com.mugane.MakMuGaNeTalk.entity.QChatRoomTag;
 import com.mugane.MakMuGaNeTalk.entity.QTag;
 import com.querydsl.core.types.Predicate;
-import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
-
 import java.util.List;
 import java.util.function.Function;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
+@Slf4j
 public class ChatRoomSupportImpl extends QuerydslRepositorySupport implements ChatRoomSupport {
 
     private final QChatRoom qChatRoom = QChatRoom.chatRoom;
@@ -22,23 +23,24 @@ public class ChatRoomSupportImpl extends QuerydslRepositorySupport implements Ch
 
     @Override
     public List<ChatRoom> findAllByKeywordAndTagsAndPaging(
-            List<String> tagList,
-            String keyword,
-            Integer pageSize,
-            Integer pageNumber
+        List<String> tagList,
+        String keyword,
+        Integer pageSize,
+        Integer pageNumber
     ) {
         final Predicate[] predicates = new Predicate[]{
-                predicateOptional(qChatRoomTag.tag.content::in, tagList),
-                keyword != null ? predicateOptional(qChatRoom.title::like, '%' + keyword + '%') : null
+            predicateOptional(qChatRoomTag.tag.content::in, tagList),
+            keyword != null ? predicateOptional(qChatRoom.title::like, '%' + keyword + '%') : null
         };
 
         return from(qChatRoom)
-                .innerJoin(qChatRoomTag).on(qChatRoom.id.eq(qChatRoomTag.chatRoom.id)).fetchJoin()
-                .where(predicates)
-                .orderBy(qChatRoom.id.desc()) // 챗룸 생성기준 최신순 정렬
-                .limit(pageSize)
-                .offset(pageNumber)
-                .fetch();
+            .leftJoin(qChatRoomTag).on(qChatRoom.id.eq(qChatRoomTag.chatRoom.id)).fetchJoin()
+            .where(predicates)
+            .orderBy(qChatRoom.id.desc()) // 챗룸 생성기준 최신순 정렬
+            .limit(pageSize)
+            .offset(pageNumber)
+            .distinct()
+            .fetch();
     }
 
     private <T> Predicate predicateOptional(final Function<T, Predicate> whereFunc, final T value) {

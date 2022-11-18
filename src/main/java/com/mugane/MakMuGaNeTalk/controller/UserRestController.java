@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Validated
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/users")
@@ -39,7 +38,7 @@ public class UserRestController {
         if (errors.hasErrors()) {
             throw new CustomException(ErrorCode.BAD_REQUEST);
         }
-        Long userId = userService.signUp(user);
+        Long userId = userService.signUp(user).getId();
         return ResponseEntity.status(HttpStatus.OK).body(userId);
     }
 
@@ -64,17 +63,12 @@ public class UserRestController {
     }
 
     @GetMapping("/nickname-check")
-    public ResponseEntity<Boolean> checkNickname(@RequestParam String nickname) {
+    public ResponseEntity<Long> checkNickname(@RequestParam String nickname) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.checkNickname(nickname));
     }
 
     @GetMapping("/email-check")
     public ResponseEntity<Boolean> checkEmail(@RequestParam @Email @NotBlank String email) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.checkEmail(email));
-    }
-
-    @GetMapping("/test")
-    public String test() {
-        return "<h1>성공</h1>";
     }
 }

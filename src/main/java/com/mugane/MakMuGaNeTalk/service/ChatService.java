@@ -41,7 +41,7 @@ public class ChatService {
     private void saveMessage(Long chatRoomId, User user, String content) {
         try {
             ChatRoom chatRoom = chatRoomService
-                .findById(chatRoomId);
+                .getChatRoomById(chatRoomId);
 
             Message message = Message.builder()
                 .user(user)
