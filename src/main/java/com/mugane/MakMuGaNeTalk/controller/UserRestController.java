@@ -5,6 +5,7 @@ import com.mugane.MakMuGaNeTalk.dto.request.SignInRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.SignUpRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.TokenRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.response.SignInResponseDto;
+import com.mugane.MakMuGaNeTalk.entity.User;
 import com.mugane.MakMuGaNeTalk.exception.CustomException;
 import com.mugane.MakMuGaNeTalk.exception.ErrorCode;
 import com.mugane.MakMuGaNeTalk.service.UserService;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,6 +57,13 @@ public class UserRestController {
             .refreshToken(tokenDto.getRefreshToken())
             .build();
         return ResponseEntity.status(HttpStatus.OK).body(signInResponse);
+    }
+
+    @PostMapping("/signout")
+    public ResponseEntity<Void> signOut(@AuthenticationPrincipal User user) {
+
+        userService.deleteRefreshToken(user.getId());
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/reissue")

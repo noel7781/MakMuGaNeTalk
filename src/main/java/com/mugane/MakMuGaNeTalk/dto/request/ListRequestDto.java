@@ -9,6 +9,6 @@ import lombok.ToString;
 @Setter
 public class ListRequestDto {
 
-    private Integer pageSize = 20;
+    private Integer pageSize = 10;
     private Integer pageNumber = 0;
 }

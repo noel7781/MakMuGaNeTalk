@@ -39,11 +39,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .authorizeRequests()
             .antMatchers(HttpMethod.OPTIONS, "/**/*").permitAll()
-            .antMatchers("/api/v1/users/signin", "/api/v1/users/signup", "/api/v1/users/reissue",
-                "/api/v1/users/nickname-check", "/api/v1/users/email-check")
-            .permitAll()
-            .antMatchers("/api/v1/users/**").hasRole("USER")
-            .antMatchers("/api/v1/admin/**").hasRole("ADMIN")
+//            .antMatchers("/api/v1/users/signin", "/api/v1/users/signup", "/api/v1/users/reissue",
+//                "/api/v1/users/nickname-check", "/api/v1/users/email-check",
+//                "/api/v1/users/signout")
+//            .permitAll()
+//            .antMatchers("/api/v1/users/**").hasRole("USER")
+//            .antMatchers("/api/v1/admin/**").hasRole("ADMIN")
             .anyRequest().permitAll()
             .and()
             .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),

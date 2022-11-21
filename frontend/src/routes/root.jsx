@@ -1,9 +1,11 @@
 import { Outlet } from "react-router-dom";
+import { signOut } from "../apis/AuthAPI";
+import Header from "../components/header";
 
 const Root = () => {
   return (
     <div>
-      <h1>MakMuGaNe Talk</h1>
+      <Header />
       <Outlet />
     </div>
   );

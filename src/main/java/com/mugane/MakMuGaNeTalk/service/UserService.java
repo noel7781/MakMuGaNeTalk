@@ -12,13 +12,16 @@ import com.mugane.MakMuGaNeTalk.exception.ErrorCode;
 import com.mugane.MakMuGaNeTalk.repository.RefreshTokenRepository;
 import com.mugane.MakMuGaNeTalk.repository.UserRepository;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class UserService {
 
@@ -109,5 +112,11 @@ public class UserService {
     public boolean checkEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         return user.isPresent();
+    }
+
+    public void deleteRefreshToken(Long userId) {
+        List<RefreshToken> refreshTokenList = refreshTokenRepository.findRefreshTokensByUserId(
+            userId);
+        refreshTokenRepository.deleteAll(refreshTokenList);
     }
 }

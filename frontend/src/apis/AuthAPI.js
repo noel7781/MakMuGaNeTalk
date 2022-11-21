@@ -92,3 +92,21 @@ export const checkEmailDuplicate = async (email) => {
 export const reissueErrorHandler = (e) => {
   removeCookieToken();
 };
+
+export const signOut = async () => {
+  const response = await AxiosClient({
+    method: "post",
+    url: "/users/signout",
+  })
+    .then((resp) => {
+      console.log(resp);
+      localStorage.removeItem("accessToken");
+      removeCookieToken();
+      return resp;
+    })
+    .catch((e) => {
+      console.error(e);
+      return e.response;
+    });
+  return response;
+};
