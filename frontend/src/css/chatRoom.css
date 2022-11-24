@@ -1,0 +1,92 @@
+.container {
+    height: 100%;
+    min-height: 80vh;
+    border: 1px solid black;
+}
+.chattable {
+    border: 1px solid black;
+    display: flex;
+}
+
+.chatbody {
+    width: 100%;
+    height: auto;
+}
+
+.chatrows {
+    padding: 1rem;
+    height: auto;
+    display: flex;
+}
+
+.chatid {
+    border: 1px solid green;
+    flex-grow: 1;
+    flex-basis: 0;
+}
+
+.chattitle {
+    border: 1px solid red;
+    flex-grow: 5;
+    flex-basis: 0;
+}
+
+.chattype {
+    border: 1px solid blue;
+    flex-grow: 1;
+    flex-basis: 0;
+}
+.chatlike {
+    border: 1px solid teal;
+    flex-grow: 1;
+    flex-basis: 0;
+}
+
+.outline {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    min-height: 80vh;
+}
+
+.messageBox {
+    flex-grow: 8;
+    flex-basis: 0;
+    overflow: auto;
+}
+
+.messages {
+    border: 1px solid tomato;
+    height: 200px;
+}
+
+.send {
+    display: flex;
+    flex-grow: 1;
+    flex-basis: 0;
+    flex-shrink: 0;
+    justify-content: space-around;
+    align-items: flex-end;
+    box-sizing: border-box;
+    max-height: 100px;
+    min-height: 100px;
+    padding: 0.4rem;
+    border: 1px solid #000;
+    font-size: 1.5rem;
+  }
+  .send_text {
+    width: calc(100% - 100px);
+    height: 100%;
+    border: none;
+    resize: none;
+  }
+  .send_text:focus {
+    outline: none;
+  }
+  .send_button {
+    width: 100px;
+    height: 100%;
+    border-radius: 8px;
+    background-color: #9ec4cf;
+  }
