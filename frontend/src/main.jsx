@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "./error-page";
@@ -7,8 +7,10 @@ import Index from "./routes";
 import Main from "./routes/main";
 import { action as signInAction } from "./routes/signIn";
 import { CookiesProvider } from "react-cookie";
-import Register from "./routes/signup";
 import SignUp from "./routes/signup";
+import Mychat from "./routes/mychat";
+import Groupchat from "./routes/groupchat";
+import ChatContainer from "./components/chatContainer";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +34,18 @@ const router = createBrowserRouter([
           {
             path: "signup",
             element: <SignUp />,
+          },
+          {
+            path: "my-chat",
+            element: <Mychat />,
+          },
+          {
+            path: "group-chat",
+            element: <Groupchat />,
+          },
+          {
+            path: "chatRooms/:chatRoomId",
+            element: <ChatContainer />,
           },
         ],
       },

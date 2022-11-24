@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getCookieToken } from "../storage/Cookie";
+import { getCookieToken, setRefreshToken } from "../storage/Cookie";
 import { reissue, reissueErrorHandler } from "./AuthAPI";
 
 const axiosClient = axios.create({
@@ -23,24 +23,26 @@ axiosClient.interceptors.response.use(
   (response) => {
     return response;
   },
-  function (error) {
-    const originalRequest = error.config;
+  async function (error) {
+    const errorCode = error.response.data.status;
 
-    if (error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
+    if (errorCode === 401) {
       const refreshToken = getCookieToken();
+      const accessToken = localStorage.getItem("accessToken");
       return axiosClient({
         method: "post",
         url: "/users/reissue",
         data: {
+          accessToken,
           refreshToken,
         },
       }).then((res) => {
-        if (res.status === 201) {
-          const { accessToken } = res.data.data;
-          localStorage.setItem("accessToken", res.data.data.accessToken);
+        if (res.status === 200) {
+          const { accessToken, refreshToken } = res.data;
+          localStorage.setItem("accessToken", accessToken);
           axios.defaults.headers.common["Authorization"] = accessToken;
-          return axios(originalRequest);
+          setRefreshToken(refreshToken);
+          window.location.reload();
         }
       });
     }

@@ -2,10 +2,10 @@ package com.mugane.MakMuGaNeTalk.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+@ToString
 @Getter
-@NoArgsConstructor
 public class TokenRequestDto {
 
     String accessToken;

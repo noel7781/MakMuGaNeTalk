@@ -1,12 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import MessageIcon from "@mui/icons-material/Message";
 import GroupsIcon from "@mui/icons-material/Groups";
 import { useNavigate } from "react-router-dom";
+import ChatRoomInvite from "../components/chatRoomInvite";
+import ChatRoomMake from "../components/chatRoomMake";
+import { signOut } from "../apis/AuthAPI";
 
 const Main = () => {
   const navigate = useNavigate();
+  const handleSignOut = async () => {
+    const response = await signOut();
+    return navigate("/");
+  };
   return (
     <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+      <button onClick={handleSignOut}>Sign Out</button>
       <div
         style={{
           display: "flex",
@@ -27,6 +35,8 @@ const Main = () => {
         <label name="group-chat">Group Chat</label>
         <GroupsIcon fontSize="large" />
       </div>
+      <ChatRoomInvite />
+      <ChatRoomMake />
     </div>
   );
 };

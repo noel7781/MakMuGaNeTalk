@@ -1,10 +1,6 @@
 import { useState } from "react";
 import { Form, useNavigate } from "react-router-dom";
-import {
-  signUp,
-  checkNicknameDuplicate,
-  checkEmailDuplicate,
-} from "../apis/AuthAPI";
+import { signUp, checkNicknameExist, checkEmailExist } from "../apis/AuthAPI";
 
 const SignUp = () => {
   const [nickname, setNickname] = useState("");
@@ -47,7 +43,7 @@ const SignUp = () => {
     }
   };
   const checkNickname = async () => {
-    const response = await checkNicknameDuplicate(nickname);
+    const response = await checkNicknameExist(nickname);
     if (response.status == 200 && !response.data) {
       alert("해당 닉네임을 사용할 수 있습니다.");
       setErrorStatus({ ...errorStatus, nickname: false });
@@ -56,7 +52,7 @@ const SignUp = () => {
     }
   };
   const checkEmail = async () => {
-    const response = await checkEmailDuplicate(email);
+    const response = await checkEmailExist(email);
     if (response.status == 200) {
       if (!response.data) {
         alert("해당 이메일을 사용할 수 있습니다.");

@@ -15,12 +15,10 @@ public class ChatRoomListRequestDto {
 
     private List<String> tagList;
     private String keyword;
-    private ListRequestDto reqList = new ListRequestDto();
 
     @Builder
-    ChatRoomListRequestDto(List<String> tagList, String keyword, ListRequestDto reqList) {
+    ChatRoomListRequestDto(List<String> tagList, String keyword) {
         this.tagList = tagList;
         this.keyword = keyword;
-        this.reqList = reqList;
     }
 }

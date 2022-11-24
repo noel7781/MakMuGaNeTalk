@@ -13,6 +13,9 @@ public enum ErrorCode {
      */
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
 
+
+    JWT_ACCESS_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "만료된 토큰 요청입니다."),
+
     /*
      * 404 NOT_FOUND: 리소스를 찾을 수 없음
      */

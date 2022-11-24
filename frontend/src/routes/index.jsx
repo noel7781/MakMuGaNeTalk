@@ -5,8 +5,8 @@ const Index = () => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("test@gmail.com");
+  const [password, setPassword] = useState("1234");
 
   const handleEmailInput = (e) => {
     setEmail(e.target.value);

@@ -12,13 +12,19 @@ import com.mugane.MakMuGaNeTalk.exception.ErrorCode;
 import com.mugane.MakMuGaNeTalk.repository.RefreshTokenRepository;
 import com.mugane.MakMuGaNeTalk.repository.UserRepository;
 import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class UserService {
 
@@ -77,14 +83,15 @@ public class UserService {
         User user = userRepository.findByEmail(authentication.getName())
             .orElseThrow(() -> new IllegalStateException("User Not Found"));
 
-        RefreshToken refreshToken = refreshTokenRepository.findByUserId(user.getId())
+        RefreshToken refreshToken = refreshTokenRepository.findByToken(
+                tokenRequestDto.getRefreshToken())
             .orElseThrow(() -> new IllegalStateException("Refresh Token Not Found"));
 
-        if (!refreshToken.getToken().equals(tokenRequestDto.getRefreshToken())) {
+        if (!Objects.equals(refreshToken.getUserId(), user.getId())) {
             throw new IllegalArgumentException("Refresh Token Not Match");
         }
 
-        TokenDto newCreatedToken = jwtTokenProvider.createTokenDto(String.valueOf(user.getId()),
+        TokenDto newCreatedToken = jwtTokenProvider.createTokenDto(user.getEmail(),
             user.getRoles());
 
         RefreshToken updatedToken = refreshToken.updateToken(newCreatedToken.getRefreshToken());
@@ -109,5 +116,16 @@ public class UserService {
     public boolean checkEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         return user.isPresent();
+    }
+
+    public void deleteRefreshToken(Long userId) {
+        List<RefreshToken> refreshTokenList = refreshTokenRepository.findRefreshTokensByUserId(
+            userId);
+        refreshTokenRepository.deleteAll(refreshTokenList);
+    }
+
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+            .orElseThrow(() -> new IllegalArgumentException("해당 이메일을 가지는 회원이 없습니다."));
     }
 }

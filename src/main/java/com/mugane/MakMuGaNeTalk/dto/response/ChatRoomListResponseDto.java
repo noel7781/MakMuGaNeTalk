@@ -4,21 +4,30 @@ import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 public class ChatRoomListResponseDto {
 
     private final List<ChatRoomResponseDto> chatRoomList;
+    private final Long likeCount;
+    private final int currentPageNumber;
+    private final int totalPageNumber;
+
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    private ChatRoomListResponseDto(List<ChatRoom> chatRoom) {
+    @Builder
+    public ChatRoomListResponseDto(List<ChatRoom> chatRoom, Long likeCount, int currentPageNumber,
+        int totalPageNumber) {
         this.chatRoomList = chatRoom.stream().map(ChatRoomResponseDto::of).collect(
             Collectors.toList());
+        this.likeCount = likeCount;
+        this.currentPageNumber = currentPageNumber;
+        this.totalPageNumber = totalPageNumber;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
 
-    public static ChatRoomListResponseDto of(List<ChatRoom> chatRoomList) {
-        return new ChatRoomListResponseDto(chatRoomList);
-    }
 }

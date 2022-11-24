@@ -1,65 +1,83 @@
 package com.mugane.MakMuGaNeTalk.service;
 
+import com.mugane.MakMuGaNeTalk.config.security.JwtTokenProvider;
 import com.mugane.MakMuGaNeTalk.dto.request.MessageRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.response.MessageResponseDto;
 import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
 import com.mugane.MakMuGaNeTalk.entity.Message;
 import com.mugane.MakMuGaNeTalk.entity.User;
 import com.mugane.MakMuGaNeTalk.entity.UserChatRoom;
+import com.mugane.MakMuGaNeTalk.enums.UserType;
 import com.mugane.MakMuGaNeTalk.repository.MessageRepository;
 import com.mugane.MakMuGaNeTalk.repository.UserChatRoomRepository;
+import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ChatService {
 
-    private UserService userService;
-    private ChatRoomService chatRoomService;
+    private final ChatRoomService chatRoomService;
     private final MessageRepository messageRepository;
     private final UserChatRoomRepository userChatRoomRepository;
     private final RabbitTemplate rabbitTemplate;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final UserService userService;
 
     @Transactional
-    public void sendMessage(Long chatRoomId, MessageRequestDto messageRequestDto) {
+    public void sendMessage(Long chatRoomId, String accessToken,
+        MessageRequestDto messageRequestDto) {
         try {
+            Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+            User user = userService.findUserByEmail(authentication.getName());
             String content = messageRequestDto.getContent();
-            // TODO : User nickname 변경
             MessageResponseDto messageResponseDto = MessageResponseDto.builder()
-                .nickname("username")
+                .nickname(user.getNickname())
                 .content(content)
                 .build();
             rabbitTemplate.convertAndSend("amq.topic", "room." + chatRoomId,
                 messageResponseDto);
-            saveMessage(chatRoomId, content);
+            saveMessage(chatRoomId, user, content);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new IllegalStateException("메시지를 전송할 수 없습니다.", e);
         }
     }
 
-    private void saveMessage(Long chatRoomId, String content) throws Exception {
+    private void saveMessage(Long chatRoomId, User user, String content) {
         try {
             ChatRoom chatRoom = chatRoomService
                 .getChatRoomById(chatRoomId);
-            // TODO : USER조회 ID정보로 변경
-            User user = userService.findUserByNickname("username");
+
+            Optional<UserChatRoom> optionalUserChatRoom = userChatRoomRepository.findByChatRoomIdAndUserId(
+                chatRoomId, user.getId());
+
+            if (optionalUserChatRoom.isEmpty()) {
+                UserChatRoom userChatRoom = UserChatRoom.builder()
+                    .chatRoom(chatRoom)
+                    .user(user)
+                    .userType(UserType.valueOf(
+                        Objects.equals(chatRoom.getOwnerUser().getId(), user.getId()) ? "OWNER"
+                            : "NORMAL"))
+                    .build();
+                userChatRoomRepository.save(userChatRoom);
+            }
 
             Message message = Message.builder()
                 .user(user)
                 .chatRoom(chatRoom)
                 .content(content)
                 .build();
-            UserChatRoom userChatRoom = UserChatRoom.builder()
-                .chatRoom(chatRoom)
-                .user(user)
-                .build();
-
             messageRepository.save(message);
-            userChatRoomRepository.save(userChatRoom);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new IllegalStateException("에러가 발생했습니다. ", e);
         }
     }

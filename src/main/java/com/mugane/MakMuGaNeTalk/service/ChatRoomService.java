@@ -23,6 +23,8 @@ import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,13 +45,12 @@ public class ChatRoomService {
             .orElseThrow(() -> new IllegalStateException("Chat Room Not Found"));
     }
 
-    public List<ChatRoom> getChatRoomList(ChatRoomListRequestDto req) {
+    public Page<ChatRoom> getChatRoomList(ChatRoomListRequestDto req, Pageable pageable) {
 
         return chatRoomRepository.findAllByKeywordAndTagsAndPaging(
             req.getTagList(),
             req.getKeyword(),
-            req.getReqList().getPageSize(),
-            req.getReqList().getPageNumber()
+            pageable
         );
     }
 
@@ -75,6 +76,7 @@ public class ChatRoomService {
             .type(chatRoomType)
             .title(title)
             .password(password)
+            .likeCount(0L)
             .createdBy(user)
             .ownerUser(user)
             .updatedBy(user)
@@ -154,5 +156,9 @@ public class ChatRoomService {
         return chatRoomRepository
             .findByTitle(title)
             .orElseThrow(() -> new IllegalArgumentException("해당 이름을 가지는 채팅방이 존재하지 않습니다."));
+    }
+
+    public void save(ChatRoom chatRoom) {
+        chatRoomRepository.save(chatRoom);
     }
 }

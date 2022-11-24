@@ -3,15 +3,15 @@ package com.mugane.MakMuGaNeTalk.controller;
 import com.mugane.MakMuGaNeTalk.dto.request.ChatRoomListRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.CreateChatRoomInvitationRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.CreateChatRoomRequestDto;
-import com.mugane.MakMuGaNeTalk.dto.response.ChatRoomResponseDto;
+import com.mugane.MakMuGaNeTalk.dto.response.ChatRoomListResponseDto;
 import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
 import com.mugane.MakMuGaNeTalk.entity.User;
 import com.mugane.MakMuGaNeTalk.enums.ChatRoomType;
 import com.mugane.MakMuGaNeTalk.service.ChatRoomService;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,20 +31,24 @@ public class ChatRoomController {
     private final ChatRoomService chatRoomService;
 
     @GetMapping("/v1/chat-rooms")
-    public ResponseEntity<List<ChatRoomResponseDto>> getChatRoomList(
-        ChatRoomListRequestDto req, @AuthenticationPrincipal User user
+    public ResponseEntity<ChatRoomListResponseDto> getChatRoomList(
+        ChatRoomListRequestDto req, Pageable pageable, @AuthenticationPrincipal User user
     ) {
         if (req == null) {
             req = new ChatRoomListRequestDto();
         }
 
-        List<ChatRoom> chatRoomList = chatRoomService.getChatRoomList(req);
+        Page<ChatRoom> chatRoomList = chatRoomService.getChatRoomList(req, pageable);
+        ChatRoomListResponseDto chatRoomListResponseDto = ChatRoomListResponseDto
+            .builder()
+            .chatRoom(chatRoomList.toList())
+            .currentPageNumber(pageable.getPageNumber())
+            .totalPageNumber(chatRoomList.getTotalPages())
+            .build();
 
-        return ResponseEntity.status(HttpStatus.OK).body(
-            chatRoomService.getChatRoomList(req)
-                .stream()
-                .map(ChatRoomResponseDto::of)
-                .collect(Collectors.toList()));
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(chatRoomListResponseDto);
     }
 
     @PostMapping("/v1/chat-rooms")

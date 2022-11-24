@@ -41,3 +41,22 @@ export const inviteChatRoom = async (userNickname, inviteMessage) => {
     .catch((e) => console.error(e));
   return response;
 };
+
+export const getChatRoomList = async (
+  tagList = [],
+  keyword = "",
+  pageNumber = 0
+) => {
+  const response = await AxiosClient({
+    method: "get",
+    url: "/chat-rooms",
+    params: { page: pageNumber, size: 10 },
+    data: { tagList, keyword },
+  })
+    .then((resp) => {
+      console.log(resp);
+      return resp;
+    })
+    .catch((e) => console.error(e));
+  return response;
+};

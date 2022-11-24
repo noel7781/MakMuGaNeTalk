@@ -21,5 +21,5 @@ export const getCookieToken = () => {
 };
 
 export const removeCookieToken = () => {
-  return cookies.remove("refreshToken", { sameSite: "strict", path: "/" });
+  cookies.remove("refreshToken", { sameSite: "strict", path: "/" });
 };
