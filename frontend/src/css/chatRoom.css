@@ -58,7 +58,14 @@
 
 .messages {
     border: 1px solid tomato;
-    height: 200px;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.my-chat {
+    border: 1px solid green;
+    justify-content: flex-end;
 }
 
 .send {

@@ -58,7 +58,6 @@ public class ChatRoom extends BaseTimeEntity {
     private List<Message> messageList;
 
     @OneToMany(mappedBy = "chatRoom")
-//    @JoinColumn(name = "CHAT_ROOM_ID")
     private List<ChatRoomTag> chatRoomTagList;
 
     public void updateChatRoomList(List<UserChatRoom> userChatRoomList) {

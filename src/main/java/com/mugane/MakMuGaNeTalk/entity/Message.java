@@ -30,6 +30,7 @@ public class Message extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "CHAT_ROOM_ID")
+    @Column(length = 1000)
     private ChatRoom chatRoom;
     private String content;
 }

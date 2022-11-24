@@ -60,7 +60,10 @@ public class UserService {
             throw new IllegalArgumentException("잘못된 비밀번호입니다.");
         }
 
-        TokenDto tokenDto = jwtTokenProvider.createTokenDto(user.getUsername(), user.getRoles());
+        TokenDto tokenDto = jwtTokenProvider.createTokenDto(
+            user.getUsername(),
+            user.getNickname(),
+            user.getRoles());
 
         RefreshToken refreshToken = RefreshToken.builder()
             .userId(user.getId())
@@ -92,6 +95,7 @@ public class UserService {
         }
 
         TokenDto newCreatedToken = jwtTokenProvider.createTokenDto(user.getEmail(),
+            user.getNickname(),
             user.getRoles());
 
         RefreshToken updatedToken = refreshToken.updateToken(newCreatedToken.getRefreshToken());

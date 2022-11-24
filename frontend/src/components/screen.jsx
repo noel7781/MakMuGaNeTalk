@@ -5,11 +5,8 @@ const ChatPresenter = ({
   message,
   setMessage,
   handleSubmit,
-  username,
+  userId,
 }) => {
-  console.log(contents);
-  console.log(username);
-  console.log(message);
   const handleEnter = (e) => {
     if (e.keyCode == 13)
       if (!e.shiftKey) {
@@ -21,8 +18,11 @@ const ChatPresenter = ({
     <div className="outline">
       <div className="messageBox">
         {contents.map((message, idx) => (
-          <div className="messages" key={idx}>
-            {message.content}{" "}
+          <div
+            className={`messages ${message.userId === userId ? "my-chat" : ""}`}
+            key={idx}
+          >
+            {message.userNickname} : {message.content} At {message.createdAt}
           </div>
         ))}
       </div>

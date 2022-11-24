@@ -10,6 +10,7 @@ import com.mugane.MakMuGaNeTalk.entity.UserChatRoom;
 import com.mugane.MakMuGaNeTalk.enums.UserType;
 import com.mugane.MakMuGaNeTalk.repository.MessageRepository;
 import com.mugane.MakMuGaNeTalk.repository.UserChatRoomRepository;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -39,11 +40,12 @@ public class ChatService {
             User user = userService.findUserByEmail(authentication.getName());
             String content = messageRequestDto.getContent();
             MessageResponseDto messageResponseDto = MessageResponseDto.builder()
+                .email(user.getEmail())
                 .nickname(user.getNickname())
                 .content(content)
+                .createdAt(LocalDateTime.now())
                 .build();
-            rabbitTemplate.convertAndSend("amq.topic", "room." + chatRoomId,
-                messageResponseDto);
+            rabbitTemplate.convertAndSend("amq.topic", "room." + chatRoomId, messageResponseDto);
             saveMessage(chatRoomId, user, content);
         } catch (Exception e) {
             e.printStackTrace();

@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { useJwt } from "react-jwt";
 
 import "../css/chatRoom.css";
+import { timeConvert } from "../utils/util";
 
 const token = localStorage.getItem("accessToken");
 const stompClient = new CompatClient();
@@ -15,14 +16,13 @@ stompClient.webSocketFactory = function () {
 const ChatContainer = () => {
   const [contents, setContents] = useState([]);
   const [message, setMessage] = useState("");
-  const [userInfo, setUserInfo] = useState({});
+  const [userId, setUserId] = useState("");
   const params = useParams();
-  const { decodedToken, isExpired } = useJwt(token);
+  const { decodedToken } = useJwt(token);
 
   useEffect(() => {
     if (decodedToken != null) {
-      console.log(decodedToken);
-      setUserInfo(decodedToken["sub"]);
+      setUserId(decodedToken["sub"]);
     }
   }, [decodedToken]);
 
@@ -63,12 +63,14 @@ const ChatContainer = () => {
     e.preventDefault();
   };
   const addMessage = (message) => {
-    setContents((prev) => [
-      ...prev,
-      {
+    setContents((prev) =>
+      prev.concat({
+        userId: message.email,
+        userNickname: message.nickname,
         content: message.content,
-      },
-    ]);
+        createdAt: timeConvert(message.createdAt),
+      })
+    );
   };
   return (
     <div className="container">
@@ -77,7 +79,7 @@ const ChatContainer = () => {
         handleSubmit={handleSubmit}
         message={message}
         setMessage={setMessage}
-        username={userInfo}
+        userId={userId}
       />
     </div>
   );

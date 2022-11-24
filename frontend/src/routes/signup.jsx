@@ -4,22 +4,19 @@ import { signUp, checkNicknameExist, checkEmailExist } from "../apis/AuthAPI";
 
 const SignUp = () => {
   const [nickname, setNickname] = useState("");
-  const [userId, setUserId] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [checkPassword, setCheckPassword] = useState("");
   const [errorStatus, setErrorStatus] = useState({
     nickname: true,
     email: true,
+    password: true,
   });
   const navigate = useNavigate();
 
   const handleChangeNickname = (e) => {
     setNickname(e.target.value);
     setErrorStatus({ ...errorStatus, nickname: true });
-  };
-  const handleChangeUserId = (e) => {
-    setUserId(e.target.value);
   };
   const handleChangeEmail = (e) => {
     setEmail(e.target.value);
@@ -32,11 +29,13 @@ const SignUp = () => {
     setCheckPassword(e.target.value);
   };
   const checkErrorStatus = () => {
-    return !errorStatus.nickname && !errorStatus.email;
+    return (
+      !errorStatus.nickname && !errorStatus.email && password === checkPassword
+    );
   };
   const handleSubmit = async () => {
     if (checkErrorStatus(errorStatus)) {
-      await signUp(nickname, userId, email, password);
+      await signUp(nickname, email, password);
       navigate("/");
     } else {
       alert("중복 확인을 하지 않았습니다.");
