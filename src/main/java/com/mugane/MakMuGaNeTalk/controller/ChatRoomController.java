@@ -8,9 +8,10 @@ import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
 import com.mugane.MakMuGaNeTalk.entity.User;
 import com.mugane.MakMuGaNeTalk.enums.ChatRoomType;
 import com.mugane.MakMuGaNeTalk.service.ChatRoomService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,18 +32,18 @@ public class ChatRoomController {
 
     @GetMapping("/v1/chat-rooms")
     public ResponseEntity<ChatRoomListResponseDto> getChatRoomList(
-        ChatRoomListRequestDto req, @AuthenticationPrincipal User user
+        ChatRoomListRequestDto req, Pageable pageable, @AuthenticationPrincipal User user
     ) {
         if (req == null) {
             req = new ChatRoomListRequestDto();
         }
 
-        List<ChatRoom> chatRoomList = chatRoomService.getChatRoomList(req);
+        Page<ChatRoom> chatRoomList = chatRoomService.getChatRoomList(req, pageable);
         ChatRoomListResponseDto chatRoomListResponseDto = ChatRoomListResponseDto
             .builder()
-            .chatRoom(chatRoomList)
-            .pageNumber(req.getReqList().getPageNumber())
-            .pageCount(req.getReqList().getPageSize())
+            .chatRoom(chatRoomList.toList())
+            .currentPageNumber(pageable.getPageNumber())
+            .totalPageNumber(chatRoomList.getTotalPages())
             .build();
 
         return ResponseEntity

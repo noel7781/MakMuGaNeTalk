@@ -8,6 +8,9 @@ import com.querydsl.core.types.Predicate;
 import java.util.List;
 import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 @Slf4j
@@ -22,25 +25,27 @@ public class ChatRoomSupportImpl extends QuerydslRepositorySupport implements Ch
     }
 
     @Override
-    public List<ChatRoom> findAllByKeywordAndTagsAndPaging(
+    public Page<ChatRoom> findAllByKeywordAndTagsAndPaging(
         List<String> tagList,
         String keyword,
-        Integer pageSize,
-        Integer pageNumber
+        Pageable pageable
     ) {
         final Predicate[] predicates = new Predicate[]{
             predicateOptional(qChatRoomTag.tag.content::in, tagList),
             keyword != null ? predicateOptional(qChatRoom.title::like, '%' + keyword + '%') : null
         };
 
-        return from(qChatRoom)
+        List<ChatRoom> chatRoomList = from(qChatRoom)
             .leftJoin(qChatRoomTag).on(qChatRoom.id.eq(qChatRoomTag.chatRoom.id)).fetchJoin()
             .where(predicates)
             .orderBy(qChatRoom.id.desc()) // 챗룸 생성기준 최신순 정렬
-            .limit(pageSize)
-            .offset(pageNumber)
+//            .limit(pageSize)
+            .limit(pageable.getPageSize())
+//            .offset(pageNumber)
+            .offset(pageable.getPageNumber())
             .distinct()
             .fetch();
+        return new PageImpl<>(chatRoomList, pageable, chatRoomList.size());
     }
 
     private <T> Predicate predicateOptional(final Function<T, Predicate> whereFunc, final T value) {

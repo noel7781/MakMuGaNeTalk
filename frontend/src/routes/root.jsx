@@ -1,5 +1,4 @@
 import { Outlet } from "react-router-dom";
-import { signOut } from "../apis/AuthAPI";
 import Header from "../components/header";
 
 const Root = () => {

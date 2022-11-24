@@ -13,12 +13,14 @@ public class ChatRoomResponseDto {
     private Long id;
     private String title;
     private ChatRoomType type;
+    private Long likeCount;
 
     @Builder
     ChatRoomResponseDto(ChatRoom chatRoom) {
         this.id = chatRoom.getId();
         this.title = chatRoom.getTitle();
         this.type = chatRoom.getType();
+        this.likeCount = chatRoom.getLikeCount();
     }
 
     public static ChatRoomResponseDto of(ChatRoom chatRoom) {

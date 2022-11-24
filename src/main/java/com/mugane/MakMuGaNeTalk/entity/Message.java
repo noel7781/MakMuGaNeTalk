@@ -6,11 +6,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -22,11 +24,11 @@ public class Message extends BaseTimeEntity {
     @Column(name = "MESSAGE_ID")
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "CHAT_ROOM_ID")
     private ChatRoom chatRoom;
     private String content;

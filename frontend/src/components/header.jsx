@@ -1,9 +1,10 @@
 import React from "react";
+import "../css/header.css";
 
 const Header = () => {
   return (
     <div>
-      <h1>MakMuGaNe Talk</h1>
+      <h1 className="header">MakMuGaNe Talk</h1>
     </div>
   );
 };

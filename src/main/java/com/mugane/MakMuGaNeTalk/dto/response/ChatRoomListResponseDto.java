@@ -11,23 +11,23 @@ import lombok.Getter;
 public class ChatRoomListResponseDto {
 
     private final List<ChatRoomResponseDto> chatRoomList;
-    private final int pageNumber;
-    private final int pageCount;
+    private final Long likeCount;
+    private final int currentPageNumber;
+    private final int totalPageNumber;
 
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
     @Builder
-    public ChatRoomListResponseDto(List<ChatRoom> chatRoom, int pageNumber, int pageCount) {
+    public ChatRoomListResponseDto(List<ChatRoom> chatRoom, Long likeCount, int currentPageNumber,
+        int totalPageNumber) {
         this.chatRoomList = chatRoom.stream().map(ChatRoomResponseDto::of).collect(
             Collectors.toList());
-        this.pageNumber = pageNumber;
-        this.pageCount = pageCount;
+        this.likeCount = likeCount;
+        this.currentPageNumber = currentPageNumber;
+        this.totalPageNumber = totalPageNumber;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
 
-//    public static ChatRoomListResponseDto of(List<ChatRoom> chatRoomList) {
-//        return new ChatRoomListResponseDto(chatRoomList);
-//    }
 }

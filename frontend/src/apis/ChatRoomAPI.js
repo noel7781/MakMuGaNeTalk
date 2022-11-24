@@ -50,7 +50,8 @@ export const getChatRoomList = async (
   const response = await AxiosClient({
     method: "get",
     url: "/chat-rooms",
-    params: { tagList, keyword },
+    params: { page: pageNumber, size: 10 },
+    data: { tagList, keyword },
   })
     .then((resp) => {
       console.log(resp);

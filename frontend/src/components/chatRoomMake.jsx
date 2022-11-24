@@ -30,7 +30,6 @@ const ChatRoomMake = () => {
   const handleCreateChatRoom = async () => {
     const tagList = tag.split(",");
     const response = await createChatRoom(title, tagList, isPublic, password);
-    console.log(response);
     handleClose();
   };
 

@@ -1,13 +1,21 @@
 package com.mugane.MakMuGaNeTalk.entity;
 
 import com.mugane.MakMuGaNeTalk.enums.ChatRoomType;
+import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
-import javax.persistence.*;
 
 @Entity
 @Getter
@@ -33,6 +41,8 @@ public class ChatRoom extends BaseTimeEntity {
     @Builder.Default
     private String password = "";
 
+    private Long likeCount = 0L;
+
     @OneToOne
     @JoinColumn(referencedColumnName = "USER_ID", name = "CREATED_BY")
     private User createdBy;
@@ -44,11 +54,18 @@ public class ChatRoom extends BaseTimeEntity {
     @OneToMany(mappedBy = "chatRoom")
     private List<UserChatRoom> userChatRoomList;
 
-    @OneToMany
-    @JoinColumn(name = "MESSAGE_ID")
+    @OneToMany(mappedBy = "chatRoom")
     private List<Message> messageList;
 
-    @OneToMany
-    @JoinColumn(name="CHAT_ROOM_ID")
+    @OneToMany(mappedBy = "chatRoom")
+//    @JoinColumn(name = "CHAT_ROOM_ID")
     private List<ChatRoomTag> chatRoomTagList;
+
+    public void updateChatRoomList(List<UserChatRoom> userChatRoomList) {
+        this.userChatRoomList = userChatRoomList;
+    }
+
+    public void updateMessageList(List<Message> messageList) {
+        this.messageList = messageList;
+    }
 }
