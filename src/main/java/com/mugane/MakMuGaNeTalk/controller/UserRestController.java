@@ -68,6 +68,7 @@ public class UserRestController {
 
     @PostMapping("/reissue")
     public ResponseEntity<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
+        log.warn("Token request  = {}", tokenRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(userService.reissue(tokenRequestDto));
     }
 
