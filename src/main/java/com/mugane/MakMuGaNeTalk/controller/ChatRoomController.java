@@ -32,14 +32,17 @@ public class ChatRoomController {
     private final ChatRoomService chatRoomService;
 
     @GetMapping("/v1/chat-rooms")
-    public ResponseEntity<ChatRoomListResponseDto> getChatRoomList(
-        ChatRoomListRequestDto req, Pageable pageable, @AuthenticationPrincipal User user
-    ) {
+    public ResponseEntity<ChatRoomListResponseDto> getChatRoomList
+        (
+            ChatRoomListRequestDto req, Pageable pageable,
+            @AuthenticationPrincipal User user
+        ) {
+        log.warn("req = {}", req);
         if (req == null) {
             req = new ChatRoomListRequestDto();
         }
 
-        Page<ChatRoom> chatRoomList = chatRoomService.getChatRoomList(req, pageable);
+        Page<ChatRoom> chatRoomList = chatRoomService.getChatRoomList(req, user.getId(), pageable);
         ChatRoomListResponseDto chatRoomListResponseDto = ChatRoomListResponseDto
             .builder()
             .chatRoom(chatRoomList.toList())

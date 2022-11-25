@@ -4,6 +4,8 @@ import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
 import com.mugane.MakMuGaNeTalk.entity.QChatRoom;
 import com.mugane.MakMuGaNeTalk.entity.QChatRoomTag;
 import com.mugane.MakMuGaNeTalk.entity.QTag;
+import com.mugane.MakMuGaNeTalk.entity.QUser;
+import com.mugane.MakMuGaNeTalk.entity.QUserChatRoom;
 import com.querydsl.core.types.Predicate;
 import java.util.List;
 import java.util.function.Function;
@@ -19,6 +21,8 @@ public class ChatRoomSupportImpl extends QuerydslRepositorySupport implements Ch
     private final QChatRoom qChatRoom = QChatRoom.chatRoom;
     private final QChatRoomTag qChatRoomTag = QChatRoomTag.chatRoomTag;
     private final QTag qTag = QTag.tag;
+    private final QUser qUser = QUser.user;
+    private final QUserChatRoom qUserChatRoom = QUserChatRoom.userChatRoom;
 
     public ChatRoomSupportImpl() {
         super(ChatRoom.class);
@@ -37,6 +41,33 @@ public class ChatRoomSupportImpl extends QuerydslRepositorySupport implements Ch
 
         List<ChatRoom> chatRoomList = from(qChatRoom)
             .leftJoin(qChatRoomTag).on(qChatRoom.id.eq(qChatRoomTag.chatRoom.id)).fetchJoin()
+            .where(predicates)
+            .orderBy(qChatRoom.id.desc()) // 챗룸 생성기준 최신순 정렬
+//            .limit(pageSize)
+            .limit(pageable.getPageSize())
+//            .offset(pageNumber)
+            .offset(pageable.getPageNumber())
+            .distinct()
+            .fetch();
+        return new PageImpl<>(chatRoomList, pageable, chatRoomList.size());
+    }
+
+    @Override
+    public Page<ChatRoom> findAllByKeywordAndTagsAndPaging(
+        Long userId,
+        List<String> tagList,
+        String keyword,
+        Pageable pageable
+    ) {
+        final Predicate[] predicates = new Predicate[]{
+            predicateOptional(qUserChatRoom.user.id::eq, userId),
+            predicateOptional(qChatRoomTag.tag.content::in, tagList),
+            keyword != null ? predicateOptional(qChatRoom.title::like, '%' + keyword + '%') : null
+        };
+
+        List<ChatRoom> chatRoomList = from(qChatRoom)
+            .leftJoin(qChatRoomTag).on(qChatRoom.id.eq(qChatRoomTag.chatRoom.id)).fetchJoin()
+            .leftJoin(qUserChatRoom).on(qChatRoom.id.eq(qUserChatRoom.chatRoom.id)).fetchJoin()
             .where(predicates)
             .orderBy(qChatRoom.id.desc()) // 챗룸 생성기준 최신순 정렬
 //            .limit(pageSize)

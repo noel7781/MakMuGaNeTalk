@@ -49,8 +49,17 @@ public class ChatRoomService {
             .orElseThrow(() -> new IllegalStateException("Chat Room Not Found"));
     }
 
-    public Page<ChatRoom> getChatRoomList(ChatRoomListRequestDto req, Pageable pageable) {
+    public Page<ChatRoom> getChatRoomList(ChatRoomListRequestDto req, Long userId,
+        Pageable pageable) {
 
+        if (req.isJoined()) {
+            return chatRoomRepository.findAllByKeywordAndTagsAndPaging(
+                userId,
+                req.getTagList(),
+                req.getKeyword(),
+                pageable
+            );
+        }
         return chatRoomRepository.findAllByKeywordAndTagsAndPaging(
             req.getTagList(),
             req.getKeyword(),
@@ -175,7 +184,8 @@ public class ChatRoomService {
             throw new IllegalArgumentException("해당 아이디를 가지는 채팅방이 존재하지 않습니다.");
         }
         if (likeState) {
-            ChatRoomLike chatRoomLike = chatRoomLikeRepository.findByUserId(user.getId());
+            ChatRoomLike chatRoomLike = chatRoomLikeRepository.findByUserIdAndChatRoomId(
+                user.getId(), chatRoomId);
             chatRoomLikeRepository.delete(chatRoomLike);
         } else {
             ChatRoom chatRoom = optionalChatRoom.get();

@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ChatRoomLikeRepository extends JpaRepository<ChatRoomLike, Long> {
 
     ChatRoomLike findByUserId(Long userId);
+
+    ChatRoomLike findByUserIdAndChatRoomId(Long userId, Long chatRoomId);
 }

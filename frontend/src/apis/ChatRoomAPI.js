@@ -45,13 +45,14 @@ export const inviteChatRoom = async (userNickname, inviteMessage) => {
 export const getChatRoomList = async (
   tagList = [],
   keyword = "",
-  pageNumber = 0
+  pageNumber = 0,
+  joined = false
 ) => {
+  console.log("joined = ", joined);
   const response = await AxiosClient({
     method: "get",
     url: "/chat-rooms",
-    params: { page: pageNumber, size: 10 },
-    data: { tagList, keyword },
+    params: { tagList, keyword, joined, page: pageNumber, size: 10 },
   })
     .then((resp) => {
       console.log(resp);
@@ -62,7 +63,6 @@ export const getChatRoomList = async (
 };
 
 export const clickLikeButton = async (id, like_state) => {
-  console.log(id, like_state);
   const response = await AxiosClient({
     method: "post",
     url: "/chat-rooms-likes",

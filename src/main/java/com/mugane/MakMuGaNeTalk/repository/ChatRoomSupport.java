@@ -12,4 +12,11 @@ public interface ChatRoomSupport {
         String keyword,
         Pageable pageable
     );
+
+    Page<ChatRoom> findAllByKeywordAndTagsAndPaging(
+        Long userId,
+        List<String> tagList,
+        String keyword,
+        Pageable pageable
+    );
 }

@@ -52,6 +52,19 @@ class ChatRoomServiceTest {
             password,
             tagContentList
         );
+        Long userId2 = 2L;
+        ChatRoomType chatRoomType2 = ChatRoomType.OPEN_CHAT;
+        String title2 = "TEST TITLE2";
+        String password2 = "";
+        List<String> tagContentList2 = Arrays.asList("TAG4", "TAG2", "TAG3");
+
+        ChatRoom chatRoom = chatRoomService.createChatRoom(
+            userId2,
+            chatRoomType2,
+            title2,
+            password2,
+            tagContentList2
+        );
     }
 
     @Transactional
@@ -91,7 +104,11 @@ class ChatRoomServiceTest {
     public void findAll() {
         Page<ChatRoom> chatRoomList = chatRoomRepository.findAllByKeywordAndTagsAndPaging(null,
             null, PageRequest.of(0, 10));
+        Page<ChatRoom> uId1ChatRoomList = chatRoomRepository.findAllByKeywordAndTagsAndPaging(1L,
+            null,
+            null, PageRequest.of(0, 10));
 
-        assertThat(chatRoomList.getSize()).isEqualTo(1);
+        assertThat(chatRoomList.getNumberOfElements()).isEqualTo(2);
+        assertThat(uId1ChatRoomList.getNumberOfElements()).isEqualTo(1);
     }
 }
