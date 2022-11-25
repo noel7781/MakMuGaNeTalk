@@ -19,10 +19,16 @@ public class ChatRoomListResponseDto {
     private final LocalDateTime updatedAt;
 
     @Builder
-    public ChatRoomListResponseDto(List<ChatRoom> chatRoom, Long likeCount, int currentPageNumber,
+    public ChatRoomListResponseDto(
+        List<ChatRoom> chatRoom,
+        Long likeCount,
+        Long userId,
+        int currentPageNumber,
         int totalPageNumber) {
-        this.chatRoomList = chatRoom.stream().map(ChatRoomResponseDto::of).collect(
-            Collectors.toList());
+        this.chatRoomList = chatRoom
+            .stream()
+            .map(room -> ChatRoomResponseDto.of(room, userId))
+            .collect(Collectors.toList());
         this.likeCount = likeCount;
         this.currentPageNumber = currentPageNumber;
         this.totalPageNumber = totalPageNumber;

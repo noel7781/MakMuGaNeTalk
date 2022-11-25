@@ -60,3 +60,18 @@ export const getChatRoomList = async (
     .catch((e) => console.error(e));
   return response;
 };
+
+export const clickLikeButton = async (id, like_state) => {
+  console.log(id, like_state);
+  const response = await AxiosClient({
+    method: "post",
+    url: "/chat-rooms-likes",
+    data: { chatRoomId: id, likeState: like_state },
+  })
+    .then((resp) => {
+      console.log(resp);
+      return resp;
+    })
+    .catch((e) => console.error(e));
+  return response;
+};

@@ -3,6 +3,7 @@ package com.mugane.MakMuGaNeTalk.controller;
 import com.mugane.MakMuGaNeTalk.dto.request.ChatRoomListRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.CreateChatRoomInvitationRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.CreateChatRoomRequestDto;
+import com.mugane.MakMuGaNeTalk.dto.request.LikeButtonRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.response.ChatRoomListResponseDto;
 import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
 import com.mugane.MakMuGaNeTalk.entity.User;
@@ -42,6 +43,7 @@ public class ChatRoomController {
         ChatRoomListResponseDto chatRoomListResponseDto = ChatRoomListResponseDto
             .builder()
             .chatRoom(chatRoomList.toList())
+            .userId(user.getId())
             .currentPageNumber(pageable.getPageNumber())
             .totalPageNumber(chatRoomList.getTotalPages())
             .build();
@@ -85,5 +87,12 @@ public class ChatRoomController {
         return ResponseEntity.status(HttpStatus.OK).body("success");
     }
 
-
+    @PostMapping("/v1/chat-rooms-likes")
+    public ResponseEntity<?> clickLikeButton(
+        @RequestBody LikeButtonRequestDto req, @AuthenticationPrincipal User user
+    ) {
+        log.warn("like req = {}", req);
+        chatRoomService.handleLikeButton(req, user);
+        return ResponseEntity.status(HttpStatus.OK).body("success");
+    }
 }

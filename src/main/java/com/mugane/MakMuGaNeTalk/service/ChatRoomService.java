@@ -2,8 +2,10 @@ package com.mugane.MakMuGaNeTalk.service;
 
 import com.mugane.MakMuGaNeTalk.dto.request.ChatRoomListRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.CreateChatRoomRequestDto;
+import com.mugane.MakMuGaNeTalk.dto.request.LikeButtonRequestDto;
 import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
 import com.mugane.MakMuGaNeTalk.entity.ChatRoomInvitation;
+import com.mugane.MakMuGaNeTalk.entity.ChatRoomLike;
 import com.mugane.MakMuGaNeTalk.entity.ChatRoomTag;
 import com.mugane.MakMuGaNeTalk.entity.Tag;
 import com.mugane.MakMuGaNeTalk.entity.User;
@@ -12,6 +14,7 @@ import com.mugane.MakMuGaNeTalk.enums.ChatRoomType;
 import com.mugane.MakMuGaNeTalk.enums.InvitationState;
 import com.mugane.MakMuGaNeTalk.enums.UserType;
 import com.mugane.MakMuGaNeTalk.repository.ChatRoomInvitationRepository;
+import com.mugane.MakMuGaNeTalk.repository.ChatRoomLikeRepository;
 import com.mugane.MakMuGaNeTalk.repository.ChatRoomRepository;
 import com.mugane.MakMuGaNeTalk.repository.ChatRoomTagRepository;
 import com.mugane.MakMuGaNeTalk.repository.TagRepository;
@@ -39,6 +42,7 @@ public class ChatRoomService {
     private final ChatRoomTagRepository chatRoomTagRepository;
     private final UserChatRoomRepository userChatRoomRepository;
     private final ChatRoomInvitationRepository chatRoomInvitationRepository;
+    private final ChatRoomLikeRepository chatRoomLikeRepository;
 
     public ChatRoom getChatRoomById(Long chatRoomId) {
         return chatRoomRepository.findById(chatRoomId)
@@ -76,12 +80,12 @@ public class ChatRoomService {
             .type(chatRoomType)
             .title(title)
             .password(password)
-            .likeCount(0L)
             .createdBy(user)
             .ownerUser(user)
             .updatedBy(user)
             .messageList(new ArrayList<>())
             .chatRoomTagList(new ArrayList<>())
+            .chatRoomLikeList(new ArrayList<>())
             .build();
 
 //         TODO: saveAndFlush 찾아보기
@@ -160,5 +164,27 @@ public class ChatRoomService {
 
     public void save(ChatRoom chatRoom) {
         chatRoomRepository.save(chatRoom);
+    }
+
+    public void handleLikeButton(LikeButtonRequestDto req, User user) {
+        Long chatRoomId = req.getChatRoomId();
+        boolean likeState = req.getLikeState();
+
+        Optional<ChatRoom> optionalChatRoom = chatRoomRepository.findById(chatRoomId);
+        if (optionalChatRoom.isEmpty()) {
+            throw new IllegalArgumentException("해당 아이디를 가지는 채팅방이 존재하지 않습니다.");
+        }
+        if (likeState) {
+            ChatRoomLike chatRoomLike = chatRoomLikeRepository.findByUserId(user.getId());
+            chatRoomLikeRepository.delete(chatRoomLike);
+        } else {
+            ChatRoom chatRoom = optionalChatRoom.get();
+            ChatRoomLike chatRoomLike = ChatRoomLike
+                .builder()
+                .user(user)
+                .chatRoom(chatRoom)
+                .build();
+            chatRoomLikeRepository.save(chatRoomLike);
+        }
     }
 }

@@ -7,21 +7,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Getter;
 
-@ToString
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Getter
 @Entity
-public class Message extends BaseTimeEntity {
+public class ChatRoomLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "MESSAGE_ID")
+    @Column(name = "CHAT_ROOM_LIKE_ID")
     private Long id;
 
     @ManyToOne
@@ -31,5 +26,13 @@ public class Message extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name = "CHAT_ROOM_ID")
     private ChatRoom chatRoom;
-    private String content;
+
+    public ChatRoomLike() {
+    }
+
+    @Builder
+    public ChatRoomLike(User user, ChatRoom chatRoom) {
+        this.user = user;
+        this.chatRoom = chatRoom;
+    }
 }

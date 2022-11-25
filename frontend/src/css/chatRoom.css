@@ -42,6 +42,10 @@
     flex-basis: 0;
 }
 
+.favorite_room {
+    color: red;
+}
+
 .outline {
     display: flex;
     flex-direction: column;
