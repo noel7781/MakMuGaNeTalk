@@ -1,5 +1,6 @@
 package com.mugane.MakMuGaNeTalk.dto.response;
 
+import com.mugane.MakMuGaNeTalk.entity.Message;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +13,6 @@ public class MessageResponseDto {
     private String email;
     private String nickname;
     private String content;
-    private String imgUrl;
     private LocalDateTime createdAt;
 
     @Builder
@@ -21,7 +21,17 @@ public class MessageResponseDto {
         this.email = email;
         this.nickname = nickname;
         this.content = content;
-        this.imgUrl = imgUrl;
         this.createdAt = createdAt;
+    }
+
+    // TODO IMG 관련 설정
+    public static MessageResponseDto of(Message message) {
+        return MessageResponseDto
+            .builder()
+            .email(message.getUser().getEmail())
+            .nickname(message.getUser().getNickname())
+            .content(message.getContent())
+            .createdAt(message.getCreatedAt())
+            .build();
     }
 }

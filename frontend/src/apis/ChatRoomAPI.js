@@ -9,7 +9,6 @@ export const createChatRoom = async (title, tagList, isPublic, password) => {
     data: { title, tagList, chatRoomType, password },
   })
     .then((resp) => {
-      console.log(resp);
       return resp;
     })
     .catch((e) => console.error(e));
@@ -35,7 +34,6 @@ export const inviteChatRoom = async (userNickname, inviteMessage) => {
     },
   })
     .then((resp) => {
-      console.log(resp);
       return resp;
     })
     .catch((e) => console.error(e));
@@ -48,14 +46,12 @@ export const getChatRoomList = async (
   pageNumber = 0,
   joined = false
 ) => {
-  console.log("joined = ", joined);
   const response = await AxiosClient({
     method: "get",
     url: "/chat-rooms",
     params: { tagList, keyword, joined, page: pageNumber, size: 10 },
   })
     .then((resp) => {
-      console.log(resp);
       return resp;
     })
     .catch((e) => console.error(e));
@@ -69,7 +65,19 @@ export const clickLikeButton = async (id, like_state) => {
     data: { chatRoomId: id, likeState: like_state },
   })
     .then((resp) => {
-      console.log(resp);
+      return resp;
+    })
+    .catch((e) => console.error(e));
+  return response;
+};
+
+export const getMessages = async (id) => {
+  const response = await AxiosClient({
+    method: "get",
+    url: "/chat-rooms/messages",
+    params: { chatRoomId: id },
+  })
+    .then((resp) => {
       return resp;
     })
     .catch((e) => console.error(e));

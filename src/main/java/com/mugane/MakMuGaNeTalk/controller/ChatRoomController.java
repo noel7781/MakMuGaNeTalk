@@ -5,10 +5,12 @@ import com.mugane.MakMuGaNeTalk.dto.request.CreateChatRoomInvitationRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.CreateChatRoomRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.LikeButtonRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.response.ChatRoomListResponseDto;
+import com.mugane.MakMuGaNeTalk.dto.response.MessageResponseDto;
 import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
 import com.mugane.MakMuGaNeTalk.entity.User;
 import com.mugane.MakMuGaNeTalk.enums.ChatRoomType;
 import com.mugane.MakMuGaNeTalk.service.ChatRoomService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -37,7 +40,6 @@ public class ChatRoomController {
             ChatRoomListRequestDto req, Pageable pageable,
             @AuthenticationPrincipal User user
         ) {
-        log.warn("req = {}", req);
         if (req == null) {
             req = new ChatRoomListRequestDto();
         }
@@ -56,12 +58,21 @@ public class ChatRoomController {
             .body(chatRoomListResponseDto);
     }
 
+    @GetMapping("/v1/chat-rooms/messages")
+    public ResponseEntity<?> getMessages(
+        @RequestParam Long chatRoomId
+    ) {
+        List<MessageResponseDto> messageResponseDtoList = chatRoomService.getMessages(chatRoomId);
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(messageResponseDtoList);
+    }
+
     @PostMapping("/v1/chat-rooms")
     public ResponseEntity<?> createChatRoom(
         @RequestBody CreateChatRoomRequestDto req, @AuthenticationPrincipal User user
     ) {
-
-        log.warn("user : {}", user);
         ChatRoomType chatRoomType = req.getChatRoomType();
 
         if (chatRoomType == ChatRoomType.ONEONONE_CHAT) {
@@ -94,7 +105,6 @@ public class ChatRoomController {
     public ResponseEntity<?> clickLikeButton(
         @RequestBody LikeButtonRequestDto req, @AuthenticationPrincipal User user
     ) {
-        log.warn("like req = {}", req);
         chatRoomService.handleLikeButton(req, user);
         return ResponseEntity.status(HttpStatus.OK).body("success");
     }

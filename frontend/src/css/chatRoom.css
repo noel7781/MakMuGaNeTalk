@@ -58,18 +58,26 @@
     flex-grow: 8;
     flex-basis: 0;
     overflow: auto;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    overflow-x: hidden;
 }
 
 .messages {
     border: 1px solid tomato;
-    display: flex;
-    justify-content: flex-start;
-    flex-wrap: wrap;
+    /* display: flex; */
+    word-wrap:break-word;
+    width: 100%;
+    /* justify-content: flex-start; */
+    /* flex-wrap: nowrap; */
+    text-align: left;
 }
 
 .my-chat {
     border: 1px solid green;
-    justify-content: flex-end;
+    /* justify-content: flex-end; */
+    text-align: right;
 }
 
 .send {

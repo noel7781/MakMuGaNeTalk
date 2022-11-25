@@ -19,10 +19,10 @@ const ChatPresenter = ({
       <div className="messageBox">
         {contents.map((message, idx) => (
           <div
-            className={`messages ${message.userId === userId ? "my-chat" : ""}`}
+            className={`messages ${message.email === userId ? "my-chat" : ""}`}
             key={idx}
           >
-            {message.userNickname} : {message.content} At {message.createdAt}
+            {message.nickname} : {message.content} At {message.createdAt}
           </div>
         ))}
       </div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { clickLikeButton, getChatRoomList } from "../apis/ChatRoomAPI";
 import { useNavigate } from "react-router-dom";
+import { timeConvert } from "../utils/util";
 import LockIcon from "@mui/icons-material/Lock";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import "../css/chatRoom.css";

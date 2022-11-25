@@ -3,10 +3,12 @@ package com.mugane.MakMuGaNeTalk.service;
 import com.mugane.MakMuGaNeTalk.dto.request.ChatRoomListRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.CreateChatRoomRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.LikeButtonRequestDto;
+import com.mugane.MakMuGaNeTalk.dto.response.MessageResponseDto;
 import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
 import com.mugane.MakMuGaNeTalk.entity.ChatRoomInvitation;
 import com.mugane.MakMuGaNeTalk.entity.ChatRoomLike;
 import com.mugane.MakMuGaNeTalk.entity.ChatRoomTag;
+import com.mugane.MakMuGaNeTalk.entity.Message;
 import com.mugane.MakMuGaNeTalk.entity.Tag;
 import com.mugane.MakMuGaNeTalk.entity.User;
 import com.mugane.MakMuGaNeTalk.entity.UserChatRoom;
@@ -24,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -196,5 +199,16 @@ public class ChatRoomService {
                 .build();
             chatRoomLikeRepository.save(chatRoomLike);
         }
+    }
+
+    public List<MessageResponseDto> getMessages(Long chatRoomId) {
+        Optional<ChatRoom> optionalChatRoom = chatRoomRepository.findById(chatRoomId);
+        if (optionalChatRoom.isEmpty()) {
+            throw new IllegalArgumentException("해당 아이디를 가지는 채팅방이 존재하지 않습니다.");
+        }
+        ChatRoom chatRoom = optionalChatRoom.get();
+        List<Message> messageList = chatRoom.getMessageList();
+        return messageList.stream().map(message -> MessageResponseDto.of(message)).collect(
+            Collectors.toList());
     }
 }

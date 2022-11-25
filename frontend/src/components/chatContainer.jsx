@@ -4,15 +4,18 @@ import { CompatClient } from "@stomp/stompjs";
 import Screen from "./screen";
 import { useParams } from "react-router-dom";
 import { useJwt } from "react-jwt";
+import { timeConvert } from "../utils/util";
 
 import "../css/chatRoom.css";
-import { timeConvert } from "../utils/util";
+import { getMessages } from "../apis/ChatRoomAPI";
 
 const token = localStorage.getItem("accessToken");
 const stompClient = new CompatClient();
 stompClient.webSocketFactory = function () {
   return new sockjs("http://localhost:8080/ws");
 };
+stompClient.debug = () => {};
+
 const ChatContainer = () => {
   const [contents, setContents] = useState([]);
   const [message, setMessage] = useState("");
@@ -20,6 +23,19 @@ const ChatContainer = () => {
   const params = useParams();
   const { decodedToken } = useJwt(token);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await getMessages(params.chatRoomId);
+      if (response.status === 200) {
+        const messages = response.data;
+        messages.map((msg) => {
+          msg.createdAt = timeConvert(msg.createdAt);
+        });
+        setContents(messages);
+      }
+    };
+    fetchData();
+  }, []);
   useEffect(() => {
     if (decodedToken != null) {
       setUserId(decodedToken["sub"]);
@@ -65,8 +81,8 @@ const ChatContainer = () => {
   const addMessage = (message) => {
     setContents((prev) =>
       prev.concat({
-        userId: message.email,
-        userNickname: message.nickname,
+        email: message.email,
+        nickname: message.nickname,
         content: message.content,
         createdAt: timeConvert(message.createdAt),
       })
