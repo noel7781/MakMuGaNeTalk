@@ -61,14 +61,12 @@ public class UserRestController {
 
     @PostMapping("/signout")
     public ResponseEntity<Void> signOut(@AuthenticationPrincipal User user) {
-
         userService.deleteRefreshToken(user.getId());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/reissue")
     public ResponseEntity<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
-        log.warn("Token request  = {}", tokenRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(userService.reissue(tokenRequestDto));
     }
 

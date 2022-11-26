@@ -9,12 +9,19 @@ const Groupchat = () => {
   const [chatRoomList, setChatRoomList] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
+  const [tagList, setTagList] = useState([]);
+  const [keyword, setKeyword] = useState("");
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await getChatRoomList();
+      const response = await getChatRoomList(
+        tagList,
+        keyword,
+        currentPage,
+        false
+      );
       if (response.status === 200) {
         setChatRoomList(response.data.chatRoomList);
         setCurrentPage(response.data.currentPageNumber);

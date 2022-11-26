@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Form, useNavigate } from "react-router-dom";
 import { signUp, checkNicknameExist, checkEmailExist } from "../apis/AuthAPI";
+import { validateEmail } from "../utils/validate";
 
 const SignUp = () => {
   const [nickname, setNickname] = useState("");
@@ -51,6 +52,10 @@ const SignUp = () => {
     }
   };
   const checkEmail = async () => {
+    if (!validateEmail(email)) {
+      alert("이메일 형식으로 입력해야 합니다.");
+      return;
+    }
     const response = await checkEmailExist(email);
     if (response.status == 200) {
       if (!response.data) {
