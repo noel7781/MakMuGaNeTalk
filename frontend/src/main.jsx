@@ -11,6 +11,7 @@ import SignUp from "./routes/signup";
 import Mychat from "./routes/mychat";
 import Groupchat from "./routes/groupchat";
 import ChatContainer from "./components/chatContainer";
+import InviteAlarm from "./routes/invitealarm";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
           {
             path: "chatRooms/:chatRoomId",
             element: <ChatContainer />,
+          },
+          {
+            path: "invite",
+            element: <InviteAlarm />,
           },
         ],
       },

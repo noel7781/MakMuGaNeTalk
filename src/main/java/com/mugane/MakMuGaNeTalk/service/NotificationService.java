@@ -67,7 +67,7 @@ public class NotificationService {
 
     private void sendLostData(String lastEventId, Long userId, String emitterId,
         SseEmitter emitter) {
-        Map<String, Object> eventCaches = emitterRepository.findAllEventCacheStartWithByMemberId(
+        Map<String, Object> eventCaches = emitterRepository.findAllEventCacheStartWithByUserId(
             String.valueOf(userId));
         eventCaches.entrySet().stream()
             .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
@@ -84,7 +84,7 @@ public class NotificationService {
 
         String receiverId = String.valueOf(receiver.getId());
         String eventId = receiverId + "_" + System.currentTimeMillis();
-        Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartWithByMemberId(
+        Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartWithByUserId(
             receiverId);
         emitters.forEach(
             (key, emitter) -> {

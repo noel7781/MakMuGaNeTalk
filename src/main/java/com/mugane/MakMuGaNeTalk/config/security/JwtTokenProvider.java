@@ -42,9 +42,10 @@ public class JwtTokenProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public TokenDto createTokenDto(String userPk, String nickname, List<String> roles) {
-        String accessToken = createAccessToken(userPk, nickname, roles);
-        String refreshToken = createRefreshToken(userPk, nickname, roles);
+    public TokenDto createTokenDto(Long userId, String userPk, String nickname,
+        List<String> roles) {
+        String accessToken = createAccessToken(userId, userPk, nickname, roles);
+        String refreshToken = createRefreshToken(userId, userPk, nickname, roles);
         return TokenDto.builder()
             .grantType("bearer")
             .accessToken(accessToken)
@@ -54,10 +55,12 @@ public class JwtTokenProvider {
 
     }
 
-    public String createAccessToken(String userPk, String nickname, List<String> roles) {
+    public String createAccessToken(Long userId, String userPk, String nickname,
+        List<String> roles) {
         Claims claims = Jwts.claims().setSubject(userPk);
         claims.put("nickname", nickname);
         claims.put("roles", roles);
+        claims.put("userId", userId);
         Date now = new Date();
         return Jwts.builder()
             .setClaims(claims)
@@ -67,10 +70,12 @@ public class JwtTokenProvider {
             .compact();
     }
 
-    public String createRefreshToken(String userPk, String nickname, List<String> roles) {
+    public String createRefreshToken(Long userId, String userPk, String nickname,
+        List<String> roles) {
         Claims claims = Jwts.claims().setSubject(userPk);
         claims.put("nickname", nickname);
         claims.put("roles", roles);
+        claims.put("userId", userId);
         Date now = new Date();
         return Jwts.builder()
             .setClaims(claims)

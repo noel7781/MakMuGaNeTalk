@@ -1,10 +1,9 @@
 package com.mugane.MakMuGaNeTalk.controller;
 
-import com.mugane.MakMuGaNeTalk.entity.User;
 import com.mugane.MakMuGaNeTalk.service.NotificationService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,12 +20,12 @@ public class NotificationController {
         this.notificationService = notificationService;
     }
 
-    @GetMapping(value = "/subscribe", produces = "text/event-stream")
+    @GetMapping(value = "/subscribe/{id}", produces = "text/event-stream")
     public SseEmitter subscribe(
-        @AuthenticationPrincipal User user,
+        @PathVariable Long id,
         @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId
     ) {
-        SseEmitter subscribe = notificationService.subscribe(user.getId(), lastEventId);
+        SseEmitter subscribe = notificationService.subscribe(id, lastEventId);
         return subscribe;
     }
 }

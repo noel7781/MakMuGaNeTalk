@@ -61,6 +61,7 @@ public class UserService {
         }
 
         TokenDto tokenDto = jwtTokenProvider.createTokenDto(
+            user.getId(),
             user.getUsername(),
             user.getNickname(),
             user.getRoles());
@@ -94,7 +95,9 @@ public class UserService {
             throw new IllegalArgumentException("Refresh Token Not Match");
         }
 
-        TokenDto newCreatedToken = jwtTokenProvider.createTokenDto(user.getEmail(),
+        TokenDto newCreatedToken = jwtTokenProvider.createTokenDto(
+            user.getId(),
+            user.getEmail(),
             user.getNickname(),
             user.getRoles());
 

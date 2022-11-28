@@ -3,9 +3,8 @@ import sockjs from "sockjs-client/dist/sockjs";
 import { CompatClient } from "@stomp/stompjs";
 import Screen from "./screen";
 import { useParams } from "react-router-dom";
-import { useJwt } from "react-jwt";
 import { timeConvert } from "../utils/util";
-
+import jwt_decode from "jwt-decode";
 import "../css/chatRoom.css";
 import { getMessages } from "../apis/ChatRoomAPI";
 
@@ -21,7 +20,7 @@ const ChatContainer = () => {
   const [message, setMessage] = useState("");
   const [userId, setUserId] = useState("");
   const params = useParams();
-  const { decodedToken } = useJwt(token);
+  const decodedToken = jwt_decode(token);
 
   useEffect(() => {
     const fetchData = async () => {
