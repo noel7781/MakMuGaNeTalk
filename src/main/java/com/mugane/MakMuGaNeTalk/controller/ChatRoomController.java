@@ -6,14 +6,12 @@ import com.mugane.MakMuGaNeTalk.dto.request.CreateChatRoomRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.LikeButtonRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.response.ChatRoomListResponseDto;
 import com.mugane.MakMuGaNeTalk.dto.response.MessageResponseDto;
-import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
 import com.mugane.MakMuGaNeTalk.entity.User;
 import com.mugane.MakMuGaNeTalk.enums.ChatRoomType;
 import com.mugane.MakMuGaNeTalk.service.ChatRoomService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,22 +38,16 @@ public class ChatRoomController {
             ChatRoomListRequestDto req, Pageable pageable,
             @AuthenticationPrincipal User user
         ) {
+
         if (req == null) {
             req = new ChatRoomListRequestDto();
         }
 
-        Page<ChatRoom> chatRoomList = chatRoomService.getChatRoomList(req, user.getId(), pageable);
-        ChatRoomListResponseDto chatRoomListResponseDto = ChatRoomListResponseDto
-            .builder()
-            .chatRoom(chatRoomList.toList())
-            .userId(user.getId())
-            .currentPageNumber(pageable.getPageNumber())
-            .totalPageNumber(chatRoomList.getTotalPages())
-            .build();
+        ChatRoomListResponseDto chatRoomList = chatRoomService.getChatRoomList(req, user, pageable);
 
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(chatRoomListResponseDto);
+            .body(chatRoomList);
     }
 
     @GetMapping("/v1/chat-rooms/messages")

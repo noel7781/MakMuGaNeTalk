@@ -33,11 +33,13 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
+    @Transactional
     public User findById(Long userId) {
         return userRepository.findById(userId)
             .orElseThrow(() -> new IllegalStateException("User Not Found"));
     }
 
+    @Transactional
     public User signUp(SignUpRequestDto signUpRequest) throws CustomException {
         try {
             User user = User.builder()
@@ -52,6 +54,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public TokenDto signIn(SignInRequestDto signInRequest) {
         User user = userRepository.findByEmail(signInRequest.getEmail())
             .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 email 입니다."));
@@ -76,7 +79,9 @@ public class UserService {
 
     }
 
+    @Transactional
     public TokenDto reissue(TokenRequestDto tokenRequestDto) {
+        log.warn("token = {}", tokenRequestDto);
         if (!jwtTokenProvider.validateToken(tokenRequestDto.getRefreshToken())) {
             throw new IllegalStateException("Refresh Token Expired");
         }
@@ -107,11 +112,13 @@ public class UserService {
         return newCreatedToken;
     }
 
+    @Transactional
     public User findUserByNickname(String nickname) {
         return userRepository.findByNickname(nickname)
             .orElseThrow(() -> new IllegalArgumentException("해당 닉네임을 가지는 회원이 없습니다."));
     }
 
+    @Transactional
     public Long checkNickname(String nickname) {
         Optional<User> user = userRepository.findByNickname(nickname);
         if (user.isPresent()) {
@@ -120,17 +127,20 @@ public class UserService {
         return 0L;
     }
 
+    @Transactional
     public boolean checkEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         return user.isPresent();
     }
 
+    @Transactional
     public void deleteRefreshToken(Long userId) {
         List<RefreshToken> refreshTokenList = refreshTokenRepository.findRefreshTokensByUserId(
             userId);
         refreshTokenRepository.deleteAll(refreshTokenList);
     }
 
+    @Transactional
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
             .orElseThrow(() -> new IllegalArgumentException("해당 이메일을 가지는 회원이 없습니다."));

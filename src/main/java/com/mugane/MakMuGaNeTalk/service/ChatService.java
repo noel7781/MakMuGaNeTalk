@@ -53,7 +53,8 @@ public class ChatService {
         }
     }
 
-    private void saveMessage(Long chatRoomId, User user, String content) {
+    @Transactional
+    void saveMessage(Long chatRoomId, User user, String content) {
         try {
             ChatRoom chatRoom = chatRoomService
                 .getChatRoomById(chatRoomId);

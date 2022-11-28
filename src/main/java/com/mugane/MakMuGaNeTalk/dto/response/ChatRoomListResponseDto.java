@@ -11,7 +11,6 @@ import lombok.Getter;
 public class ChatRoomListResponseDto {
 
     private final List<ChatRoomResponseDto> chatRoomList;
-    private final Long likeCount;
     private final int currentPageNumber;
     private final int totalPageNumber;
 
@@ -21,7 +20,6 @@ public class ChatRoomListResponseDto {
     @Builder
     public ChatRoomListResponseDto(
         List<ChatRoom> chatRoom,
-        Long likeCount,
         Long userId,
         int currentPageNumber,
         int totalPageNumber) {
@@ -29,7 +27,6 @@ public class ChatRoomListResponseDto {
             .stream()
             .map(room -> ChatRoomResponseDto.of(room, userId))
             .collect(Collectors.toList());
-        this.likeCount = likeCount;
         this.currentPageNumber = currentPageNumber;
         this.totalPageNumber = totalPageNumber;
         this.createdAt = LocalDateTime.now();

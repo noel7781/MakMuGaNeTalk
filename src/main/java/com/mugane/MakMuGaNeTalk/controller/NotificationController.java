@@ -2,6 +2,8 @@ package com.mugane.MakMuGaNeTalk.controller;
 
 import com.mugane.MakMuGaNeTalk.service.NotificationService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -20,12 +22,12 @@ public class NotificationController {
         this.notificationService = notificationService;
     }
 
-    @GetMapping(value = "/subscribe/{id}", produces = "text/event-stream")
-    public SseEmitter subscribe(
+    @GetMapping(value = "/subscribe/{id}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public ResponseEntity<SseEmitter> subscribe(
         @PathVariable Long id,
         @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId
     ) {
-        SseEmitter subscribe = notificationService.subscribe(id, lastEventId);
-        return subscribe;
+        SseEmitter emitter = notificationService.subscribe(id, lastEventId);
+        return ResponseEntity.ok(emitter);
     }
 }

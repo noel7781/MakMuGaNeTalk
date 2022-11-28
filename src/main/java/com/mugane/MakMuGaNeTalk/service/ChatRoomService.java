@@ -3,6 +3,7 @@ package com.mugane.MakMuGaNeTalk.service;
 import com.mugane.MakMuGaNeTalk.dto.request.ChatRoomListRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.CreateChatRoomRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.LikeButtonRequestDto;
+import com.mugane.MakMuGaNeTalk.dto.response.ChatRoomListResponseDto;
 import com.mugane.MakMuGaNeTalk.dto.response.MessageResponseDto;
 import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
 import com.mugane.MakMuGaNeTalk.entity.ChatRoomInvitation;
@@ -48,28 +49,43 @@ public class ChatRoomService {
     private final ChatRoomInvitationRepository chatRoomInvitationRepository;
     private final ChatRoomLikeRepository chatRoomLikeRepository;
     private final NotificationService notificationService;
+    private final CustomUserDetailService customUserDetailService;
 
+    @Transactional
     public ChatRoom getChatRoomById(Long chatRoomId) {
         return chatRoomRepository.findById(chatRoomId)
             .orElseThrow(() -> new IllegalStateException("Chat Room Not Found"));
     }
 
-    public Page<ChatRoom> getChatRoomList(ChatRoomListRequestDto req, Long userId,
+    @Transactional
+    public ChatRoomListResponseDto getChatRoomList(ChatRoomListRequestDto req, User user,
         Pageable pageable) {
 
+        Page<ChatRoom> chatRoomList;
+        // TODO 리턴해주는거 DTO로 바꿔서 시도
         if (req.isJoined()) {
-            return chatRoomRepository.findAllByKeywordAndTagsAndPaging(
-                userId,
+            chatRoomList = chatRoomRepository.findAllByKeywordAndTagsAndPaging(
+                user.getId(),
+                req.getTagList(),
+                req.getKeyword(),
+                pageable
+            );
+        } else {
+            chatRoomList = chatRoomRepository.findAllByKeywordAndTagsAndPaging(
                 req.getTagList(),
                 req.getKeyword(),
                 pageable
             );
         }
-        return chatRoomRepository.findAllByKeywordAndTagsAndPaging(
-            req.getTagList(),
-            req.getKeyword(),
-            pageable
-        );
+
+        ChatRoomListResponseDto chatRoomListResponseDto = ChatRoomListResponseDto
+            .builder()
+            .chatRoom(chatRoomList.toList())
+            .userId(user.getId())
+            .currentPageNumber(pageable.getPageNumber())
+            .totalPageNumber(chatRoomList.getTotalPages())
+            .build();
+        return chatRoomListResponseDto;
     }
 
     @Transactional
@@ -85,6 +101,7 @@ public class ChatRoomService {
         ).getId();
     }
 
+    @Transactional
     public ChatRoom createChatRoom(Long userId, ChatRoomType chatRoomType, String title,
         String password, List<String> tagContentList) {
 
@@ -119,7 +136,8 @@ public class ChatRoomService {
         return savedChatRoom;
     }
 
-    private void createChatRoomTagList(ChatRoom chatRoom, List<Tag> tagList) {
+    @Transactional
+    void createChatRoomTagList(ChatRoom chatRoom, List<Tag> tagList) {
 
         List<ChatRoomTag> chatRoomTagList = new ArrayList<>();
         int turn = 1;
@@ -135,7 +153,8 @@ public class ChatRoomService {
         chatRoomTagRepository.saveAll(chatRoomTagList);
     }
 
-    private List<Tag> createTagList(List<String> tagContentList) {
+    @Transactional
+    List<Tag> createTagList(List<String> tagContentList) {
 
         // TODO tagList 사이 중복은 제거된 상태로 입력이 들어온다고 가정
         List<Tag> tagList = new LinkedList<>();
@@ -173,16 +192,19 @@ public class ChatRoomService {
     }
 
 
+    @Transactional
     public ChatRoom getChatRoomByTitle(String title) {
         return chatRoomRepository
             .findByTitle(title)
             .orElseThrow(() -> new IllegalArgumentException("해당 이름을 가지는 채팅방이 존재하지 않습니다."));
     }
 
+    @Transactional
     public void save(ChatRoom chatRoom) {
         chatRoomRepository.save(chatRoom);
     }
 
+    @Transactional
     public void handleLikeButton(LikeButtonRequestDto req, User user) {
         Long chatRoomId = req.getChatRoomId();
         boolean likeState = req.getLikeState();
@@ -206,6 +228,7 @@ public class ChatRoomService {
         }
     }
 
+    @Transactional
     public List<MessageResponseDto> getMessages(Long chatRoomId) {
         Optional<ChatRoom> optionalChatRoom = chatRoomRepository.findById(chatRoomId);
         if (optionalChatRoom.isEmpty()) {

@@ -3,7 +3,7 @@ import { EventSourcePolyfill } from "event-source-polyfill";
 import jwt_decode from "jwt-decode";
 import "../css/header.css";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [inviteList, setInviteList] = useState([]);
@@ -14,6 +14,9 @@ const Header = () => {
 
   const handleInviteAlarmClick = (e) => {
     navigate("/invite", { state: { inviteList } });
+  };
+  const handleNavigateMain = () => {
+    navigate("/main");
   };
   useEffect(() => {
     let eventSource;
@@ -37,7 +40,6 @@ const Header = () => {
             const res = await event.data;
             console.log("on Message: ", res);
             const data = JSON.parse(res);
-            console.log(data);
             if (data.notificationType === "INVITE") {
               setInviteList((prev) => {
                 let newInviteList = [...prev, data];
@@ -63,7 +65,7 @@ const Header = () => {
   return (
     <div>
       <h1 className="header">
-        <span>MakMuGaNe Talk</span>
+        <span onClick={handleNavigateMain}>MakMuGaNe Talk</span>
         <div onClick={handleInviteAlarmClick} className="notification">
           <NotificationsActiveIcon />
           <span className="badge">{inviteList.length}</span>
