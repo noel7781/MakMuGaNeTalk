@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MessageIcon from "@mui/icons-material/Message";
 import GroupsIcon from "@mui/icons-material/Groups";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +12,7 @@ const Main = () => {
     const response = await signOut();
     return navigate("/");
   };
+
   return (
     <div style={{ display: "flex", justifyContent: "space-evenly" }}>
       <button onClick={handleSignOut}>Sign Out</button>

@@ -14,6 +14,7 @@ import com.mugane.MakMuGaNeTalk.entity.User;
 import com.mugane.MakMuGaNeTalk.entity.UserChatRoom;
 import com.mugane.MakMuGaNeTalk.enums.ChatRoomType;
 import com.mugane.MakMuGaNeTalk.enums.InvitationState;
+import com.mugane.MakMuGaNeTalk.enums.NotificationType;
 import com.mugane.MakMuGaNeTalk.enums.UserType;
 import com.mugane.MakMuGaNeTalk.repository.ChatRoomInvitationRepository;
 import com.mugane.MakMuGaNeTalk.repository.ChatRoomLikeRepository;
@@ -46,6 +47,7 @@ public class ChatRoomService {
     private final UserChatRoomRepository userChatRoomRepository;
     private final ChatRoomInvitationRepository chatRoomInvitationRepository;
     private final ChatRoomLikeRepository chatRoomLikeRepository;
+    private final NotificationService notificationService;
 
     public ChatRoom getChatRoomById(Long chatRoomId) {
         return chatRoomRepository.findById(chatRoomId)
@@ -155,14 +157,17 @@ public class ChatRoomService {
     public void createChatRoomInvitation(User user, Long guestUserId,
         String firstMessage) {
 
-        User questUser = userService.findById(guestUserId);
+        User guestUser = userService.findById(guestUserId);
 
         ChatRoomInvitation chatRoomInvitation = ChatRoomInvitation.builder()
             .hostUser(user)
-            .guestUser(questUser)
+            .guestUser(guestUser)
             .firstMessage(firstMessage)
             .state(InvitationState.WAITING)
             .build();
+
+        notificationService.send(guestUser, NotificationType.valueOf("INVITE"), user.getNickname(),
+            firstMessage, "urls...");
 
         chatRoomInvitationRepository.save(chatRoomInvitation);
     }
