@@ -9,6 +9,7 @@ import "../css/chatRoom.css";
 import { getMessages } from "../apis/ChatRoomAPI";
 
 const token = localStorage.getItem("accessToken");
+const decodedToken = jwt_decode(token);
 const stompClient = new CompatClient();
 stompClient.webSocketFactory = function () {
   return new sockjs("http://localhost:8080/ws");
@@ -20,7 +21,6 @@ const ChatContainer = () => {
   const [message, setMessage] = useState("");
   const [userId, setUserId] = useState("");
   const params = useParams();
-  const decodedToken = jwt_decode(token);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,7 +52,7 @@ const ChatContainer = () => {
             const newMessage = JSON.parse(data.body);
             addMessage(newMessage);
           },
-          { Authorization: token }
+          { headers: { Authorization: token } }
         );
       },
       (e) => {
