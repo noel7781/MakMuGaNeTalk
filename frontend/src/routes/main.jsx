@@ -8,14 +8,8 @@ import { signOut } from "../apis/AuthAPI";
 
 const Main = () => {
   const navigate = useNavigate();
-  const handleSignOut = async () => {
-    const response = await signOut();
-    return navigate("/");
-  };
-
   return (
     <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-      <button onClick={handleSignOut}>Sign Out</button>
       <div
         style={{
           display: "flex",

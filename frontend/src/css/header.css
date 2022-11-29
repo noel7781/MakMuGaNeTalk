@@ -34,3 +34,17 @@
     background: red;
     color: white;
   }
+
+  .signoutbutton {
+    border: 5px solid black;
+    margin: 10px;
+    width: 4.2rem;
+    height: 4.2rem;
+    font-size: 0.8rem;
+
+    border-radius: 6px;
+  }
+
+  .signin {
+    display: flex;
+  }

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import jwt_decode from "jwt-decode";
-import "../css/header.css";
-import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import { useNavigate } from "react-router-dom";
-
+import { signOut } from "../apis/AuthAPI";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+import "../css/header.css";
 const Header = () => {
   const [inviteList, setInviteList] = useState([]);
 
@@ -18,6 +18,12 @@ const Header = () => {
   const handleNavigateMain = () => {
     navigate("/main");
   };
+
+  const handleSignOut = async () => {
+    const response = await signOut();
+    return navigate("/");
+  };
+
   useEffect(() => {
     let eventSource;
     if (accessToken) {
@@ -61,15 +67,23 @@ const Header = () => {
       return () => eventSource.close();
     }
   }, [accessToken]);
-  console.log(inviteList);
   return (
     <div>
       <h1 className="header">
         <span onClick={handleNavigateMain}>MakMuGaNe Talk</span>
-        <div onClick={handleInviteAlarmClick} className="notification">
-          <NotificationsActiveIcon />
-          <span className="badge">{inviteList.length}</span>
-        </div>
+        {accessToken ? (
+          <div className="signin">
+            <div onClick={handleInviteAlarmClick} className="notification">
+              <NotificationsActiveIcon />
+              <span className="badge">{inviteList.length}</span>
+            </div>
+            <button className="signoutbutton" onClick={handleSignOut}>
+              로그아웃
+            </button>
+          </div>
+        ) : (
+          <></>
+        )}
       </h1>
     </div>
   );

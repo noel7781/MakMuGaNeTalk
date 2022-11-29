@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Form, useNavigate } from "react-router-dom";
-import Button from "../components/ui/button";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -46,12 +45,10 @@ const Index = () => {
               onChange={() => setChecked((c) => !c)}
             />
           </label>
-          <Button type="submit" content="Login" />
-          <Button
-            type="button"
-            onClickHandler={() => navigate("/signup")}
-            content="회원가입"
-          />
+          <button type="submit">Login</button>
+          <button type="button" onClickHandler={() => navigate("/signup")}>
+            회원가입
+          </button>
         </Form>
         {/* <button>Google</button>
         <button>Facebook</button>
