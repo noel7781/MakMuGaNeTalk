@@ -33,7 +33,7 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public User findById(Long userId) {
         return userRepository.findById(userId)
             .orElseThrow(() -> new IllegalStateException("User Not Found"));
@@ -112,13 +112,13 @@ public class UserService {
         return newCreatedToken;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public User findUserByNickname(String nickname) {
         return userRepository.findByNickname(nickname)
             .orElseThrow(() -> new IllegalArgumentException("해당 닉네임을 가지는 회원이 없습니다."));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Long checkNickname(String nickname) {
         Optional<User> user = userRepository.findByNickname(nickname);
         if (user.isPresent()) {
@@ -127,7 +127,7 @@ public class UserService {
         return 0L;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public boolean checkEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         return user.isPresent();
@@ -140,7 +140,7 @@ public class UserService {
         refreshTokenRepository.deleteAll(refreshTokenList);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
             .orElseThrow(() -> new IllegalArgumentException("해당 이메일을 가지는 회원이 없습니다."));

@@ -51,18 +51,17 @@ public class ChatRoomService {
     private final NotificationService notificationService;
     private final CustomUserDetailService customUserDetailService;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ChatRoom getChatRoomById(Long chatRoomId) {
         return chatRoomRepository.findById(chatRoomId)
             .orElseThrow(() -> new IllegalStateException("Chat Room Not Found"));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ChatRoomListResponseDto getChatRoomList(ChatRoomListRequestDto req, User user,
         Pageable pageable) {
 
         Page<ChatRoom> chatRoomList;
-        // TODO 리턴해주는거 DTO로 바꿔서 시도
         if (req.isJoined()) {
             chatRoomList = chatRoomRepository.findAllByKeywordAndTagsAndPaging(
                 user.getId(),
@@ -192,7 +191,7 @@ public class ChatRoomService {
     }
 
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ChatRoom getChatRoomByTitle(String title) {
         return chatRoomRepository
             .findByTitle(title)
@@ -228,7 +227,7 @@ public class ChatRoomService {
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<MessageResponseDto> getMessages(Long chatRoomId) {
         Optional<ChatRoom> optionalChatRoom = chatRoomRepository.findById(chatRoomId);
         if (optionalChatRoom.isEmpty()) {

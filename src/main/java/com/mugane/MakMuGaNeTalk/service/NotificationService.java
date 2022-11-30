@@ -9,6 +9,7 @@ import com.mugane.MakMuGaNeTalk.repository.NotificationRepository;
 import java.io.IOException;
 import java.util.Map;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @Service
@@ -25,6 +26,7 @@ public class NotificationService {
         this.notificationRepository = notificationRepository;
     }
 
+    @Transactional
     public SseEmitter subscribe(Long userId, String lastEventId) {
         String emitterId = makeTimeIncludeId(userId);
         SseEmitter emitter = emitterRepository.save(emitterId, new SseEmitter(DEFAULT_TIMEOUT));
@@ -76,6 +78,7 @@ public class NotificationService {
                     (NotificationResponseDto) entry.getValue()));
     }
 
+    @Transactional
     public void send(User receiver, NotificationType notificationType, String senderNickname,
         String content,
         String url) {
