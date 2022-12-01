@@ -9,16 +9,18 @@ import lombok.ToString;
 
 @ToString
 @NoArgsConstructor
-@Getter
 @Setter
+@Getter
 public class ChatRoomListRequestDto {
 
     private List<String> tagList;
     private String keyword;
+    private boolean joined;
 
     @Builder
-    ChatRoomListRequestDto(List<String> tagList, String keyword) {
+    ChatRoomListRequestDto(List<String> tagList, String keyword, Boolean joined) {
         this.tagList = tagList;
         this.keyword = keyword;
+        this.joined = joined;
     }
 }

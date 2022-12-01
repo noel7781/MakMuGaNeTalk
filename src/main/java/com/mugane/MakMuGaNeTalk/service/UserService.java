@@ -33,11 +33,13 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
+    @Transactional(readOnly = true)
     public User findById(Long userId) {
         return userRepository.findById(userId)
             .orElseThrow(() -> new IllegalStateException("User Not Found"));
     }
 
+    @Transactional
     public User signUp(SignUpRequestDto signUpRequest) throws CustomException {
         try {
             User user = User.builder()
@@ -52,6 +54,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public TokenDto signIn(SignInRequestDto signInRequest) {
         User user = userRepository.findByEmail(signInRequest.getEmail())
             .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 email 입니다."));
@@ -60,7 +63,11 @@ public class UserService {
             throw new IllegalArgumentException("잘못된 비밀번호입니다.");
         }
 
-        TokenDto tokenDto = jwtTokenProvider.createTokenDto(user.getUsername(), user.getRoles());
+        TokenDto tokenDto = jwtTokenProvider.createTokenDto(
+            user.getId(),
+            user.getUsername(),
+            user.getNickname(),
+            user.getRoles());
 
         RefreshToken refreshToken = RefreshToken.builder()
             .userId(user.getId())
@@ -72,7 +79,9 @@ public class UserService {
 
     }
 
+    @Transactional
     public TokenDto reissue(TokenRequestDto tokenRequestDto) {
+        log.warn("token = {}", tokenRequestDto);
         if (!jwtTokenProvider.validateToken(tokenRequestDto.getRefreshToken())) {
             throw new IllegalStateException("Refresh Token Expired");
         }
@@ -91,7 +100,10 @@ public class UserService {
             throw new IllegalArgumentException("Refresh Token Not Match");
         }
 
-        TokenDto newCreatedToken = jwtTokenProvider.createTokenDto(user.getEmail(),
+        TokenDto newCreatedToken = jwtTokenProvider.createTokenDto(
+            user.getId(),
+            user.getEmail(),
+            user.getNickname(),
             user.getRoles());
 
         RefreshToken updatedToken = refreshToken.updateToken(newCreatedToken.getRefreshToken());
@@ -100,11 +112,13 @@ public class UserService {
         return newCreatedToken;
     }
 
+    @Transactional(readOnly = true)
     public User findUserByNickname(String nickname) {
         return userRepository.findByNickname(nickname)
             .orElseThrow(() -> new IllegalArgumentException("해당 닉네임을 가지는 회원이 없습니다."));
     }
 
+    @Transactional(readOnly = true)
     public Long checkNickname(String nickname) {
         Optional<User> user = userRepository.findByNickname(nickname);
         if (user.isPresent()) {
@@ -113,17 +127,20 @@ public class UserService {
         return 0L;
     }
 
+    @Transactional(readOnly = true)
     public boolean checkEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         return user.isPresent();
     }
 
+    @Transactional
     public void deleteRefreshToken(Long userId) {
         List<RefreshToken> refreshTokenList = refreshTokenRepository.findRefreshTokensByUserId(
             userId);
         refreshTokenRepository.deleteAll(refreshTokenList);
     }
 
+    @Transactional(readOnly = true)
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
             .orElseThrow(() -> new IllegalArgumentException("해당 이메일을 가지는 회원이 없습니다."));

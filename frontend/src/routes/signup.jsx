@@ -1,25 +1,23 @@
 import { useState } from "react";
 import { Form, useNavigate } from "react-router-dom";
 import { signUp, checkNicknameExist, checkEmailExist } from "../apis/AuthAPI";
+import { validateEmail } from "../utils/validate";
 
 const SignUp = () => {
   const [nickname, setNickname] = useState("");
-  const [userId, setUserId] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [checkPassword, setCheckPassword] = useState("");
   const [errorStatus, setErrorStatus] = useState({
     nickname: true,
     email: true,
+    password: true,
   });
   const navigate = useNavigate();
 
   const handleChangeNickname = (e) => {
     setNickname(e.target.value);
     setErrorStatus({ ...errorStatus, nickname: true });
-  };
-  const handleChangeUserId = (e) => {
-    setUserId(e.target.value);
   };
   const handleChangeEmail = (e) => {
     setEmail(e.target.value);
@@ -32,11 +30,13 @@ const SignUp = () => {
     setCheckPassword(e.target.value);
   };
   const checkErrorStatus = () => {
-    return !errorStatus.nickname && !errorStatus.email;
+    return (
+      !errorStatus.nickname && !errorStatus.email && password === checkPassword
+    );
   };
   const handleSubmit = async () => {
     if (checkErrorStatus(errorStatus)) {
-      await signUp(nickname, userId, email, password);
+      await signUp(nickname, email, password);
       navigate("/");
     } else {
       alert("중복 확인을 하지 않았습니다.");
@@ -52,6 +52,10 @@ const SignUp = () => {
     }
   };
   const checkEmail = async () => {
+    if (!validateEmail(email)) {
+      alert("이메일 형식으로 입력해야 합니다.");
+      return;
+    }
     const response = await checkEmailExist(email);
     if (response.status == 200) {
       if (!response.data) {

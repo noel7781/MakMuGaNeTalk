@@ -11,6 +11,7 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import java.io.IOException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -41,9 +42,10 @@ public class JwtTokenProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public TokenDto createTokenDto(String userPk, List<String> roles) {
-        String accessToken = createAccessToken(userPk, roles);
-        String refreshToken = createRefreshToken(userPk, roles);
+    public TokenDto createTokenDto(Long userId, String userPk, String nickname,
+        List<String> roles) {
+        String accessToken = createAccessToken(userId, userPk, nickname, roles);
+        String refreshToken = createRefreshToken(userId, userPk, nickname, roles);
         return TokenDto.builder()
             .grantType("bearer")
             .accessToken(accessToken)
@@ -53,9 +55,12 @@ public class JwtTokenProvider {
 
     }
 
-    public String createAccessToken(String userPk, List<String> roles) {
+    public String createAccessToken(Long userId, String userPk, String nickname,
+        List<String> roles) {
         Claims claims = Jwts.claims().setSubject(userPk);
+        claims.put("nickname", nickname);
         claims.put("roles", roles);
+        claims.put("userId", userId);
         Date now = new Date();
         return Jwts.builder()
             .setClaims(claims)
@@ -65,9 +70,12 @@ public class JwtTokenProvider {
             .compact();
     }
 
-    public String createRefreshToken(String userPk, List<String> roles) {
+    public String createRefreshToken(Long userId, String userPk, String nickname,
+        List<String> roles) {
         Claims claims = Jwts.claims().setSubject(userPk);
+        claims.put("nickname", nickname);
         claims.put("roles", roles);
+        claims.put("userId", userId);
         Date now = new Date();
         return Jwts.builder()
             .setClaims(claims)
@@ -106,6 +114,8 @@ public class JwtTokenProvider {
         } catch (JsonProcessingException e) {
             log.error(e.getMessage());
             return new HashMap<>();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

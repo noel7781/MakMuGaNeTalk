@@ -21,7 +21,7 @@ const style = {
 };
 
 const ChatRoomInvite = () => {
-  const [userNickname, setUserNickname] = useState("first");
+  const [userNickname, setUserNickname] = useState("test");
   const [inviteMessage, setInviteMessage] = useState("hihiyo!");
   const [open, setOpen] = useState(false);
 

@@ -1,7 +1,10 @@
 package com.mugane.MakMuGaNeTalk.config;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -56,7 +59,9 @@ public class RabbitConfiguration {
     @Bean
     public Jackson2JsonMessageConverter jsonMessageConverter() {
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.ANY);
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true);
+        objectMapper.registerModule(new JavaTimeModule());
         return new Jackson2JsonMessageConverter(objectMapper);
     }
 }

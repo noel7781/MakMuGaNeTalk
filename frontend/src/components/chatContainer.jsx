@@ -3,26 +3,43 @@ import sockjs from "sockjs-client/dist/sockjs";
 import { CompatClient } from "@stomp/stompjs";
 import Screen from "./screen";
 import { useParams } from "react-router-dom";
-import { useJwt } from "react-jwt";
-
+import { timeConvert } from "../utils/util";
+import jwt_decode from "jwt-decode";
 import "../css/chatRoom.css";
+import { getMessages } from "../apis/ChatRoomAPI";
 
-const token = localStorage.getItem("accessToken");
 const stompClient = new CompatClient();
 stompClient.webSocketFactory = function () {
   return new sockjs("http://localhost:8080/ws");
 };
+stompClient.debug = () => {};
+
 const ChatContainer = () => {
   const [contents, setContents] = useState([]);
   const [message, setMessage] = useState("");
-  const [userInfo, setUserInfo] = useState({});
+  const [userId, setUserId] = useState("");
+  const accessToken = localStorage.getItem("accessToken");
+  const decodedToken = jwt_decode(accessToken);
   const params = useParams();
-  const { decodedToken, isExpired } = useJwt(token);
 
+  // const token = localStorage.getItem("accessToken");
+  // const decodedToken = jwt_decode(token);
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await getMessages(params.chatRoomId);
+      if (response.status === 200) {
+        const messages = response.data;
+        messages.map((msg) => {
+          msg.createdAt = timeConvert(msg.createdAt);
+        });
+        setContents(messages);
+      }
+    };
+    fetchData();
+  }, []);
   useEffect(() => {
     if (decodedToken != null) {
-      console.log(decodedToken);
-      setUserInfo(decodedToken["sub"]);
+      setUserId(decodedToken["sub"]);
     }
   }, [decodedToken]);
 
@@ -37,7 +54,7 @@ const ChatContainer = () => {
             const newMessage = JSON.parse(data.body);
             addMessage(newMessage);
           },
-          { Authorization: token }
+          { headers: { Authorization: token } }
         );
       },
       (e) => {
@@ -63,12 +80,14 @@ const ChatContainer = () => {
     e.preventDefault();
   };
   const addMessage = (message) => {
-    setContents((prev) => [
-      ...prev,
-      {
+    setContents((prev) =>
+      prev.concat({
+        email: message.email,
+        nickname: message.nickname,
         content: message.content,
-      },
-    ]);
+        createdAt: timeConvert(message.createdAt),
+      })
+    );
   };
   return (
     <div className="container">
@@ -77,7 +96,7 @@ const ChatContainer = () => {
         handleSubmit={handleSubmit}
         message={message}
         setMessage={setMessage}
-        username={userInfo}
+        userId={userId}
       />
     </div>
   );

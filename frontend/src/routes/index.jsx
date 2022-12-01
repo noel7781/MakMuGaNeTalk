@@ -45,20 +45,14 @@ const Index = () => {
               onChange={() => setChecked((c) => !c)}
             />
           </label>
-          <button type="submit" style={{ border: "2px solid blue" }}>
-            Login
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate("/signup")}
-            style={{ border: "2px solid blue" }}
-          >
+          <button type="submit">Login</button>
+          <button type="button" onClick={() => navigate("/signup")}>
             회원가입
           </button>
         </Form>
-        <button>Google</button>
+        {/* <button>Google</button>
         <button>Facebook</button>
-        <button>Naver</button>
+        <button>Naver</button> */}
       </div>
     </div>
   );

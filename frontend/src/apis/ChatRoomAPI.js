@@ -9,7 +9,6 @@ export const createChatRoom = async (title, tagList, isPublic, password) => {
     data: { title, tagList, chatRoomType, password },
   })
     .then((resp) => {
-      console.log(resp);
       return resp;
     })
     .catch((e) => console.error(e));
@@ -35,7 +34,6 @@ export const inviteChatRoom = async (userNickname, inviteMessage) => {
     },
   })
     .then((resp) => {
-      console.log(resp);
       return resp;
     })
     .catch((e) => console.error(e));
@@ -45,16 +43,41 @@ export const inviteChatRoom = async (userNickname, inviteMessage) => {
 export const getChatRoomList = async (
   tagList = [],
   keyword = "",
-  pageNumber = 0
+  pageNumber = 0,
+  joined = false
 ) => {
   const response = await AxiosClient({
     method: "get",
     url: "/chat-rooms",
-    params: { page: pageNumber, size: 10 },
-    data: { tagList, keyword },
+    params: { tagList, keyword, joined, page: pageNumber, size: 10 },
   })
     .then((resp) => {
-      console.log(resp);
+      return resp;
+    })
+    .catch((e) => console.error(e));
+  return response;
+};
+
+export const clickLikeButton = async (id, like_state) => {
+  const response = await AxiosClient({
+    method: "post",
+    url: "/chat-rooms-likes",
+    data: { chatRoomId: id, likeState: like_state },
+  })
+    .then((resp) => {
+      return resp;
+    })
+    .catch((e) => console.error(e));
+  return response;
+};
+
+export const getMessages = async (id) => {
+  const response = await AxiosClient({
+    method: "get",
+    url: "/chat-rooms/messages",
+    params: { chatRoomId: id },
+  })
+    .then((resp) => {
       return resp;
     })
     .catch((e) => console.error(e));

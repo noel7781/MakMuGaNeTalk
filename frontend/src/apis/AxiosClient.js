@@ -37,6 +37,7 @@ axiosClient.interceptors.response.use(
           refreshToken,
         },
       }).then((res) => {
+        console.log("res =", res);
         if (res.status === 200) {
           const { accessToken, refreshToken } = res.data;
           localStorage.setItem("accessToken", accessToken);

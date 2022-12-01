@@ -41,8 +41,6 @@ public class ChatRoom extends BaseTimeEntity {
     @Builder.Default
     private String password = "";
 
-    private Long likeCount = 0L;
-
     @OneToOne
     @JoinColumn(referencedColumnName = "USER_ID", name = "CREATED_BY")
     private User createdBy;
@@ -58,8 +56,10 @@ public class ChatRoom extends BaseTimeEntity {
     private List<Message> messageList;
 
     @OneToMany(mappedBy = "chatRoom")
-//    @JoinColumn(name = "CHAT_ROOM_ID")
     private List<ChatRoomTag> chatRoomTagList;
+
+    @OneToMany(mappedBy = "chatRoom")
+    private List<ChatRoomLike> chatRoomLikeList;
 
     public void updateChatRoomList(List<UserChatRoom> userChatRoomList) {
         this.userChatRoomList = userChatRoomList;
