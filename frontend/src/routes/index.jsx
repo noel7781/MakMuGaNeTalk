@@ -46,7 +46,7 @@ const Index = () => {
             />
           </label>
           <button type="submit">Login</button>
-          <button type="button" onClickHandler={() => navigate("/signup")}>
+          <button type="button" onClick={() => navigate("/signup")}>
             회원가입
           </button>
         </Form>
