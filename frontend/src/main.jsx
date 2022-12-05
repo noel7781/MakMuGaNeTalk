@@ -5,13 +5,15 @@ import ErrorPage from "./error-page";
 import Root from "./routes/root";
 import Index from "./routes";
 import Main from "./routes/main";
-import { action as signInAction } from "./routes/signIn";
+// import { action as signInAction } from "./routes/signIn";
 import { CookiesProvider } from "react-cookie";
 import SignUp from "./routes/signup";
 import Mychat from "./routes/mychat";
 import Groupchat from "./routes/groupchat";
 import ChatContainer from "./components/chatContainer";
 import InviteAlarm from "./routes/invitealarm";
+import { Provider } from "react-redux";
+import store from "./Store";
 
 const router = createBrowserRouter([
   {
@@ -25,7 +27,7 @@ const router = createBrowserRouter([
           { index: true, element: <Index /> },
           {
             path: "signin",
-            action: signInAction,
+            // action: signInAction,
             errorElement: <div>Login Error!</div>,
           },
           {
@@ -61,7 +63,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <CookiesProvider>
-      <RouterProvider router={router} />
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
     </CookiesProvider>
   </React.StrictMode>
 );

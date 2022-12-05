@@ -5,12 +5,16 @@ import { useNavigate } from "react-router-dom";
 import { signOut } from "../apis/AuthAPI";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import "../css/header.css";
+import { useDispatch, useSelector } from "react-redux";
+import { DELETE_TOKEN } from "../Store/Auth";
 const Header = () => {
   const [inviteList, setInviteList] = useState([]);
 
-  const accessToken = localStorage.getItem("accessToken");
+  // const accessToken = localStorage.getItem("accessToken");
+  const { accessToken } = useSelector((state) => state.authToken);
   const EventSource = EventSourcePolyfill || NativeEventSource;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleInviteAlarmClick = (e) => {
     navigate("/invite", { state: { inviteList } });
@@ -21,6 +25,10 @@ const Header = () => {
 
   const handleSignOut = async () => {
     const response = await signOut();
+    if (response.status === 200) {
+      dispatch(DELETE_TOKEN());
+      console.log("delete Token!");
+    }
     return navigate("/");
   };
 

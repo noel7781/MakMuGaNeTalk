@@ -1,5 +1,7 @@
 import axios from "axios";
+import { useDispatch } from "react-redux";
 import { getCookieToken, setRefreshToken } from "../storage/Cookie";
+import { SET_TOKEN } from "../Store/Auth";
 import { reissue, reissueErrorHandler } from "./AuthAPI";
 
 const axiosClient = axios.create({
@@ -41,6 +43,7 @@ axiosClient.interceptors.response.use(
         if (res.status === 200) {
           const { accessToken, refreshToken } = res.data;
           localStorage.setItem("accessToken", accessToken);
+          // dispatch(SET_TOKEN(accessToken));
           axios.defaults.headers.common["Authorization"] = accessToken;
           setRefreshToken(refreshToken);
           window.location.reload();
