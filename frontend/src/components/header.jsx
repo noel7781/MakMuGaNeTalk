@@ -6,7 +6,10 @@ import { signOut } from "../apis/AuthAPI";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import "../css/header.css";
 import { useDispatch, useSelector } from "react-redux";
-import { DELETE_TOKEN } from "../Store/Auth";
+import { DELETE_TOKEN, SET_TOKEN } from "../Store/Auth";
+import { setRefreshToken, getCookieToken } from "../storage/Cookie";
+import axiosClient from "../apis/AxiosClient";
+import axios from "axios";
 const Header = () => {
   const [inviteList, setInviteList] = useState([]);
 
@@ -16,24 +19,30 @@ const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      dispatch(SET_TOKEN(token));
+    }
+  }, []);
   const handleInviteAlarmClick = (e) => {
     navigate("/invite", { state: { inviteList } });
   };
   const handleNavigateMain = () => {
     navigate("/main");
   };
-
   const handleSignOut = async () => {
     const response = await signOut();
     if (response.status === 200) {
       dispatch(DELETE_TOKEN());
-      console.log("delete Token!");
     }
     return navigate("/");
   };
 
   useEffect(() => {
     let eventSource;
+    const token = localStorage.getItem("accessToken");
+    dispatch(SET_TOKEN(token));
     if (accessToken) {
       const fetchSse = async () => {
         const decodedToken = jwt_decode(accessToken);
@@ -60,11 +69,34 @@ const Header = () => {
                 return newInviteList;
               });
             }
-            // if (!res.includes("EventStream Created."))  // 알림 목록 업데이트
           };
 
           /* EVENTSOURCE ONERROR ------------------------------------------------------ */
           eventSource.onerror = async (event) => {
+            if (event.status === 401) {
+              const refreshToken = getCookieToken();
+              const accessToken = localStorage.getItem("accessToken");
+              return axiosClient({
+                method: "post",
+                url: "/users/reissue",
+                data: {
+                  accessToken,
+                  refreshToken,
+                },
+              })
+                .then((res) => {
+                  if (res.status === 200) {
+                    const { accessToken, refreshToken } = res.data;
+                    localStorage.setItem("accessToken", accessToken);
+                    axios.defaults.headers.common["Authorization"] =
+                      accessToken;
+                    dispatch(SET_TOKEN(accessToken));
+                    setRefreshToken(refreshToken);
+                    window.location.reload();
+                  }
+                })
+                .catch((e) => console.log(e));
+            }
             if (!event.error.message.includes("No activity"))
               eventSource.close();
           };

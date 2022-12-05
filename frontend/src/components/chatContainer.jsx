@@ -7,7 +7,8 @@ import { timeConvert } from "../utils/util";
 import jwt_decode from "jwt-decode";
 import "../css/chatRoom.css";
 import { getMessages } from "../apis/ChatRoomAPI";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { SET_TOKEN } from "../Store/Auth";
 
 const stompClient = new CompatClient();
 stompClient.webSocketFactory = function () {
@@ -21,14 +22,21 @@ const ChatContainer = () => {
   const [userId, setUserId] = useState("");
   // const accessToken = localStorage.getItem("accessToken");
   const { accessToken } = useSelector((state) => state.authToken);
-  const decodedToken = jwt_decode(accessToken);
+  let decodedToken;
   const params = useParams();
+  const dispatch = useDispatch();
 
   // const token = localStorage.getItem("accessToken");
   // const decodedToken = jwt_decode(token);
   useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      dispatch(SET_TOKEN(token));
+      decodedToken = jwt_decode(token);
+    }
     const fetchData = async () => {
       const response = await getMessages(params.chatRoomId);
+      console.log(response);
       if (response.status === 200) {
         const messages = response.data;
         messages.map((msg) => {
