@@ -1,4 +1,4 @@
-package com.mugane.MakMuGaNeTalk.controller;
+package com.mugane.MakMuGaNeTalk.integrationtest.controller;
 
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

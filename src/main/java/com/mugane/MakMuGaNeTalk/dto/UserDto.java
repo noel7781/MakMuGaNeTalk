@@ -1,4 +1,4 @@
-package com.mugane.MakMuGaNeTalk.dto.request;
+package com.mugane.MakMuGaNeTalk.dto;
 
 import com.mugane.MakMuGaNeTalk.entity.User;
 import java.util.Collection;

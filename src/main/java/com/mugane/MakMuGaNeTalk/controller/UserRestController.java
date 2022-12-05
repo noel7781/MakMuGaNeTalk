@@ -1,11 +1,11 @@
 package com.mugane.MakMuGaNeTalk.controller;
 
 import com.mugane.MakMuGaNeTalk.dto.TokenDto;
+import com.mugane.MakMuGaNeTalk.dto.UserDto;
 import com.mugane.MakMuGaNeTalk.dto.request.SignInRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.SignUpRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.TokenRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.response.SignInResponseDto;
-import com.mugane.MakMuGaNeTalk.entity.User;
 import com.mugane.MakMuGaNeTalk.exception.CustomException;
 import com.mugane.MakMuGaNeTalk.exception.ErrorCode;
 import com.mugane.MakMuGaNeTalk.service.UserService;
@@ -60,7 +60,8 @@ public class UserRestController {
     }
 
     @PostMapping("/signout")
-    public ResponseEntity<Void> signOut(@AuthenticationPrincipal User user) {
+    public ResponseEntity<Void> signOut(@AuthenticationPrincipal UserDto user) {
+        log.warn("USER : {}", user);
         userService.deleteRefreshToken(user.getId());
         return ResponseEntity.ok().build();
     }
@@ -78,5 +79,15 @@ public class UserRestController {
     @GetMapping("/email-check")
     public ResponseEntity<Boolean> checkEmail(@RequestParam @Email @NotBlank String email) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.checkEmail(email));
+    }
+
+    @PostMapping("/oauth/google")
+    public ResponseEntity<?> oauthGoogle(@RequestBody String credential) {
+        TokenDto tokenDto = userService.oauthGoogle(credential);
+        SignInResponseDto signInResponse = SignInResponseDto.builder()
+            .accessToken(tokenDto.getAccessToken())
+            .refreshToken(tokenDto.getRefreshToken())
+            .build();
+        return ResponseEntity.status(HttpStatus.OK).body(signInResponse);
     }
 }

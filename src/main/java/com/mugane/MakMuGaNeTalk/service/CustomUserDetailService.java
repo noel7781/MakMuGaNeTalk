@@ -1,6 +1,6 @@
 package com.mugane.MakMuGaNeTalk.service;
 
-import com.mugane.MakMuGaNeTalk.dto.request.UserDto;
+import com.mugane.MakMuGaNeTalk.dto.UserDto;
 import com.mugane.MakMuGaNeTalk.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

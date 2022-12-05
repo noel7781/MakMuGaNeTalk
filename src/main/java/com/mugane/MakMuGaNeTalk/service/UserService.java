@@ -13,6 +13,7 @@ import com.mugane.MakMuGaNeTalk.repository.RefreshTokenRepository;
 import com.mugane.MakMuGaNeTalk.repository.UserRepository;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,7 @@ public class UserService {
                 .email(signUpRequest.getEmail())
                 .nickname(signUpRequest.getNickname())
                 .password(passwordEncoder.encode(signUpRequest.getPassword()))
+                .fromSocial(false)
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build();
             return userRepository.save(user);
@@ -144,5 +146,40 @@ public class UserService {
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
             .orElseThrow(() -> new IllegalArgumentException("해당 이메일을 가지는 회원이 없습니다."));
+    }
+
+    @Transactional
+    public TokenDto oauthGoogle(String credential) {
+        Map<String, String> attrs = JwtTokenProvider.getPayloadByToken(credential);
+
+        String email = attrs.get("email");
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        User user;
+        if (optionalUser.isEmpty()) {
+            user = User.builder()
+                .email(attrs.get("email"))
+                .nickname(attrs.get("given_name"))
+                .password(passwordEncoder.encode(attrs.get("sub")))
+                .fromSocial(true)
+                .roles(Collections.singletonList("ROLE_USER"))
+                .build();
+            userRepository.save(user);
+        } else {
+            user = optionalUser.get();
+        }
+
+        TokenDto tokenDto = jwtTokenProvider.createTokenDto(
+            user.getId(),
+            user.getUsername(),
+            user.getNickname(),
+            user.getRoles());
+
+        RefreshToken refreshToken = RefreshToken.builder()
+            .userId(user.getId())
+            .token(tokenDto.getRefreshToken())
+            .build();
+
+        refreshTokenRepository.save(refreshToken);
+        return tokenDto;
     }
 }
