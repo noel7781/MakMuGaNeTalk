@@ -4,6 +4,7 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import { useNavigate } from "react-router-dom";
 import ChatRoomInvite from "../components/chatRoomInvite";
 import ChatRoomMake from "../components/chatRoomMake";
+import NicknameChange from "../components/nicknameChange";
 import { signOut } from "../apis/AuthAPI";
 
 const Main = () => {
@@ -32,6 +33,7 @@ const Main = () => {
       </div>
       <ChatRoomInvite />
       <ChatRoomMake />
+      <NicknameChange />
     </div>
   );
 };

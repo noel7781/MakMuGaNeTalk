@@ -2,6 +2,7 @@ package com.mugane.MakMuGaNeTalk.service;
 
 import com.mugane.MakMuGaNeTalk.config.security.JwtTokenProvider;
 import com.mugane.MakMuGaNeTalk.dto.TokenDto;
+import com.mugane.MakMuGaNeTalk.dto.request.ChangeNicknameRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.SignInRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.SignUpRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.TokenRequestDto;
@@ -181,5 +182,19 @@ public class UserService {
 
         refreshTokenRepository.save(refreshToken);
         return tokenDto;
+    }
+
+    public boolean changeNickname(ChangeNicknameRequestDto requestDto) {
+        Long userId = requestDto.getUserId();
+        String newNickname = requestDto.getNickname();
+        Optional<User> optionalUser = userRepository.findByNickname(newNickname);
+        if (optionalUser.isPresent()) {
+            return false;
+        }
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("해당 아이디를 가지는 유저가 없습니다."));
+        user.changeNickname(newNickname);
+        userRepository.save(user);
+        return true;
     }
 }

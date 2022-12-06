@@ -10,11 +10,13 @@ import { DELETE_TOKEN, SET_TOKEN } from "../Store/Auth";
 import { setRefreshToken, getCookieToken } from "../storage/Cookie";
 import axiosClient from "../apis/AxiosClient";
 import axios from "axios";
+import { isExpired } from "../utils/util";
 const Header = () => {
+  const { accessToken } = useSelector((state) => state.authToken);
   const [inviteList, setInviteList] = useState([]);
 
   // const accessToken = localStorage.getItem("accessToken");
-  const { accessToken } = useSelector((state) => state.authToken);
+  const [userNickname, setUserNickname] = useState("");
   const EventSource = EventSourcePolyfill || NativeEventSource;
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -22,7 +24,13 @@ const Header = () => {
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     if (token) {
-      dispatch(SET_TOKEN(token));
+      const decoded = jwt_decode(token);
+      if (isExpired(decoded)) {
+        localStorage.removeItem("accessToken");
+      } else {
+        dispatch(SET_TOKEN(token));
+        setUserNickname(jwt_decode(token).nickname);
+      }
     }
   }, []);
   const handleInviteAlarmClick = (e) => {
@@ -47,6 +55,7 @@ const Header = () => {
       const fetchSse = async () => {
         const decodedToken = jwt_decode(accessToken);
         const userId = decodedToken.userId;
+        setUserNickname(decodedToken.nickname);
         try {
           eventSource = new EventSource(
             `http://localhost:8080/api/v1/alarm/subscribe/${userId}`,
@@ -120,6 +129,7 @@ const Header = () => {
             <button className="signoutbutton" onClick={handleSignOut}>
               로그아웃
             </button>
+            <div className="nickname">Nickname : {userNickname}</div>
           </div>
         ) : (
           <></>

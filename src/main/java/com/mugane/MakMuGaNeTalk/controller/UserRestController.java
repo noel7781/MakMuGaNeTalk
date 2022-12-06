@@ -2,6 +2,7 @@ package com.mugane.MakMuGaNeTalk.controller;
 
 import com.mugane.MakMuGaNeTalk.dto.TokenDto;
 import com.mugane.MakMuGaNeTalk.dto.UserDto;
+import com.mugane.MakMuGaNeTalk.dto.request.ChangeNicknameRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.SignInRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.SignUpRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.TokenRequestDto;
@@ -79,6 +80,11 @@ public class UserRestController {
     @GetMapping("/email-check")
     public ResponseEntity<Boolean> checkEmail(@RequestParam @Email @NotBlank String email) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.checkEmail(email));
+    }
+
+    @PostMapping("/nickname")
+    public ResponseEntity<Boolean> changeNickname(@RequestBody ChangeNicknameRequestDto nickname) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.changeNickname(nickname));
     }
 
     @PostMapping("/oauth/google")

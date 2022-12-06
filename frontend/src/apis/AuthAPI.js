@@ -131,3 +131,21 @@ export const signOut = async () => {
     });
   return response;
 };
+
+export const changeNickname = async (userId, nickname) => {
+  console.log(userId, nickname);
+  const response = await AxiosClient({
+    method: "post",
+    url: "/users/nickname",
+    data: { userId, nickname },
+  })
+    .then((resp) => {
+      console.log(resp);
+      return resp;
+    })
+    .catch((e) => {
+      console.error(e);
+      return e.response;
+    });
+  return response;
+};

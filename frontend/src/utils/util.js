@@ -15,3 +15,7 @@ export const timeConvert = (times) => {
     options,
   });
 };
+
+export const isExpired = ({ exp }) => {
+  return Date.now() >= exp * 1000;
+};

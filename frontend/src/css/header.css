@@ -48,3 +48,8 @@
   .signin {
     display: flex;
   }
+
+  .nickname {
+    display: flex;
+    align-items: center;
+  }
