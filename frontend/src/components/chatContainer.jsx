@@ -13,7 +13,7 @@ import "../css/chatRoom.css";
 const ChatContainer = () => {
   const [contents, setContents] = useState([]);
   const [message, setMessage] = useState("");
-  const [userId, setUserId] = useState("");
+  const [userId, setUserId] = useState(0);
   const { accessToken } = useSelector((state) => state.authToken);
   const params = useParams();
   const dispatch = useDispatch();
@@ -33,7 +33,6 @@ const ChatContainer = () => {
     }
     const fetchData = async () => {
       const response = await getMessages(params.chatRoomId);
-      console.log(response);
       if (response.status === 200) {
         const messages = response.data;
         messages.map((msg) => {
@@ -46,7 +45,7 @@ const ChatContainer = () => {
   }, []);
   useEffect(() => {
     if (decodedToken != null) {
-      setUserId(decodedToken["sub"]);
+      setUserId(decodedToken["userId"]);
     }
   }, [decodedToken]);
 
@@ -89,7 +88,7 @@ const ChatContainer = () => {
   const addMessage = (message) => {
     setContents((prev) =>
       prev.concat({
-        email: message.email,
+        userId: message.userId,
         nickname: message.nickname,
         content: message.content,
         createdAt: timeConvert(message.createdAt),

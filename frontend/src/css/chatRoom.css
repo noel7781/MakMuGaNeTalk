@@ -154,7 +154,13 @@
   border-radius: 8px;
   background-color: #9ec4cf;
 }
-.time_date {
+.chat-nickname {
+  color: #cd31d0;
+  display: block;
+  margin: 8px 0 0;
+  font-size: 1.8rem;
+}
+.chat-time-date {
   color: #747474;
   display: block;
   margin: 8px 0 0;
