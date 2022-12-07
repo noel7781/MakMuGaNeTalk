@@ -7,4 +7,7 @@ public class MessageRequestDto {
 
     private String content;
 
+    public MessageRequestDto(String content) {
+        this.content = content;
+    }
 }

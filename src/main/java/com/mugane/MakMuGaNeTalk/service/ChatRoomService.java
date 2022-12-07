@@ -118,7 +118,6 @@ public class ChatRoomService {
             .chatRoomLikeList(new ArrayList<>())
             .build();
 
-//         TODO: saveAndFlush 찾아보기
         ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
 
         List<Tag> tagList = createTagList(tagContentList);

@@ -10,7 +10,7 @@ const Index = () => {
   const dispatch = useDispatch();
   const [checked, setChecked] = useState(false);
 
-  const [email, setEmail] = useState("test@gmail.com");
+  const [email, setEmail] = useState("user1@test.com");
   const [password, setPassword] = useState("1234");
 
   const handleEmailInput = (e) => {
