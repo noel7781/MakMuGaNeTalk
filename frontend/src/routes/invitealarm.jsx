@@ -1,4 +1,3 @@
-import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const InviteAlarm = () => {
@@ -8,7 +7,6 @@ const InviteAlarm = () => {
   const onClickInviteUrl = (url) => {
     navigate(url);
   };
-  // inv.content, inv.notificationType, inv.senderNickname, inv.url
   return (
     <div>
       {inviteList &&

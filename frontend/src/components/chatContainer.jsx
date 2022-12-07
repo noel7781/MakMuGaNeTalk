@@ -1,34 +1,31 @@
-import React, { useEffect, useState } from "react";
 import sockjs from "sockjs-client/dist/sockjs";
-import { CompatClient } from "@stomp/stompjs";
 import Screen from "./screen";
+import jwt_decode from "jwt-decode";
+import { useEffect, useState, useRef } from "react";
+import { CompatClient } from "@stomp/stompjs";
 import { useParams } from "react-router-dom";
 import { timeConvert } from "../utils/util";
-import jwt_decode from "jwt-decode";
-import "../css/chatRoom.css";
 import { getMessages } from "../apis/ChatRoomAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { SET_TOKEN } from "../Store/Auth";
-
-const stompClient = new CompatClient();
-stompClient.webSocketFactory = function () {
-  return new sockjs("http://localhost:8080/ws");
-};
-stompClient.debug = () => {};
+import "../css/chatRoom.css";
 
 const ChatContainer = () => {
   const [contents, setContents] = useState([]);
   const [message, setMessage] = useState("");
   const [userId, setUserId] = useState("");
-  // const accessToken = localStorage.getItem("accessToken");
   const { accessToken } = useSelector((state) => state.authToken);
-  let decodedToken;
   const params = useParams();
   const dispatch = useDispatch();
+  const stompClient = useRef(new CompatClient());
 
-  // const token = localStorage.getItem("accessToken");
-  // const decodedToken = jwt_decode(token);
+  let decodedToken;
+
   useEffect(() => {
+    stompClient.current.webSocketFactory = function () {
+      return new sockjs("http://localhost:8080/ws");
+    };
+    stompClient.current.debug = () => {};
     const token = localStorage.getItem("accessToken");
     if (token) {
       dispatch(SET_TOKEN(token));
@@ -55,10 +52,10 @@ const ChatContainer = () => {
 
   useEffect(() => {
     let token = localStorage.getItem("accessToken");
-    stompClient.connect(
+    stompClient.current.connect(
       { Authorization: token },
       () => {
-        stompClient.subscribe(
+        stompClient.current.subscribe(
           `/topic/room.${params.chatRoomId}`,
           (data) => {
             const newMessage = JSON.parse(data.body);
@@ -81,7 +78,7 @@ const ChatContainer = () => {
     const newMessage = {
       content: message,
     };
-    stompClient.publish({
+    stompClient.current.publish({
       destination: `/app/chat.message.${params.chatRoomId}`,
       headers: { Authorization: token },
       body: JSON.stringify(newMessage),

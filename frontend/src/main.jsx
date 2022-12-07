@@ -5,7 +5,6 @@ import ErrorPage from "./error-page";
 import Root from "./routes/root";
 import Index from "./routes";
 import Main from "./routes/main";
-// import { action as signInAction } from "./routes/signIn";
 import { CookiesProvider } from "react-cookie";
 import SignUp from "./routes/signup";
 import Mychat from "./routes/mychat";
@@ -27,7 +26,6 @@ const router = createBrowserRouter([
           { index: true, element: <Index /> },
           {
             path: "signin",
-            // action: signInAction,
             errorElement: <div>Login Error!</div>,
           },
           {

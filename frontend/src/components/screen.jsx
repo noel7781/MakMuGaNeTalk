@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import "../css/chatRoom.css";
 
 const ChatPresenter = ({
@@ -7,6 +8,8 @@ const ChatPresenter = ({
   handleSubmit,
   userId,
 }) => {
+  const messagesEndRef = useRef(null);
+
   const handleEnter = (e) => {
     if (e.keyCode == 13)
       if (!e.shiftKey) {
@@ -14,17 +17,38 @@ const ChatPresenter = ({
         handleSubmit(e);
       }
   };
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [contents]);
+
   return (
     <div className="outline">
       <div className="messageBox">
         {contents.map((message, idx) => (
           <div
-            className={`messages ${message.email === userId ? "my-chat" : ""}`}
+            className={`messages ${
+              message.email === userId ? "my-chat" : "other-chat"
+            }`}
             key={idx}
           >
-            {message.nickname} : {message.content} At {message.createdAt}
+            {/* {message.nickname} : {message.content} At {message.createdAt} */}
+
+            <div
+              className={
+                message.email === userId ? "my-chat-inner" : "other-chat-inner"
+              }
+            >
+              <p>{message.content} </p>
+              <span className="time_date"> {message.createdAt}</span>
+            </div>
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
       <form className="send" onSubmit={handleSubmit}>
         <textarea

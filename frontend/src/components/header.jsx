@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { EventSourcePolyfill } from "event-source-polyfill";
+import axiosClient from "../apis/AxiosClient";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import jwt_decode from "jwt-decode";
+import { EventSourcePolyfill } from "event-source-polyfill";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "../apis/AuthAPI";
-import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
-import "../css/header.css";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DELETE_TOKEN, SET_TOKEN } from "../Store/Auth";
 import { setRefreshToken, getCookieToken } from "../storage/Cookie";
-import axiosClient from "../apis/AxiosClient";
-import axios from "axios";
 import { isExpired } from "../utils/util";
+import "../css/header.css";
+
 const Header = () => {
   const { accessToken } = useSelector((state) => state.authToken);
   const [inviteList, setInviteList] = useState([]);
@@ -97,7 +97,8 @@ const Header = () => {
                   if (res.status === 200) {
                     const { accessToken, refreshToken } = res.data;
                     localStorage.setItem("accessToken", accessToken);
-                    axios.defaults.headers.common["Authorization"] =
+                    // TODO: CHECK 할 부분
+                    axiosClient.defaults.headers.common["Authorization"] =
                       accessToken;
                     dispatch(SET_TOKEN(accessToken));
                     setRefreshToken(refreshToken);

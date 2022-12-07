@@ -1,111 +1,162 @@
 .container {
-    height: 100%;
-    min-height: 80vh;
-    border: 1px solid black;
+  height: 100%;
+  min-height: 80vh;
+  border: 1px solid black;
 }
 .chattable {
-    border: 1px solid black;
-    display: flex;
+  border: 1px solid black;
+  display: flex;
 }
 
 .chatbody {
-    width: 100%;
-    height: auto;
+  width: 100%;
+  height: auto;
 }
 
 .chatrows {
-    padding: 1rem;
-    height: auto;
-    display: flex;
+  padding: 1rem;
+  height: auto;
+  display: flex;
 }
 
 .chatid {
-    border: 1px solid green;
-    flex-grow: 1;
-    flex-basis: 0;
+  border: 1px solid green;
+  flex-grow: 1;
+  flex-basis: 0;
 }
 
 .chattitle {
-    border: 1px solid red;
-    flex-grow: 5;
-    flex-basis: 0;
+  border: 1px solid red;
+  flex-grow: 5;
+  flex-basis: 0;
 }
 
 .chattype {
-    border: 1px solid blue;
-    flex-grow: 1;
-    flex-basis: 0;
+  border: 1px solid blue;
+  flex-grow: 1;
+  flex-basis: 0;
 }
 .chatlike {
-    border: 1px solid teal;
-    flex-grow: 1;
-    flex-basis: 0;
+  border: 1px solid teal;
+  flex-grow: 1;
+  flex-basis: 0;
 }
 
 .favorite_room {
-    color: red;
+  color: red;
 }
 
 .outline {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 80vh;
 }
 
 .messageBox {
-    flex-grow: 8;
-    flex-basis: 0;
-    overflow: auto;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    overflow-x: hidden;
+  background-color: rgb(202, 224, 224);
+  flex-grow: 8;
+  flex-basis: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  overflow-x: hidden;
+  /* padding-left: 20px;
+  padding-right: 20px; */
 }
 
 .messages {
-    border: 1px solid tomato;
-    /* display: flex; */
-    word-wrap:break-word;
-    width: 100%;
-    /* justify-content: flex-start; */
-    /* flex-wrap: nowrap; */
-    text-align: left;
+  /* 최근 */
+  /* border: 1px solid tomato; */
+
+  word-wrap: break-word;
+  width: 100%;
+  text-align: left;
+  padding-bottom: 10px;
+
+  /* justify-content: flex-start; */
+  /* flex-wrap: nowrap; */
+  /* display: flex; */
 }
 
 .my-chat {
-    border: 1px solid green;
-    /* justify-content: flex-end; */
-    text-align: right;
+  /* border: 1px solid green;
+    text-align: right; */
+  /* justify-content: flex-end; */
+
+  /* overflow: visible; */
+  margin: 0 30px 0 0;
+}
+.my-chat-inner {
+  float: right;
+  padding-right: 30px;
+  width: 60%;
+  min-width: none;
+}
+
+.my-chat-inner p {
+  background: #424bc9 none repeat scroll 0 0;
+  border-radius: 6px;
+  font-size: 2rem;
+  margin: 0;
+  color: #fff;
+  padding: 5px 10px 5px 12px;
+  width: 100%;
+}
+.other-chat {
+  display: inline-block;
+  padding: 0 0 0 10px;
+  vertical-align: top;
+  width: 92%;
+}
+
+.other-chat-inner {
+  width: 57%;
+}
+.other-chat-inner p {
+  background: #ebebeb none repeat scroll 0 0;
+  border-radius: 6px;
+  color: #646464;
+  font-size: 2rem;
+  margin: 0;
+  padding: 5px 10px 5px 12px;
+  width: 100%;
 }
 
 .send {
-    display: flex;
-    flex-grow: 1;
-    flex-basis: 0;
-    flex-shrink: 0;
-    justify-content: space-around;
-    align-items: flex-end;
-    box-sizing: border-box;
-    max-height: 100px;
-    min-height: 100px;
-    padding: 0.4rem;
-    border: 1px solid #000;
-    font-size: 1.5rem;
-  }
-  .send_text {
-    width: calc(100% - 100px);
-    height: 100%;
-    border: none;
-    resize: none;
-  }
-  .send_text:focus {
-    outline: none;
-  }
-  .send_button {
-    width: 100px;
-    height: 100%;
-    border-radius: 8px;
-    background-color: #9ec4cf;
-  }
+  display: flex;
+  flex-grow: 1;
+  flex-basis: 0;
+  flex-shrink: 0;
+  justify-content: space-around;
+  align-items: flex-end;
+  box-sizing: border-box;
+  max-height: 100px;
+  min-height: 100px;
+  padding: 0.4rem;
+  border: 1px solid #000;
+  font-size: 1.5rem;
+}
+.send_text {
+  width: calc(100% - 100px);
+  height: 100%;
+  border: none;
+  resize: none;
+}
+.send_text:focus {
+  outline: none;
+}
+.send_button {
+  width: 100px;
+  height: 100%;
+  border-radius: 8px;
+  background-color: #9ec4cf;
+}
+.time_date {
+  color: #747474;
+  display: block;
+  margin: 8px 0 0;
+  font-size: 1.4rem;
+}

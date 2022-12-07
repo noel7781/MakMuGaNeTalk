@@ -1,15 +1,14 @@
-import React from "react";
+import jwt_decode from "jwt-decode";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
 import { TextField } from "@mui/material";
 import { checkNicknameExist, changeNickname } from "../apis/AuthAPI";
-import CheckIcon from "@mui/icons-material/Check";
-import CloseIcon from "@mui/icons-material/Close";
 import { useSelector } from "react-redux";
-import jwt_decode from "jwt-decode";
 
 const style = {
   position: "absolute",
