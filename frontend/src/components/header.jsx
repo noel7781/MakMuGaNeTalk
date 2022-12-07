@@ -3,7 +3,7 @@ import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import jwt_decode from "jwt-decode";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import { useNavigate } from "react-router-dom";
-import { signOut } from "../apis/AuthAPI";
+import { reissue, signOut } from "../apis/AuthAPI";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DELETE_TOKEN, SET_TOKEN } from "../Store/Auth";
@@ -26,7 +26,7 @@ const Header = () => {
     if (token) {
       const decoded = jwt_decode(token);
       if (isExpired(decoded)) {
-        localStorage.removeItem("accessToken");
+        return;
       } else {
         dispatch(SET_TOKEN(token));
         setUserNickname(jwt_decode(token).nickname);
