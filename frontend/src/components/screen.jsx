@@ -36,8 +36,6 @@ const ChatPresenter = ({
             }`}
             key={idx}
           >
-            {/* {message.nickname} : {message.content} At {message.createdAt} */}
-
             <div
               className={
                 message.userId === userId ? "my-chat-inner" : "other-chat-inner"
