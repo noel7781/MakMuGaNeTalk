@@ -79,9 +79,9 @@ public class ChatRoomService {
 
         ChatRoomListResponseDto chatRoomListResponseDto = ChatRoomListResponseDto
             .builder()
-            .chatRoom(chatRoomList.toList())
+            .chatRoom(chatRoomList)
             .userId(user.getId())
-            .currentPageNumber(pageable.getPageNumber())
+            .currentPageNumber(chatRoomList.getPageable().getPageNumber())
             .totalPageNumber(chatRoomList.getTotalPages())
             .build();
         return chatRoomListResponseDto;

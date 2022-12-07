@@ -7,7 +7,9 @@ import com.mugane.MakMuGaNeTalk.entity.QTag;
 import com.mugane.MakMuGaNeTalk.entity.QUser;
 import com.mugane.MakMuGaNeTalk.entity.QUserChatRoom;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.jpa.JPQLQuery;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -39,17 +41,15 @@ public class ChatRoomSupportImpl extends QuerydslRepositorySupport implements Ch
             keyword != null ? predicateOptional(qChatRoom.title::like, '%' + keyword + '%') : null
         };
 
-        List<ChatRoom> chatRoomList = from(qChatRoom)
+        JPQLQuery<ChatRoom> query = from(qChatRoom)
             .leftJoin(qChatRoomTag).on(qChatRoom.id.eq(qChatRoomTag.chatRoom.id)).fetchJoin()
             .where(predicates)
-            .orderBy(qChatRoom.id.desc()) // 챗룸 생성기준 최신순 정렬
-//            .limit(pageSize)
-            .limit(pageable.getPageSize())
-//            .offset(pageNumber)
-            .offset(pageable.getPageNumber())
-            .distinct()
-            .fetch();
-        return new PageImpl<>(chatRoomList, pageable, chatRoomList.size());
+            .orderBy(qChatRoom.id.desc())
+            .distinct();
+        long totalCount = query.fetchCount();
+        List<ChatRoom> chatRoomList = Objects.requireNonNull(getQuerydsl())
+            .applyPagination(pageable, query).fetch();
+        return new PageImpl<>(chatRoomList, pageable, totalCount);
     }
 
     @Override
@@ -65,18 +65,16 @@ public class ChatRoomSupportImpl extends QuerydslRepositorySupport implements Ch
             keyword != null ? predicateOptional(qChatRoom.title::like, '%' + keyword + '%') : null
         };
 
-        List<ChatRoom> chatRoomList = from(qChatRoom)
+        JPQLQuery<ChatRoom> query = from(qChatRoom)
             .leftJoin(qChatRoomTag).on(qChatRoom.id.eq(qChatRoomTag.chatRoom.id)).fetchJoin()
             .leftJoin(qUserChatRoom).on(qChatRoom.id.eq(qUserChatRoom.chatRoom.id)).fetchJoin()
             .where(predicates)
-            .orderBy(qChatRoom.id.desc()) // 챗룸 생성기준 최신순 정렬
-//            .limit(pageSize)
-            .limit(pageable.getPageSize())
-//            .offset(pageNumber)
-            .offset(pageable.getPageNumber())
-            .distinct()
-            .fetch();
-        return new PageImpl<>(chatRoomList, pageable, chatRoomList.size());
+            .orderBy(qChatRoom.id.desc())
+            .distinct();
+        long totalCount = query.fetchCount();
+        List<ChatRoom> chatRoomList = Objects.requireNonNull(getQuerydsl())
+            .applyPagination(pageable, query).fetch();
+        return new PageImpl<>(chatRoomList, pageable, totalCount);
     }
 
     private <T> Predicate predicateOptional(final Function<T, Predicate> whereFunc, final T value) {
