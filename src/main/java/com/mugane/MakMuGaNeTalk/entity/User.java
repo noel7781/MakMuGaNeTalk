@@ -1,5 +1,6 @@
 package com.mugane.MakMuGaNeTalk.entity;
 
+import com.mugane.MakMuGaNeTalk.enums.UserRoleType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -22,7 +23,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-@ToString
+@ToString(exclude = {"userChatRoomList", "userBanList"})
 @Entity
 @Builder
 @Getter
@@ -43,6 +44,8 @@ public class User extends BaseTimeEntity implements UserDetails {
     @Column(unique = true)
     private String email;
 
+    private Boolean fromSocial;
+
     @OneToMany(mappedBy = "user")
     private List<UserChatRoom> userChatRoomList;
 
@@ -53,6 +56,10 @@ public class User extends BaseTimeEntity implements UserDetails {
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
+
+    public void addRole(UserRoleType userRoleType) {
+        roles.add(String.valueOf(userRoleType));
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -89,5 +96,9 @@ public class User extends BaseTimeEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

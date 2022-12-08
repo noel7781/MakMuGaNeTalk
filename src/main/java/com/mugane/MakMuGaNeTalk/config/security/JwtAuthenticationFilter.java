@@ -28,12 +28,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             String path = request.getServletPath();
+            log.warn("path is {}", path);
             if (path.startsWith("/api/v1/users/signup")
                 || path.startsWith("/api/v1/users/signin")
                 || path.startsWith("/api/v1/users/reissue")
+                || path.startsWith("/api/v1/users/oauth")
                 || path.startsWith("/api/v1/users/email-check")
                 || path.startsWith("/api/v1/users/nickname-check")
                 || path.startsWith("/ws")
+                || !path.contains("/api")
             ) {
                 chain.doFilter(request, response);
             } else {

@@ -40,7 +40,7 @@ public class ChatService {
             User user = userService.findUserByEmail(authentication.getName());
             String content = messageRequestDto.getContent();
             MessageResponseDto messageResponseDto = MessageResponseDto.builder()
-                .email(user.getEmail())
+                .userId(user.getId())
                 .nickname(user.getNickname())
                 .content(content)
                 .createdAt(LocalDateTime.now())

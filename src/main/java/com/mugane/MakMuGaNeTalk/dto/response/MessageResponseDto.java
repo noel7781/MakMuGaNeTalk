@@ -10,15 +10,15 @@ import lombok.ToString;
 @Getter
 public class MessageResponseDto {
 
-    private String email;
+    private Long userId;
     private String nickname;
     private String content;
     private LocalDateTime createdAt;
 
     @Builder
-    public MessageResponseDto(String email, String nickname, String content, String imgUrl,
+    public MessageResponseDto(Long userId, String nickname, String content, String imgUrl,
         LocalDateTime createdAt) {
-        this.email = email;
+        this.userId = userId;
         this.nickname = nickname;
         this.content = content;
         this.createdAt = createdAt;
@@ -28,7 +28,7 @@ public class MessageResponseDto {
     public static MessageResponseDto of(Message message) {
         return MessageResponseDto
             .builder()
-            .email(message.getUser().getEmail())
+            .userId(message.getUser().getId())
             .nickname(message.getUser().getNickname())
             .content(message.getContent())
             .createdAt(message.getCreatedAt())

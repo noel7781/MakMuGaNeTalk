@@ -15,3 +15,11 @@ export const timeConvert = (times) => {
     options,
   });
 };
+
+export const isExpired = ({ exp }) => {
+  return Date.now() >= exp * 1000;
+};
+
+export const getArrays = (a, b) => {
+  return Array.from({ length: b - a + 1 }, (v, k) => k + a);
+};

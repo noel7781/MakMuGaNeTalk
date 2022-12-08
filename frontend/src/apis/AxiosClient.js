@@ -1,6 +1,5 @@
 import axios from "axios";
 import { getCookieToken, setRefreshToken } from "../storage/Cookie";
-import { reissue, reissueErrorHandler } from "./AuthAPI";
 
 const axiosClient = axios.create({
   baseURL: "http://localhost:8080/api/v1",
@@ -37,11 +36,11 @@ axiosClient.interceptors.response.use(
           refreshToken,
         },
       }).then((res) => {
-        console.log("res =", res);
         if (res.status === 200) {
           const { accessToken, refreshToken } = res.data;
           localStorage.setItem("accessToken", accessToken);
-          axios.defaults.headers.common["Authorization"] = accessToken;
+          // TODO: CHECK 할 부분
+          axiosClient.defaults.headers.common["Authorization"] = accessToken;
           setRefreshToken(refreshToken);
           window.location.reload();
         }

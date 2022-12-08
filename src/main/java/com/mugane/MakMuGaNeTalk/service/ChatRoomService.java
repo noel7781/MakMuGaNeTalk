@@ -79,9 +79,9 @@ public class ChatRoomService {
 
         ChatRoomListResponseDto chatRoomListResponseDto = ChatRoomListResponseDto
             .builder()
-            .chatRoom(chatRoomList.toList())
+            .chatRoom(chatRoomList)
             .userId(user.getId())
-            .currentPageNumber(pageable.getPageNumber())
+            .currentPageNumber(chatRoomList.getPageable().getPageNumber())
             .totalPageNumber(chatRoomList.getTotalPages())
             .build();
         return chatRoomListResponseDto;
@@ -118,7 +118,6 @@ public class ChatRoomService {
             .chatRoomLikeList(new ArrayList<>())
             .build();
 
-//         TODO: saveAndFlush 찾아보기
         ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
 
         List<Tag> tagList = createTagList(tagContentList);

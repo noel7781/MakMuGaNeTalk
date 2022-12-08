@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.data.domain.Page;
 
 @Getter
 public class ChatRoomListResponseDto {
@@ -19,7 +20,7 @@ public class ChatRoomListResponseDto {
 
     @Builder
     public ChatRoomListResponseDto(
-        List<ChatRoom> chatRoom,
+        Page<ChatRoom> chatRoom,
         Long userId,
         int currentPageNumber,
         int totalPageNumber) {

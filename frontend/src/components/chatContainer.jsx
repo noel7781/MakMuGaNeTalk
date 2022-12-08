@@ -1,30 +1,36 @@
-import React, { useEffect, useState } from "react";
 import sockjs from "sockjs-client/dist/sockjs";
-import { CompatClient } from "@stomp/stompjs";
 import Screen from "./screen";
+import jwt_decode from "jwt-decode";
+import { useEffect, useState, useRef } from "react";
+import { CompatClient } from "@stomp/stompjs";
 import { useParams } from "react-router-dom";
 import { timeConvert } from "../utils/util";
-import jwt_decode from "jwt-decode";
-import "../css/chatRoom.css";
 import { getMessages } from "../apis/ChatRoomAPI";
-
-const stompClient = new CompatClient();
-stompClient.webSocketFactory = function () {
-  return new sockjs("http://localhost:8080/ws");
-};
-stompClient.debug = () => {};
+import { useDispatch, useSelector } from "react-redux";
+import { SET_TOKEN } from "../Store/Auth";
+import "../css/chatRoom.css";
 
 const ChatContainer = () => {
   const [contents, setContents] = useState([]);
   const [message, setMessage] = useState("");
-  const [userId, setUserId] = useState("");
-  const accessToken = localStorage.getItem("accessToken");
-  const decodedToken = jwt_decode(accessToken);
+  const [userId, setUserId] = useState(0);
+  const { accessToken } = useSelector((state) => state.authToken);
   const params = useParams();
+  const dispatch = useDispatch();
+  const stompClient = useRef(new CompatClient());
 
-  // const token = localStorage.getItem("accessToken");
-  // const decodedToken = jwt_decode(token);
+  let decodedToken;
+
   useEffect(() => {
+    stompClient.current.webSocketFactory = function () {
+      return new sockjs("http://localhost:8080/ws");
+    };
+    stompClient.current.debug = () => {};
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      dispatch(SET_TOKEN(token));
+      decodedToken = jwt_decode(token);
+    }
     const fetchData = async () => {
       const response = await getMessages(params.chatRoomId);
       if (response.status === 200) {
@@ -39,16 +45,16 @@ const ChatContainer = () => {
   }, []);
   useEffect(() => {
     if (decodedToken != null) {
-      setUserId(decodedToken["sub"]);
+      setUserId(decodedToken["userId"]);
     }
   }, [decodedToken]);
 
   useEffect(() => {
     let token = localStorage.getItem("accessToken");
-    stompClient.connect(
+    stompClient.current.connect(
       { Authorization: token },
       () => {
-        stompClient.subscribe(
+        stompClient.current.subscribe(
           `/topic/room.${params.chatRoomId}`,
           (data) => {
             const newMessage = JSON.parse(data.body);
@@ -71,7 +77,7 @@ const ChatContainer = () => {
     const newMessage = {
       content: message,
     };
-    stompClient.publish({
+    stompClient.current.publish({
       destination: `/app/chat.message.${params.chatRoomId}`,
       headers: { Authorization: token },
       body: JSON.stringify(newMessage),
@@ -82,7 +88,7 @@ const ChatContainer = () => {
   const addMessage = (message) => {
     setContents((prev) =>
       prev.concat({
-        email: message.email,
+        userId: message.userId,
         nickname: message.nickname,
         content: message.content,
         createdAt: timeConvert(message.createdAt),

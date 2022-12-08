@@ -1,5 +1,6 @@
 package com.mugane.MakMuGaNeTalk.controller;
 
+import com.mugane.MakMuGaNeTalk.dto.UserDto;
 import com.mugane.MakMuGaNeTalk.dto.request.ChatRoomListRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.CreateChatRoomInvitationRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.CreateChatRoomRequestDto;
@@ -9,6 +10,7 @@ import com.mugane.MakMuGaNeTalk.dto.response.MessageResponseDto;
 import com.mugane.MakMuGaNeTalk.entity.User;
 import com.mugane.MakMuGaNeTalk.enums.ChatRoomType;
 import com.mugane.MakMuGaNeTalk.service.ChatRoomService;
+import com.mugane.MakMuGaNeTalk.service.UserService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,18 +33,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
+    private final UserService userService;
 
     @GetMapping("/v1/chat-rooms")
     public ResponseEntity<ChatRoomListResponseDto> getChatRoomList
         (
             ChatRoomListRequestDto req, Pageable pageable,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal UserDto userDto
         ) {
 
         if (req == null) {
             req = new ChatRoomListRequestDto();
         }
-
+        User user = userService.findById(userDto.getId());
         ChatRoomListResponseDto chatRoomList = chatRoomService.getChatRoomList(req, user, pageable);
 
         return ResponseEntity
@@ -63,7 +66,7 @@ public class ChatRoomController {
 
     @PostMapping("/v1/chat-rooms")
     public ResponseEntity<?> createChatRoom(
-        @RequestBody CreateChatRoomRequestDto req, @AuthenticationPrincipal User user
+        @RequestBody CreateChatRoomRequestDto req, @AuthenticationPrincipal UserDto user
     ) {
         ChatRoomType chatRoomType = req.getChatRoomType();
 
@@ -86,17 +89,19 @@ public class ChatRoomController {
 
     @PostMapping("/v1/chat-room-invitations")
     public ResponseEntity<?> createChatRoom(
-        @RequestBody CreateChatRoomInvitationRequestDto req, @AuthenticationPrincipal User user
+        @RequestBody CreateChatRoomInvitationRequestDto req,
+        @AuthenticationPrincipal UserDto userDto
     ) {
-
+        User user = userService.findById(userDto.getId());
         chatRoomService.createChatRoomInvitation(user, req.getGuestUserId(), req.getFirstMessage());
         return ResponseEntity.status(HttpStatus.OK).body("success");
     }
 
     @PostMapping("/v1/chat-rooms-likes")
     public ResponseEntity<?> clickLikeButton(
-        @RequestBody LikeButtonRequestDto req, @AuthenticationPrincipal User user
+        @RequestBody LikeButtonRequestDto req, @AuthenticationPrincipal UserDto userDto
     ) {
+        User user = userService.findById(userDto.getId());
         chatRoomService.handleLikeButton(req, user);
         return ResponseEntity.status(HttpStatus.OK).body("success");
     }
