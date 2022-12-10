@@ -68,7 +68,7 @@ public class UserService {
 
         TokenDto tokenDto = jwtTokenProvider.createTokenDto(
             user.getId(),
-            user.getUsername(),
+            user.getEmail(),
             user.getNickname(),
             user.getRoles());
 
@@ -171,7 +171,7 @@ public class UserService {
 
         TokenDto tokenDto = jwtTokenProvider.createTokenDto(
             user.getId(),
-            user.getUsername(),
+            user.getEmail(),
             user.getNickname(),
             user.getRoles());
 

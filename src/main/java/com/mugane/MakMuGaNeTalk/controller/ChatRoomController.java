@@ -45,8 +45,9 @@ public class ChatRoomController {
         if (req == null) {
             req = new ChatRoomListRequestDto();
         }
-        User user = userService.findById(userDto.getId());
-        ChatRoomListResponseDto chatRoomList = chatRoomService.getChatRoomList(req, user, pageable);
+
+        ChatRoomListResponseDto chatRoomList = chatRoomService.getChatRoomList(req, userDto,
+            pageable);
 
         return ResponseEntity
             .status(HttpStatus.OK)

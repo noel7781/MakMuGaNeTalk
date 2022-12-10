@@ -51,6 +51,15 @@ public class UserDto implements OAuth2User, UserDetails {
             .build();
     }
 
+    public User toEntity() {
+        return User.builder()
+            .id(this.id)
+            .email(this.email)
+            .nickname(this.nickname)
+            .roles(this.roles.stream().map(Object::toString).collect(Collectors.toList()))
+            .build();
+    }
+
 
     @Override
     public Map<String, Object> getAttributes() {

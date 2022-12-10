@@ -2,6 +2,7 @@ package com.mugane.MakMuGaNeTalk.repository;
 
 import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
 import com.mugane.MakMuGaNeTalk.entity.QChatRoom;
+import com.mugane.MakMuGaNeTalk.entity.QChatRoomLike;
 import com.mugane.MakMuGaNeTalk.entity.QChatRoomTag;
 import com.mugane.MakMuGaNeTalk.entity.QTag;
 import com.mugane.MakMuGaNeTalk.entity.QUser;
@@ -25,6 +26,7 @@ public class ChatRoomSupportImpl extends QuerydslRepositorySupport implements Ch
     private final QTag qTag = QTag.tag;
     private final QUser qUser = QUser.user;
     private final QUserChatRoom qUserChatRoom = QUserChatRoom.userChatRoom;
+    private final QChatRoomLike qChatRoomLike = QChatRoomLike.chatRoomLike;
 
     public ChatRoomSupportImpl() {
         super(ChatRoom.class);
@@ -42,10 +44,12 @@ public class ChatRoomSupportImpl extends QuerydslRepositorySupport implements Ch
         };
 
         JPQLQuery<ChatRoom> query = from(qChatRoom)
-            .leftJoin(qChatRoomTag).on(qChatRoom.id.eq(qChatRoomTag.chatRoom.id)).fetchJoin()
+            .leftJoin(qChatRoom.chatRoomTagList, qChatRoomTag)
+            .leftJoin(qChatRoom.chatRoomLikeList, qChatRoomLike)
             .where(predicates)
             .orderBy(qChatRoom.id.desc())
             .distinct();
+
         long totalCount = query.fetchCount();
         List<ChatRoom> chatRoomList = Objects.requireNonNull(getQuerydsl())
             .applyPagination(pageable, query).fetch();
@@ -66,8 +70,9 @@ public class ChatRoomSupportImpl extends QuerydslRepositorySupport implements Ch
         };
 
         JPQLQuery<ChatRoom> query = from(qChatRoom)
-            .leftJoin(qChatRoomTag).on(qChatRoom.id.eq(qChatRoomTag.chatRoom.id)).fetchJoin()
-            .leftJoin(qUserChatRoom).on(qChatRoom.id.eq(qUserChatRoom.chatRoom.id)).fetchJoin()
+            .leftJoin(qChatRoom.chatRoomTagList, qChatRoomTag)
+            .leftJoin(qChatRoom.userChatRoomList, qUserChatRoom)
+            .leftJoin(qChatRoom.chatRoomLikeList, qChatRoomLike)
             .where(predicates)
             .orderBy(qChatRoom.id.desc())
             .distinct();

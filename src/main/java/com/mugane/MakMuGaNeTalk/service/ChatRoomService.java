@@ -1,5 +1,6 @@
 package com.mugane.MakMuGaNeTalk.service;
 
+import com.mugane.MakMuGaNeTalk.dto.UserDto;
 import com.mugane.MakMuGaNeTalk.dto.request.ChatRoomListRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.CreateChatRoomRequestDto;
 import com.mugane.MakMuGaNeTalk.dto.request.LikeButtonRequestDto;
@@ -58,7 +59,7 @@ public class ChatRoomService {
     }
 
     @Transactional(readOnly = true)
-    public ChatRoomListResponseDto getChatRoomList(ChatRoomListRequestDto req, User user,
+    public ChatRoomListResponseDto getChatRoomList(ChatRoomListRequestDto req, UserDto user,
         Pageable pageable) {
 
         Page<ChatRoom> chatRoomList;
@@ -110,9 +111,7 @@ public class ChatRoomService {
             .type(chatRoomType)
             .title(title)
             .password(password)
-            .createdBy(user)
             .ownerUser(user)
-            .updatedBy(user)
             .messageList(new ArrayList<>())
             .chatRoomTagList(new ArrayList<>())
             .chatRoomLikeList(new ArrayList<>())
