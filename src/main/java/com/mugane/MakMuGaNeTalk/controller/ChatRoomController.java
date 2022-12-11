@@ -93,7 +93,7 @@ public class ChatRoomController {
         @RequestBody CreateChatRoomInvitationRequestDto req,
         @AuthenticationPrincipal UserDto userDto
     ) {
-        User user = userService.findById(userDto.getId());
+        User user = userDto.toEntity();
         chatRoomService.createChatRoomInvitation(user, req.getGuestUserId(), req.getFirstMessage());
         return ResponseEntity.status(HttpStatus.OK).body("success");
     }
@@ -102,7 +102,7 @@ public class ChatRoomController {
     public ResponseEntity<?> clickLikeButton(
         @RequestBody LikeButtonRequestDto req, @AuthenticationPrincipal UserDto userDto
     ) {
-        User user = userService.findById(userDto.getId());
+        User user = userDto.toEntity();
         chatRoomService.handleLikeButton(req, user);
         return ResponseEntity.status(HttpStatus.OK).body("success");
     }

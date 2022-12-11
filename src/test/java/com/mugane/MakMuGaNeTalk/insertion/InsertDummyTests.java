@@ -33,9 +33,9 @@ public class InsertDummyTests {
 
     @Test
     public void insertDummies() {
-        int userCount = 20;
-        int chatRoomCount = 100;
-        int messageCount = 10000;
+        int userCount = 3;
+        int chatRoomCount = 2;
+        int messageCount = 2400;
         // Dummy User
         IntStream.rangeClosed(1, userCount).forEach(i -> {
             User user = User.builder()

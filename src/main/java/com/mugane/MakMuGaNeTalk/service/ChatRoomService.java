@@ -50,12 +50,11 @@ public class ChatRoomService {
     private final ChatRoomInvitationRepository chatRoomInvitationRepository;
     private final ChatRoomLikeRepository chatRoomLikeRepository;
     private final NotificationService notificationService;
-    private final CustomUserDetailService customUserDetailService;
 
     @Transactional(readOnly = true)
     public ChatRoom getChatRoomById(Long chatRoomId) {
         return chatRoomRepository.findById(chatRoomId)
-            .orElseThrow(() -> new IllegalStateException("Chat Room Not Found"));
+            .orElseThrow(() -> new IllegalArgumentException("해당 아이디를 가지는 채팅방이 존재하지 않습니다."));
     }
 
     @Transactional(readOnly = true)
@@ -206,16 +205,12 @@ public class ChatRoomService {
         Long chatRoomId = req.getChatRoomId();
         boolean likeState = req.getLikeState();
 
-        Optional<ChatRoom> optionalChatRoom = chatRoomRepository.findById(chatRoomId);
-        if (optionalChatRoom.isEmpty()) {
-            throw new IllegalArgumentException("해당 아이디를 가지는 채팅방이 존재하지 않습니다.");
-        }
+        ChatRoom chatRoom = getChatRoomById(chatRoomId);
         if (likeState) {
             ChatRoomLike chatRoomLike = chatRoomLikeRepository.findByUserIdAndChatRoomId(
                 user.getId(), chatRoomId);
             chatRoomLikeRepository.delete(chatRoomLike);
         } else {
-            ChatRoom chatRoom = optionalChatRoom.get();
             ChatRoomLike chatRoomLike = ChatRoomLike
                 .builder()
                 .user(user)
@@ -227,11 +222,7 @@ public class ChatRoomService {
 
     @Transactional(readOnly = true)
     public List<MessageResponseDto> getMessages(Long chatRoomId) {
-        Optional<ChatRoom> optionalChatRoom = chatRoomRepository.findById(chatRoomId);
-        if (optionalChatRoom.isEmpty()) {
-            throw new IllegalArgumentException("해당 아이디를 가지는 채팅방이 존재하지 않습니다.");
-        }
-        ChatRoom chatRoom = optionalChatRoom.get();
+        ChatRoom chatRoom = getChatRoomById(chatRoomId);
         List<Message> messageList = chatRoom.getMessageList();
         return messageList.stream().map(message -> MessageResponseDto.of(message)).collect(
             Collectors.toList());
