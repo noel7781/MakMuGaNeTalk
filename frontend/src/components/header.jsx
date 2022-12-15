@@ -30,6 +30,7 @@ const Header = () => {
       } else {
         dispatch(SET_TOKEN(token));
         setUserNickname(jwt_decode(token).nickname);
+        navigate("/main");
       }
     }
   }, []);
