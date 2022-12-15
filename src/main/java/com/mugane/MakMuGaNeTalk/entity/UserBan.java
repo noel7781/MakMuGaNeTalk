@@ -6,7 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class UserBan extends BaseTimeEntity {
@@ -16,11 +16,11 @@ public class UserBan extends BaseTimeEntity {
     @Column(name = "USER_BAN_ID")
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(referencedColumnName = "USER_ID", name = "BAN_USER_ID")
     private User banUser;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(referencedColumnName = "USER_ID", name = "BANNED_USER_ID")
     private User bannedUser;
 }

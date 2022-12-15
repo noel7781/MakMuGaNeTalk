@@ -8,6 +8,7 @@ import { clickLikeButton, getChatRoomList } from "../apis/ChatRoomAPI";
 import { useNavigate } from "react-router-dom";
 import { getArrays } from "../utils/util";
 import "../css/chatRoom.css";
+import SearchBar from "../components/ui/searchbar";
 const Groupchat = () => {
   const [chatRoomList, setChatRoomList] = useState([]);
   const [totalPage, setTotalPage] = useState(0);
@@ -124,34 +125,37 @@ const Groupchat = () => {
         ) : (
           ""
         )}
-        <div style={{ display: "flex" }}>
-          {nextPageList.length > 0 &&
-            nextPageList.map((n, idx) => (
-              <div
-                key={idx}
-                style={{
-                  padding: "20px",
-                  color: n === currentPage ? "red" : "black",
-                }}
-                onClick={() => setCurrentPage(n)}
-              >
-                {n}
-              </div>
-            ))}
-        </div>
-        {hasNext ? (
-          <div
-            style={{ display: "flex" }}
-            onClick={() =>
-              setCurrentPage((c) => (Math.floor((c - 1) / 10) + 1) * 10 + 1)
-            }
-          >
-            <NavigateNextIcon />
+        <div>
+          <SearchBar />
+          <div style={{ display: "flex" }}>
+            {nextPageList.length > 0 &&
+              nextPageList.map((n, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    padding: "20px",
+                    color: n === currentPage ? "red" : "black",
+                  }}
+                  onClick={() => setCurrentPage(n)}
+                >
+                  {n}
+                </div>
+              ))}
           </div>
-        ) : (
-          ""
-        )}
-      </div>
+          {hasNext ? (
+            <div
+              style={{ display: "flex" }}
+              onClick={() =>
+                setCurrentPage((c) => (Math.floor((c - 1) / 10) + 1) * 10 + 1)
+              }
+            >
+              <NavigateNextIcon />
+            </div>
+          ) : (
+            ""
+          )}
+        </div>
+      </div>{" "}
     </div>
   );
 };

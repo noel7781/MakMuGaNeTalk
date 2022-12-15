@@ -3,7 +3,7 @@ import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import jwt_decode from "jwt-decode";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import { useNavigate } from "react-router-dom";
-import { reissue, signOut } from "../apis/AuthAPI";
+import { signOut } from "../apis/AuthAPI";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DELETE_TOKEN, SET_TOKEN } from "../Store/Auth";
@@ -30,6 +30,7 @@ const Header = () => {
       } else {
         dispatch(SET_TOKEN(token));
         setUserNickname(jwt_decode(token).nickname);
+        navigate("/main");
       }
     }
   }, []);
@@ -62,6 +63,7 @@ const Header = () => {
             {
               headers: {
                 Authorization: accessToken,
+                "LAST-EVENT-ID": "",
               },
               withCredentials: true,
             }
@@ -113,7 +115,6 @@ const Header = () => {
         } catch (error) {}
       };
       fetchSse();
-      console.log(eventSource);
       return () => eventSource.close();
     }
   }, [accessToken]);

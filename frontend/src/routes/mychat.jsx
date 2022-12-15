@@ -1,5 +1,7 @@
 import LockIcon from "@mui/icons-material/Lock";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import Loading from "../components/ui/loading";
 import { useEffect, useState } from "react";
 import { clickLikeButton, getChatRoomList } from "../apis/ChatRoomAPI";

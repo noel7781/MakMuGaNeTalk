@@ -6,12 +6,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,20 +35,12 @@ public class ChatRoom extends BaseTimeEntity {
 
     private String title;
 
-    @OneToOne
-    @JoinColumn(referencedColumnName = "USER_ID", name = "OWNER_USER_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID")
     private User ownerUser;
 
     @Builder.Default
     private String password = "";
-
-    @OneToOne
-    @JoinColumn(referencedColumnName = "USER_ID", name = "CREATED_BY")
-    private User createdBy;
-
-    @OneToOne
-    @JoinColumn(referencedColumnName = "USER_ID", name = "UPDATED_BY")
-    private User updatedBy;
 
     @OneToMany(mappedBy = "chatRoom")
     private List<UserChatRoom> userChatRoomList;
