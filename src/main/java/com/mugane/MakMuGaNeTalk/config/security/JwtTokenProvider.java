@@ -99,6 +99,12 @@ public class JwtTokenProvider {
             userDetails.getAuthorities());
     }
 
+    public Long getUserId(String token) {
+        HashMap<String, String> payloadMap = getPayloadByToken(token);
+        payloadMap.get("userId");
+        return Long.parseLong(String.valueOf(payloadMap.get("userId")));
+    }
+
     public String getUserPk(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }

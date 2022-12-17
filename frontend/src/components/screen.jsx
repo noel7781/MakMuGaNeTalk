@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import "../css/chatRoom.css";
+import UserList from "./userlist";
 
 const ChatPresenter = ({
   contents,
@@ -7,6 +8,7 @@ const ChatPresenter = ({
   setMessage,
   handleSubmit,
   userId,
+  joinUserList,
 }) => {
   const messagesEndRef = useRef(null);
 
@@ -28,25 +30,32 @@ const ChatPresenter = ({
 
   return (
     <div className="outline">
-      <div className="messageBox">
-        {contents.map((message, idx) => (
-          <div
-            className={`messages ${
-              message.userId === userId ? "my-chat" : "other-chat"
-            }`}
-            key={idx}
-          >
+      <div className="chat-and-user">
+        <div className="messageBox">
+          {contents.map((message, idx) => (
             <div
-              className={
-                message.userId === userId ? "my-chat-inner" : "other-chat-inner"
-              }
+              className={`messages ${
+                message.userId === userId ? "my-chat" : "other-chat"
+              }`}
+              key={idx}
             >
-              <span className="chat-nickname"> {message.nickname}</span>
-              <p>{message.content} </p>
-              <span className="chat-time-date"> {message.createdAt}</span>
+              <div
+                className={
+                  message.userId === userId
+                    ? "my-chat-inner"
+                    : "other-chat-inner"
+                }
+              >
+                <span className="chat-nickname"> {message.nickname}</span>
+                <p>{message.content} </p>
+                <span className="chat-time-date"> {message.createdAt}</span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+        <div className="userlistBox">
+          <UserList users={joinUserList} />
+        </div>
         <div ref={messagesEndRef} />
       </div>
       <form className="send" onSubmit={handleSubmit}>

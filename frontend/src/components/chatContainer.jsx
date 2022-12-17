@@ -14,10 +14,11 @@ const ChatContainer = () => {
   const [contents, setContents] = useState([]);
   const [message, setMessage] = useState("");
   const [userId, setUserId] = useState(0);
-  const { accessToken } = useSelector((state) => state.authToken);
+  const [joinUserList, setJoinUserList] = useState([]);
   const params = useParams();
   const dispatch = useDispatch();
   const stompClient = useRef(new CompatClient());
+  const isConnected = useRef(false);
 
   let decodedToken;
 
@@ -30,6 +31,38 @@ const ChatContainer = () => {
     if (token) {
       dispatch(SET_TOKEN(token));
       decodedToken = jwt_decode(token);
+      setUserId(decodedToken["userId"]);
+      stompClient.current.connect(
+        { Authorization: token },
+        () => {
+          stompClient.current.subscribe(
+            `/topic/room.${params.chatRoomId}`,
+            (data) => {
+              const newMessage = JSON.parse(data.body);
+              addMessage(newMessage);
+            },
+            { headers: { Authorization: token } }
+          );
+          stompClient.current.subscribe(
+            `/topic/roomUsers.${params.chatRoomId}`,
+            (data) => {
+              const res = JSON.parse(data.body);
+              setJoinUserList(res.userList);
+            },
+            { headers: { Authorization: token } }
+          );
+          isConnected.current = true;
+
+          stompClient.current.publish({
+            destination: `/app/chat.enter.${params.chatRoomId}`,
+            headers: { Authorization: token },
+            body: JSON.stringify({ content: "입장했습니다." }),
+          });
+        },
+        (e) => {
+          console.error(e);
+        }
+      );
     }
     const fetchData = async () => {
       const response = await getMessages(params.chatRoomId);
@@ -42,32 +75,18 @@ const ChatContainer = () => {
       }
     };
     fetchData();
-  }, []);
-  useEffect(() => {
-    if (decodedToken != null) {
-      setUserId(decodedToken["userId"]);
-    }
-  }, [decodedToken]);
-
-  useEffect(() => {
-    let token = localStorage.getItem("accessToken");
-    stompClient.current.connect(
-      { Authorization: token },
-      () => {
-        stompClient.current.subscribe(
-          `/topic/room.${params.chatRoomId}`,
-          (data) => {
-            const newMessage = JSON.parse(data.body);
-            addMessage(newMessage);
-          },
-          { headers: { Authorization: token } }
-        );
-      },
-      (e) => {
-        console.error(e);
+    return () => {
+      if (isConnected.current) {
+        stompClient.current.publish({
+          destination: `/app/chat.leave.${params.chatRoomId}`,
+          headers: { Authorization: token },
+        });
+        stompClient.current.disconnect(() => {
+          isConnected.current = false;
+        });
       }
-    );
-  }, [contents]);
+    };
+  }, []);
 
   const handleSubmit = (e) => {
     if (message.trim().length === 0) {
@@ -103,6 +122,7 @@ const ChatContainer = () => {
         message={message}
         setMessage={setMessage}
         userId={userId}
+        joinUserList={joinUserList}
       />
     </div>
   );

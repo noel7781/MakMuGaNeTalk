@@ -16,6 +16,18 @@ public class ChatController {
 
     private final ChatService chatService;
 
+    @MessageMapping("chat.enter.{chatRoomId}")
+    public void enter(@DestinationVariable("chatRoomId") Long chatRoomId,
+        @Header("Authorization") String accessToken) {
+        chatService.enter(chatRoomId, accessToken);
+    }
+
+    @MessageMapping("chat.leave.{chatRoomId}")
+    public void leave(@DestinationVariable("chatRoomId") Long chatRoomId,
+        @Header("Authorization") String accessToken) {
+        chatService.leave(chatRoomId, accessToken);
+    }
+
     @MessageMapping("chat.message.{chatRoomId}")
     public void chat(@DestinationVariable("chatRoomId") Long chatRoomId,
         MessageRequestDto messageRequestDto,
