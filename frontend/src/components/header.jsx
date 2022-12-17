@@ -32,6 +32,8 @@ const Header = () => {
         setUserNickname(jwt_decode(token).nickname);
         navigate("/main");
       }
+    } else {
+      navigate("/");
     }
   }, []);
   const handleInviteAlarmClick = (e) => {
