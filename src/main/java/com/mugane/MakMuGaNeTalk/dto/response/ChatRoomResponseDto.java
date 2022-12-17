@@ -10,6 +10,7 @@ public class ChatRoomResponseDto {
 
     private Long id;
     private String title;
+    private String password;
     private ChatRoomType type;
     private Long likeCount;
     private boolean isMyFavorite;
@@ -18,6 +19,7 @@ public class ChatRoomResponseDto {
     ChatRoomResponseDto(ChatRoom chatRoom, Long userId) {
         this.id = chatRoom.getId();
         this.title = chatRoom.getTitle();
+        this.password = chatRoom.getPassword();
         this.type = chatRoom.getType();
         this.likeCount = (long) chatRoom.getChatRoomLikeList().size();
         this.isMyFavorite = chatRoom.getChatRoomLikeList().stream()

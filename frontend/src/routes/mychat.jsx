@@ -8,6 +8,7 @@ import { clickLikeButton, getChatRoomList } from "../apis/ChatRoomAPI";
 import { useNavigate } from "react-router-dom";
 import { getArrays } from "../utils/util";
 import "../css/chatRoom.css";
+import Card from "../components/ui/card";
 const MyChat = () => {
   const [chatRoomList, setChatRoomList] = useState([]);
   const [totalPage, setTotalPage] = useState(0);
@@ -51,6 +52,15 @@ const MyChat = () => {
   }, [currentPage]);
 
   const handleJoinChatRoom = (id) => {
+    const chatRoom = chatRoomList.find((room) => room.id === id);
+    if (chatRoom.type === "PRIVATE_CHAT") {
+      const password = prompt("비밀번호를 입력하세요.");
+      if (password !== chatRoom.password) {
+        alert("비밀번호가 틀렸습니다.");
+        return;
+      }
+      navigate(`/chatRooms/${id}`);
+    }
     navigate(`/chatRooms/${id}`);
   };
 
@@ -76,7 +86,7 @@ const MyChat = () => {
   return isLoading ? (
     <Loading />
   ) : (
-    <div>
+    <Card>
       {chatRoomList &&
         chatRoomList.map((room) => {
           return (
@@ -152,7 +162,7 @@ const MyChat = () => {
           ""
         )}
       </div>
-    </div>
+    </Card>
   );
 };
 

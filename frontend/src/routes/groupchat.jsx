@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { getArrays } from "../utils/util";
 import "../css/chatRoom.css";
 import SearchBar from "../components/ui/searchbar";
+import Card from "../components/ui/card";
 const Groupchat = () => {
   const [chatRoomList, setChatRoomList] = useState([]);
   const [totalPage, setTotalPage] = useState(0);
@@ -52,6 +53,15 @@ const Groupchat = () => {
   }, [currentPage]);
 
   const handleJoinChatRoom = (id) => {
+    const chatRoom = chatRoomList.find((room) => room.id === id);
+    if (chatRoom.type === "PRIVATE_CHAT") {
+      const password = prompt("비밀번호를 입력하세요.");
+      if (password !== chatRoom.password) {
+        alert("비밀번호가 틀렸습니다.");
+        return;
+      }
+      navigate(`/chatRooms/${id}`);
+    }
     navigate(`/chatRooms/${id}`);
   };
 
@@ -77,7 +87,7 @@ const Groupchat = () => {
   return isLoading ? (
     <Loading />
   ) : (
-    <div>
+    <Card>
       {chatRoomList &&
         chatRoomList.map((room) => {
           return (
@@ -126,7 +136,6 @@ const Groupchat = () => {
           ""
         )}
         <div>
-          <SearchBar />
           <div style={{ display: "flex" }}>
             {nextPageList.length > 0 &&
               nextPageList.map((n, idx) => (
@@ -155,8 +164,8 @@ const Groupchat = () => {
             ""
           )}
         </div>
-      </div>{" "}
-    </div>
+      </div>
+    </Card>
   );
 };
 
