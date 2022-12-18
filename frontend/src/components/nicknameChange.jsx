@@ -7,7 +7,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
 import { TextField } from "@mui/material";
-import { checkNicknameExist, changeNickname } from "../apis/AuthAPI";
+import { checkNicknameExist, changeNickname, reissue } from "../apis/AuthAPI";
 import { useSelector } from "react-redux";
 
 const style = {
@@ -37,6 +37,9 @@ const ChatRoomMake = () => {
     }
     const userId = jwt_decode(accessToken).userId;
     const response = await changeNickname(userId, nickname);
+    if (response.status === 200) {
+      await reissue();
+    }
     handleClose();
   };
   const handleTyping = (e) => {
