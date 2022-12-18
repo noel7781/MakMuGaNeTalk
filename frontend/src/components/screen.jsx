@@ -21,6 +21,7 @@ const ChatPresenter = ({
   };
 
   const scrollToBottom = () => {
+    console.log("scroll");
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -52,11 +53,11 @@ const ChatPresenter = ({
               </div>
             </div>
           ))}
+          <div ref={messagesEndRef} />
         </div>
         <div className="userlistBox">
           <UserList users={joinUserList} />
         </div>
-        <div ref={messagesEndRef} />
       </div>
       <form className="send" onSubmit={handleSubmit}>
         <textarea

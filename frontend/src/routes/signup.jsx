@@ -1,7 +1,11 @@
+import Card from "../components/ui/card";
 import { useState } from "react";
 import { Form, useNavigate } from "react-router-dom";
 import { signUp, checkNicknameExist, checkEmailExist } from "../apis/AuthAPI";
 import { validateEmail } from "../utils/validate";
+import { isEmpty } from "../utils/util";
+
+import "../css/signup.css";
 
 const SignUp = () => {
   const [nickname, setNickname] = useState("");
@@ -43,6 +47,10 @@ const SignUp = () => {
     }
   };
   const checkNickname = async () => {
+    if (isEmpty(nickname)) {
+      alert("올바른 닉네임을 입력해주세요.");
+      return;
+    }
     const response = await checkNicknameExist(nickname);
     if (response.status == 200 && !response.data) {
       alert("해당 닉네임을 사용할 수 있습니다.");
@@ -70,13 +78,18 @@ const SignUp = () => {
   };
 
   return (
-    <div>
-      <h2>회원가입</h2>
+    <Card>
+      <h2 style={{ textAlign: "center" }}>회원가입</h2>
       <Form
-        style={{ display: "flex", flexDirection: "column" }}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
         onSubmit={handleSubmit}
       >
-        <div>
+        <div className="input--div">
           <label name="nickname">닉네임</label>
           <input
             type="text"
@@ -85,11 +98,15 @@ const SignUp = () => {
             defaultValue={nickname}
             onChange={handleChangeNickname}
           />
-          <button type="button" onClick={checkNickname}>
+          <button
+            className="btn check--btn"
+            type="button"
+            onClick={checkNickname}
+          >
             중복확인
           </button>
         </div>
-        <div>
+        <div className="input--div">
           <label name="email">이메일</label>
           <input
             type="text"
@@ -98,11 +115,11 @@ const SignUp = () => {
             defaultValue={email}
             onChange={handleChangeEmail}
           />
-          <button type="button" onClick={checkEmail}>
+          <button className="btn check--btn" type="button" onClick={checkEmail}>
             중복확인
           </button>
         </div>
-        <div>
+        <div className="input--div">
           <label name="password">비밀번호</label>
           <input
             type="password"
@@ -111,8 +128,11 @@ const SignUp = () => {
             defaultValue={password}
             onChange={handleChangePassword}
           />
+          <button className="transparent" type="button" disabled>
+            임시버튼
+          </button>
         </div>
-        <div>
+        <div className="input--div">
           <label name="checkPassword">비밀번호 확인</label>
           <input
             type="password"
@@ -121,12 +141,17 @@ const SignUp = () => {
             defaultValue={checkPassword}
             onChange={handleChangeCheckPassword}
           />
+          <button className="transparent" type="button" disabled>
+            임시버튼
+          </button>
         </div>
-        <button type="submit" style={{ border: "2px solid blue" }}>
-          가입하기
-        </button>
+        <div className="input--div">
+          <button type="submit" className="btn submit">
+            가입하기
+          </button>
+        </div>
       </Form>
-    </div>
+    </Card>
   );
 };
 

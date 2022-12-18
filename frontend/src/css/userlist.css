@@ -1,0 +1,16 @@
+ul {
+  padding: 0px;
+  margin: 0px;
+}
+.title {
+  text-align: center;
+  background-color: coral;
+  border-bottom: 4px solid #7e4b4b75;
+}
+.userlist {
+  padding: 5px 0px 5px 5px;
+  margin-bottom: 5px;
+  border-bottom: 4px solid #7e4b4b75;
+  font-size: 1.6rem;
+  text-align: center;
+}

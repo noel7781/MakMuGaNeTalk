@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 import { useState } from "react";
 import { Checkbox, TextField } from "@mui/material";
 import { createChatRoom } from "../apis/ChatRoomAPI";
@@ -39,8 +40,18 @@ const ChatRoomMake = () => {
     setOpen(false);
   };
   return (
-    <div>
-      <Button onClick={() => handleOpen()}>채팅방 생성</Button>
+    <>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+        onClick={() => handleOpen()}
+      >
+        <AddBoxIcon />
+        <Button onClick={() => handleOpen()}>채팅방 생성</Button>
+      </div>
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
           <Typography variant="h3" component="h1">
@@ -96,7 +107,7 @@ const ChatRoomMake = () => {
           </Button>
         </Box>
       </Modal>
-    </div>
+    </>
   );
 };
 

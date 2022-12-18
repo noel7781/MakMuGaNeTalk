@@ -3,13 +3,13 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import Loading from "../components/ui/loading";
+import Card from "../components/ui/card";
+import ChatroomHeader from "../components/chatroomHeader";
 import { useEffect, useState } from "react";
 import { clickLikeButton, getChatRoomList } from "../apis/ChatRoomAPI";
 import { useNavigate } from "react-router-dom";
 import { getArrays } from "../utils/util";
 import "../css/chatRoom.css";
-import SearchBar from "../components/ui/searchbar";
-import Card from "../components/ui/card";
 const Groupchat = () => {
   const [chatRoomList, setChatRoomList] = useState([]);
   const [totalPage, setTotalPage] = useState(0);
@@ -87,85 +87,92 @@ const Groupchat = () => {
   return isLoading ? (
     <Loading />
   ) : (
-    <Card>
-      {chatRoomList &&
-        chatRoomList.map((room) => {
-          return (
-            <table key={room.id} className="chattable">
-              <tbody className="chatbody">
-                <tr className="chatrows">
-                  <td className="chatid">{room.id}</td>
-                  <td
-                    className="chattitle"
-                    onClick={() => handleJoinChatRoom(room.id)}
-                  >
-                    {room.title}
-                  </td>
-                  <td className="chattype">
-                    {room.type === "PRIVATE_CHAT" ? <LockIcon /> : ""}
-                  </td>
-                  <td className="chatlike">
-                    <ThumbUpIcon
-                      className={`${room.myFavorite ? "favorite_room" : ""}`}
-                      onClick={() => handleLikeButton(room.id)}
-                    />
-                    {room.likeCount}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          );
-        })}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        {hasPrev ? (
-          <div
-            style={{ display: "flex" }}
-            onClick={() =>
-              setCurrentPage((c) => (Math.floor((c - 1) / 10) - 1) * 10 + 1)
-            }
-          >
-            <NavigateBeforeIcon />
-          </div>
-        ) : (
-          ""
-        )}
-        <div>
-          <div style={{ display: "flex" }}>
-            {nextPageList.length > 0 &&
-              nextPageList.map((n, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    padding: "20px",
-                    color: n === currentPage ? "red" : "black",
-                  }}
-                  onClick={() => setCurrentPage(n)}
-                >
-                  {n}
-                </div>
-              ))}
-          </div>
-          {hasNext ? (
+    <>
+      <ChatroomHeader />
+      <Card>
+        {chatRoomList &&
+          chatRoomList.map((room) => {
+            return (
+              <table key={room.id} className="chattable">
+                <tbody className="chatbody">
+                  <tr className="chatrows">
+                    <td className="chatid">{room.id}</td>
+                    <td
+                      className="chattitle"
+                      onClick={() => handleJoinChatRoom(room.id)}
+                    >
+                      {room.title}
+                    </td>
+                    <td className="chattype">
+                      {room.type === "PRIVATE_CHAT" ? (
+                        <LockIcon />
+                      ) : (
+                        <>PUBLIC</>
+                      )}
+                    </td>
+                    <td className="chatlike">
+                      <ThumbUpIcon
+                        className={`${room.myFavorite ? "favorite_room" : ""}`}
+                        onClick={() => handleLikeButton(room.id)}
+                      />
+                      {room.likeCount}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            );
+          })}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {hasPrev ? (
             <div
               style={{ display: "flex" }}
               onClick={() =>
-                setCurrentPage((c) => (Math.floor((c - 1) / 10) + 1) * 10 + 1)
+                setCurrentPage((c) => (Math.floor((c - 1) / 10) - 1) * 10 + 1)
               }
             >
-              <NavigateNextIcon />
+              <NavigateBeforeIcon />
             </div>
           ) : (
             ""
           )}
+          <div>
+            <div style={{ display: "flex" }}>
+              {nextPageList.length > 0 &&
+                nextPageList.map((n, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      padding: "20px",
+                      color: n === currentPage ? "red" : "black",
+                    }}
+                    onClick={() => setCurrentPage(n)}
+                  >
+                    {n}
+                  </div>
+                ))}
+            </div>
+            {hasNext ? (
+              <div
+                style={{ display: "flex" }}
+                onClick={() =>
+                  setCurrentPage((c) => (Math.floor((c - 1) / 10) + 1) * 10 + 1)
+                }
+              >
+                <NavigateNextIcon />
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
         </div>
-      </div>
-    </Card>
+      </Card>
+    </>
   );
 };
 

@@ -40,7 +40,19 @@ const Header = () => {
     navigate("/invite", { state: { inviteList } });
   };
   const handleNavigateMain = () => {
-    navigate("/main");
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      const decoded = jwt_decode(token);
+      if (isExpired(decoded)) {
+        return;
+      } else {
+        dispatch(SET_TOKEN(token));
+        setUserNickname(jwt_decode(token).nickname);
+        navigate("/main");
+      }
+    } else {
+      navigate("/");
+    }
   };
   const handleSignOut = async () => {
     const response = await signOut();
