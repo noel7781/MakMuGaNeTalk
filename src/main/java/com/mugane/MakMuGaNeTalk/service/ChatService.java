@@ -36,16 +36,11 @@ public class ChatService {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
 
-    //    private final Map<Long, HashSet<Long>> chatRoomUsers = new HashMap<>();
     private final Map<Long, HashSet<User>> chatRoomUsers = new HashMap<>();
 
     private User getUserByAccessToken(String accessToken) {
         Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
         return userService.findUserByEmail(authentication.getName());
-    }
-
-    private Long getUserIdByAccessToken(String accessToken) {
-        return jwtTokenProvider.getUserId(accessToken);
     }
 
     @Transactional
@@ -102,14 +97,11 @@ public class ChatService {
 
     @Transactional
     public void enter(Long chatRoomId, String accessToken) {
-//        Long userId = getUserIdByAccessToken(accessToken);
         try {
             User user = getUserByAccessToken(accessToken);
-//        chatRoomUsers.computeIfAbsent(chatRoomId, (id) -> new HashSet<>()).add(userId);
             chatRoomUsers.computeIfAbsent(chatRoomId, (id) -> new HashSet<>()).add(user);
             rabbitTemplate.convertAndSend("amq.topic", "roomUsers." + chatRoomId,
                 ChatRoomUserListDto.of(chatRoomUsers.get(chatRoomId)));
-            log.warn("SET SIZE = {}", chatRoomUsers.get(chatRoomId).size());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -117,17 +109,14 @@ public class ChatService {
 
     @Transactional
     public void leave(Long chatRoomId, String accessToken) {
-//        Long userId = getUserIdByAccessToken(accessToken);
         try {
             User user = getUserByAccessToken(accessToken);
             chatRoomUsers.computeIfPresent(chatRoomId, (id, s) -> {
-//            s.remove(userId);
                 s.remove(user);
                 rabbitTemplate.convertAndSend("amq.topic", "roomUsers." + chatRoomId,
                     ChatRoomUserListDto.of(s));
                 return s;
             });
-            log.warn("SET SIZE = {}", chatRoomUsers.get(chatRoomId).size());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

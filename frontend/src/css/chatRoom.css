@@ -34,6 +34,7 @@
   border-right: 1px solid black;
   flex-grow: 5;
   flex-basis: 0;
+  font-size: 1.2rem;
 }
 
 .chattype {
@@ -188,4 +189,11 @@
   display: block;
   margin: 8px 0 0;
   font-size: 1.4rem;
+}
+
+.tags {
+  display: inline;
+  padding: 10px;
+  color: #747474;
+  font-size: 1rem;
 }

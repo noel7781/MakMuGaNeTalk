@@ -11,6 +11,7 @@ import com.mugane.MakMuGaNeTalk.service.ChatService;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,6 +33,7 @@ public class InsertDummyTests {
     private JwtTokenProvider jwtTokenProvider;
 
     @Test
+    @Disabled
     public void insertDummies() {
         int userCount = 3;
         int chatRoomCount = 2;

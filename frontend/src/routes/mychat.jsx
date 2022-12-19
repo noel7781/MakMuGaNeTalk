@@ -102,6 +102,14 @@ const MyChat = () => {
                       onClick={() => handleJoinChatRoom(room.id)}
                     >
                       {room.title}
+                      <div>
+                        {room.chatRoomTagList &&
+                          room.chatRoomTagList.map((tag) => (
+                            <p className="tags" key={tag.id}>
+                              # {tag.content}
+                            </p>
+                          ))}
+                      </div>
                     </td>
                     <td className="chattype">
                       {room.type === "PRIVATE_CHAT" ? (

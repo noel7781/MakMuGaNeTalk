@@ -21,7 +21,6 @@ const ChatPresenter = ({
   };
 
   const scrollToBottom = () => {
-    console.log("scroll");
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 

@@ -1,13 +1,15 @@
-package com.mugane.MakMuGaNeTalk.unittest.service;
+package com.mugane.MakMuGaNeTalk.integrationtest.service;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
 import com.mugane.MakMuGaNeTalk.entity.ChatRoomTag;
+import com.mugane.MakMuGaNeTalk.entity.User;
 import com.mugane.MakMuGaNeTalk.enums.ChatRoomType;
 import com.mugane.MakMuGaNeTalk.repository.ChatRoomRepository;
 import com.mugane.MakMuGaNeTalk.repository.TagRepository;
+import com.mugane.MakMuGaNeTalk.repository.UserRepository;
 import com.mugane.MakMuGaNeTalk.service.ChatRoomService;
 import java.util.Arrays;
 import java.util.List;
@@ -35,15 +37,20 @@ class ChatRoomServiceTest {
 
     @Autowired
     TagRepository tagRepository;
+    @Autowired
+    UserRepository userRepository;
 
     @BeforeAll
     public void setUp() {
         Long userId = 1L;
+        User user = User.builder()
+            .id(userId)
+            .build();
+        userRepository.save(user);
         ChatRoomType chatRoomType = ChatRoomType.PRIVATE_CHAT;
         String title = "TEST TITLE";
         String password = "TEST_PASSWORD";
         List<String> tagContentList = Arrays.asList("TAG1", "TAG2", "TAG3");
-//        List<String> tagContentList = new ArrayList<>();
 
         chatRoomService.createChatRoom(
             userId,
@@ -53,6 +60,10 @@ class ChatRoomServiceTest {
             tagContentList
         );
         Long userId2 = 2L;
+        User user2 = User.builder()
+            .id(userId2)
+            .build();
+        userRepository.save(user2);
         ChatRoomType chatRoomType2 = ChatRoomType.OPEN_CHAT;
         String title2 = "TEST TITLE2";
         String password2 = "";
