@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import { useState } from "react";
 import { TextField } from "@mui/material";
 import { checkNicknameExist, changeNickname, reissue } from "../apis/AuthAPI";
@@ -62,6 +63,7 @@ const ChatRoomMake = () => {
   };
   return (
     <div>
+      <DriveFileRenameOutlineIcon />
       <Button onClick={() => handleOpen()}>닉네임 변경</Button>
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>

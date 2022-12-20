@@ -62,7 +62,6 @@ public class UserRestController {
 
     @PostMapping("/signout")
     public ResponseEntity<Void> signOut(@AuthenticationPrincipal UserDto user) {
-        log.warn("USER : {}", user);
         userService.deleteRefreshToken(user.getId());
         return ResponseEntity.ok().build();
     }
