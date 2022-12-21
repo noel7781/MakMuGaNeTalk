@@ -86,13 +86,6 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-//        log.warn("get auth");
-//        String username = getUserPk(token);
-//        log.warn("username: {}", username);
-//        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
-//        log.warn("get detail");
-//        return new UsernamePasswordAuthenticationToken(userDetails, "",
-//            userDetails.getAuthorities());
         HashMap<String, String> payloadMap = getPayloadByToken(token);
         UserDetails userDetails = userDetailsService.loadUserByUsername(payloadMap.get("sub"));
         return new UsernamePasswordAuthenticationToken(userDetails, token,

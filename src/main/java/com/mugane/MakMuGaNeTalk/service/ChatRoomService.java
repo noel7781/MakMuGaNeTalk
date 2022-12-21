@@ -77,14 +77,13 @@ public class ChatRoomService {
             );
         }
 
-        ChatRoomListResponseDto chatRoomListResponseDto = ChatRoomListResponseDto
+        return ChatRoomListResponseDto
             .builder()
             .chatRoom(chatRoomList)
             .userId(user.getId())
             .currentPageNumber(chatRoomList.getPageable().getPageNumber())
             .totalPageNumber(chatRoomList.getTotalPages())
             .build();
-        return chatRoomListResponseDto;
     }
 
     @Transactional
