@@ -5,6 +5,8 @@ import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import { TextField } from "@mui/material";
 import { Button } from "@mui/material";
+import { getChatRoomList } from "../apis/ChatRoomAPI";
+import { useRef } from "react";
 
 const style = {
   position: "absolute",
@@ -19,11 +21,11 @@ const style = {
   textAlign: "center",
 };
 
-const Search = () => {
-  const [keywordInput, setKeywordInput] = useState("");
-  const [tagInput, setTagInput] = useState("");
+const Search = ({ setTags, setKeyword }) => {
   const [open, setOpen] = useState(false);
 
+  const tagRef = useRef();
+  const keywordRef = useRef();
   const handleOpen = () => {
     setOpen(true);
   };
@@ -31,15 +33,12 @@ const Search = () => {
     setOpen(false);
   };
 
-  const keywordInputHandler = (e) => {
-    setKeywordInput(e.target.value);
-  };
-  const tagInputHandler = (e) => {
-    setTagInput(e.target.value);
-  };
   const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(e);
+    setTags(tagRef.current.value);
+    setKeyword(keywordRef.current.value);
+
+    tagRef.current.value = "";
+    keywordRef.current.value = "";
     setOpen(false);
   };
 
@@ -77,9 +76,8 @@ const Search = () => {
               <input
                 type="text"
                 name="keyword"
-                value={keywordInput}
-                onChange={keywordInputHandler}
                 placeholder="키워드"
+                ref={keywordRef}
               />
             </div>
             <div
@@ -93,9 +91,8 @@ const Search = () => {
               <input
                 type="text"
                 name="tag"
-                value={tagInput}
-                onChange={tagInputHandler}
                 placeholder="태그(,로 구분)"
+                ref={tagRef}
               />
             </div>
           </div>

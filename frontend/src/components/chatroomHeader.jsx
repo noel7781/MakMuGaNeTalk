@@ -1,13 +1,14 @@
 import React from "react";
 import ChatRoomInvite from "./chatRoomInvite";
 import ChatRoomMake from "./chatRoomMake";
-import Search from "./ui/search";
+import Search from "./search";
 import "../css/chatRoomHeader.css";
 
-const ChatroomHeader = () => {
+const ChatroomHeader = (props) => {
+  const { tags, setTags, keyword, setKeyword } = props;
   return (
     <div className="chatpage--header">
-      <Search />
+      <Search setTags={setTags} setKeyword={setKeyword} />
       <ChatRoomInvite />
       <ChatRoomMake />
     </div>

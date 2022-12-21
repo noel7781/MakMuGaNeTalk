@@ -13,7 +13,7 @@ import "../css/chatRoom.css";
 const Groupchat = () => {
   const [chatRoomList, setChatRoomList] = useState([]);
   const [totalPage, setTotalPage] = useState(0);
-  const [tagList, setTagList] = useState([]);
+  const [tags, setTags] = useState("");
   const [keyword, setKeyword] = useState("");
   const [nextPageList, setNextPageList] = useState([]);
 
@@ -26,6 +26,8 @@ const Groupchat = () => {
   useEffect(() => {
     setIsLoading(true);
     const fetchData = async () => {
+      const trimmedTags = tags.trim();
+      let tagList = trimmedTags === "" ? [] : trimmedTags.split(",");
       const response = await getChatRoomList(
         tagList,
         keyword,
@@ -50,7 +52,7 @@ const Groupchat = () => {
       }
     };
     fetchData();
-  }, [currentPage]);
+  }, [currentPage, tags, keyword]);
 
   const handleJoinChatRoom = (id) => {
     const chatRoom = chatRoomList.find((room) => room.id === id);
@@ -88,7 +90,7 @@ const Groupchat = () => {
     <Loading />
   ) : (
     <>
-      <ChatroomHeader />
+      <ChatroomHeader setTags={setTags} setKeyword={setKeyword} />
       <Card>
         {chatRoomList &&
           chatRoomList.map((room) => {
