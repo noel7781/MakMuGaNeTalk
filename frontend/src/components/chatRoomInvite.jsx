@@ -27,7 +27,6 @@ const ChatRoomInvite = () => {
 
   const handleInviteChatRoom = async () => {
     const response = await inviteChatRoom(userNickname, inviteMessage);
-    console.log(response);
     handleClose();
   };
   const handleOpen = () => {

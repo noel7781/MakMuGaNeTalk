@@ -46,9 +46,6 @@ export const getChatRoomList = async (
   pageNumber = 0,
   joined = false
 ) => {
-  console.log("tagList: ", tagList);
-  console.log("keyword: ", keyword);
-  console.log("tagList Len: ", tagList.length);
   const response = await AxiosClient({
     method: "get",
     url: "/chat-rooms",
@@ -61,7 +58,6 @@ export const getChatRoomList = async (
     },
   })
     .then((resp) => {
-      console.log(resp);
       return resp;
     })
     .catch((e) => console.error(e));

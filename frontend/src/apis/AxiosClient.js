@@ -1,8 +1,10 @@
 import axios from "axios";
 import { getCookieToken, setRefreshToken } from "../storage/Cookie";
 
+const { VITE_API_ROOT: API_BASE_URL } = import.meta.env;
+
 const axiosClient = axios.create({
-  baseURL: "http://localhost:8080/api/v1",
+  baseURL: `${API_BASE_URL}/api/v1`,
   headers: { "Content-Type": "application/json" },
 });
 

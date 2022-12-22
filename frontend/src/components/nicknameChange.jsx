@@ -50,7 +50,6 @@ const ChatRoomMake = () => {
   const checkDuplicate = async () => {
     const response = await checkNicknameExist(nickname);
     if (response.status === 200) {
-      console.log(response);
       if (response.data === 0) setIsDuplicate(false);
     }
   };
