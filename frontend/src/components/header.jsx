@@ -11,6 +11,8 @@ import { setRefreshToken, getCookieToken } from "../storage/Cookie";
 import { isExpired } from "../utils/util";
 import "../css/header.css";
 
+const { VITE_API_ROOT: API_BASE_URL } = import.meta.env;
+
 const Header = () => {
   const { accessToken } = useSelector((state) => state.authToken);
   const [inviteList, setInviteList] = useState([]);
@@ -73,7 +75,7 @@ const Header = () => {
         setUserNickname(decodedToken.nickname);
         try {
           eventSource = new EventSource(
-            `http://localhost:8080/api/v1/alarm/subscribe/${userId}`,
+            `${API_BASE_URL}/api/v1/alarm/subscribe/${userId}`,
             {
               headers: {
                 Authorization: accessToken,
