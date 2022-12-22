@@ -11,7 +11,6 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
-import java.io.IOException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,6 +19,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,7 +31,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class JwtTokenProvider {
 
-    private String secretKey = "MMGN";
+    @Value("${jwt.secret_key}")
+    private String secretKey;
 
     private final UserDetailsService userDetailsService;
     private final long refreshTokenValidTime = 30 * 24 * 60 * 60 * 1000L; // 30일
@@ -92,15 +93,6 @@ public class JwtTokenProvider {
             userDetails.getAuthorities());
     }
 
-    public Long getUserId(String token) {
-        HashMap<String, String> payloadMap = getPayloadByToken(token);
-        payloadMap.get("userId");
-        return Long.parseLong(String.valueOf(payloadMap.get("userId")));
-    }
-
-    public String getUserPk(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
-    }
 
     public static HashMap<String, String> getPayloadByToken(String token) {
         try {
@@ -113,8 +105,6 @@ public class JwtTokenProvider {
         } catch (JsonProcessingException e) {
             log.error(e.getMessage());
             return new HashMap<>();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
