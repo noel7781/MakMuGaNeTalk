@@ -1,5 +1,9 @@
 import AxiosClient from "./AxiosClient";
-import { removeCookieToken, setRefreshToken } from "../storage/Cookie";
+import {
+  removeCookieToken,
+  setRefreshToken,
+  getCookieToken,
+} from "../storage/Cookie";
 
 export const signIn = async (email, password) => {
   const response = await AxiosClient({
@@ -29,7 +33,7 @@ export const signUp = async (nickname, email, password) => {
     data: { password, nickname, email },
   })
     .then((resp) => {
-      console.log(resp);
+      return resp;
     })
     .catch((e) => {
       console.log("error", e);
@@ -60,18 +64,20 @@ export const oauthGoogle = async ({ credential }) => {
   return response;
 };
 
-export const reissue = async (refreshToken) => {
+export const reissue = async () => {
   const oldAceessToken = localStorage.getItem("accessToken");
+  const refreshToken = getCookieToken();
   const response = await AxiosClient({
     method: "post",
     url: "/users/reissue",
     data: { accessToken: oldAceessToken, refreshToken },
   })
     .then((resp) => {
-      console.log("reissue ", resp);
-      const { accessToken } = resp.data.data;
+      const { accessToken, refreshToken } = resp.data;
       localStorage.setItem("accessToken", accessToken);
       AxiosClient.defaults.headers.common["Authorization"] = accessToken;
+      setRefreshToken(refreshToken);
+      window.location.reload();
       return resp;
     })
     .catch((e) => {
@@ -133,14 +139,12 @@ export const signOut = async () => {
 };
 
 export const changeNickname = async (userId, nickname) => {
-  console.log(userId, nickname);
   const response = await AxiosClient({
     method: "post",
     url: "/users/nickname",
     data: { userId, nickname },
   })
     .then((resp) => {
-      console.log(resp);
       return resp;
     })
     .catch((e) => {

@@ -45,8 +45,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
                 boolean isTokenValid = jwtTokenProvider.validateToken(token);
 
-                log.info("[Verifying Token] token = {}", token);
-
                 if (token != null && isTokenValid) {
                     setAuthentication(token);
                 }

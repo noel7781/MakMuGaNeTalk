@@ -1,0 +1,9 @@
+.div--icon {
+  display: flex;
+  flex-direction: column;
+  margin: 50px;
+  padding: 50px;
+  align-items: center;
+  font-size: 40px;
+  width: 50%;
+}

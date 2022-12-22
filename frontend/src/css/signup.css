@@ -1,0 +1,74 @@
+.input--div {
+  margin-bottom: 0.5rem;
+}
+
+.input--div label {
+  display: inline-block;
+  width: 10rem;
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+  text-align: center;
+  padding: 20px;
+}
+
+.input--div input {
+  display: inline-block;
+  border: 0.1px solid black;
+  font: inherit;
+  border-radius: 4px;
+  padding: 20px;
+  width: 10rem;
+}
+
+.check--btn {
+  display: inline-block;
+  background-color: #77af9c;
+  color: #000000;
+}
+.btn {
+  margin: 10px;
+  position: relative;
+  border: none;
+  width: 200px;
+  display: inline-block;
+  padding: 15px 30px;
+  border-radius: 15px;
+  font-family: "paybooc-Light", sans-serif;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+.submit {
+  background-color: #6aafe6;
+  color: #000000;
+}
+.submit:hover,
+.submit:active {
+  letter-spacing: 2px;
+  transform: scale(1.2);
+}
+
+.invalid label {
+  color: #ca3e51;
+}
+
+.invalid input {
+  border-color: #aa0b20;
+  background-color: #ffeff1;
+}
+
+.transparent {
+  margin: 10px;
+  position: relative;
+  border: none;
+  width: 200px;
+  display: inline-block;
+  padding: 15px 30px;
+  border-radius: 15px;
+  text-decoration: none;
+  transition: 0.25s;
+  background-color: transparent;
+  color: transparent;
+}

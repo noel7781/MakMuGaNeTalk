@@ -23,3 +23,5 @@ export const isExpired = ({ exp }) => {
 export const getArrays = (a, b) => {
   return Array.from({ length: b - a + 1 }, (v, k) => k + a);
 };
+
+export const isEmpty = (value) => value.trim().length === 0;

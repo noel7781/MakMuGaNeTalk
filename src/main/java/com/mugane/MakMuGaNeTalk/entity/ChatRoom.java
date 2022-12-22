@@ -54,11 +54,4 @@ public class ChatRoom extends BaseTimeEntity {
     @OneToMany(mappedBy = "chatRoom")
     private List<ChatRoomLike> chatRoomLikeList;
 
-    public void updateChatRoomList(List<UserChatRoom> userChatRoomList) {
-        this.userChatRoomList = userChatRoomList;
-    }
-
-    public void updateMessageList(List<Message> messageList) {
-        this.messageList = messageList;
-    }
 }

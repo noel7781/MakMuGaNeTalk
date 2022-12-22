@@ -27,6 +27,8 @@ public class StompHandler implements ChannelInterceptor {
             jwtTokenProvider.validateToken(
                 Objects.requireNonNull(accessor.getFirstNativeHeader("Authorization")));
         }
+
         return message;
     }
+
 }

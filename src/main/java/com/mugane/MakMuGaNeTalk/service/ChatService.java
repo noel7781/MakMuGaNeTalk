@@ -2,6 +2,7 @@ package com.mugane.MakMuGaNeTalk.service;
 
 import com.mugane.MakMuGaNeTalk.config.security.JwtTokenProvider;
 import com.mugane.MakMuGaNeTalk.dto.request.MessageRequestDto;
+import com.mugane.MakMuGaNeTalk.dto.response.ChatRoomUserListDto;
 import com.mugane.MakMuGaNeTalk.dto.response.MessageResponseDto;
 import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
 import com.mugane.MakMuGaNeTalk.entity.Message;
@@ -11,6 +12,9 @@ import com.mugane.MakMuGaNeTalk.enums.UserType;
 import com.mugane.MakMuGaNeTalk.repository.MessageRepository;
 import com.mugane.MakMuGaNeTalk.repository.UserChatRoomRepository;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -32,12 +36,18 @@ public class ChatService {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
 
+    private final Map<Long, HashSet<User>> chatRoomUsers = new HashMap<>();
+
+    private User getUserByAccessToken(String accessToken) {
+        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+        return userService.findUserByEmail(authentication.getName());
+    }
+
     @Transactional
     public void sendMessage(Long chatRoomId, String accessToken,
         MessageRequestDto messageRequestDto) {
         try {
-            Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
-            User user = userService.findUserByEmail(authentication.getName());
+            User user = getUserByAccessToken(accessToken);
             String content = messageRequestDto.getContent();
             MessageResponseDto messageResponseDto = MessageResponseDto.builder()
                 .userId(user.getId())
@@ -82,6 +92,33 @@ public class ChatService {
         } catch (Exception e) {
             e.printStackTrace();
             throw new IllegalStateException("에러가 발생했습니다. ", e);
+        }
+    }
+
+    @Transactional
+    public void enter(Long chatRoomId, String accessToken) {
+        try {
+            User user = getUserByAccessToken(accessToken);
+            chatRoomUsers.computeIfAbsent(chatRoomId, (id) -> new HashSet<>()).add(user);
+            rabbitTemplate.convertAndSend("amq.topic", "roomUsers." + chatRoomId,
+                ChatRoomUserListDto.of(chatRoomUsers.get(chatRoomId)));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void leave(Long chatRoomId, String accessToken) {
+        try {
+            User user = getUserByAccessToken(accessToken);
+            chatRoomUsers.computeIfPresent(chatRoomId, (id, s) -> {
+                s.remove(user);
+                rabbitTemplate.convertAndSend("amq.topic", "roomUsers." + chatRoomId,
+                    ChatRoomUserListDto.of(s));
+                return s;
+            });
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 

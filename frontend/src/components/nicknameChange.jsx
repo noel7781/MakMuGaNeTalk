@@ -5,9 +5,10 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import { useState } from "react";
 import { TextField } from "@mui/material";
-import { checkNicknameExist, changeNickname } from "../apis/AuthAPI";
+import { checkNicknameExist, changeNickname, reissue } from "../apis/AuthAPI";
 import { useSelector } from "react-redux";
 
 const style = {
@@ -37,6 +38,9 @@ const ChatRoomMake = () => {
     }
     const userId = jwt_decode(accessToken).userId;
     const response = await changeNickname(userId, nickname);
+    if (response.status === 200) {
+      await reissue();
+    }
     handleClose();
   };
   const handleTyping = (e) => {
@@ -59,6 +63,7 @@ const ChatRoomMake = () => {
   };
   return (
     <div>
+      <DriveFileRenameOutlineIcon />
       <Button onClick={() => handleOpen()}>닉네임 변경</Button>
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>

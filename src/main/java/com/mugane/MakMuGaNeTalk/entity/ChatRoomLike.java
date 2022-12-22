@@ -10,8 +10,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 @Entity
 public class ChatRoomLike {
 
@@ -27,9 +29,6 @@ public class ChatRoomLike {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CHAT_ROOM_ID")
     private ChatRoom chatRoom;
-
-    public ChatRoomLike() {
-    }
 
     @Builder
     public ChatRoomLike(User user, ChatRoom chatRoom) {

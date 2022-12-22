@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { useState } from "react";
 import { TextField } from "@mui/material";
 import { inviteChatRoom } from "../apis/ChatRoomAPI";
@@ -20,8 +21,8 @@ const style = {
 };
 
 const ChatRoomInvite = () => {
-  const [userNickname, setUserNickname] = useState("test");
-  const [inviteMessage, setInviteMessage] = useState("hihiyo!");
+  const [userNickname, setUserNickname] = useState("");
+  const [inviteMessage, setInviteMessage] = useState("");
   const [open, setOpen] = useState(false);
 
   const handleInviteChatRoom = async () => {
@@ -36,8 +37,18 @@ const ChatRoomInvite = () => {
     setOpen(false);
   };
   return (
-    <div>
-      <Button onClick={() => handleOpen()}>초대버튼</Button>
+    <>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+        onClick={() => handleOpen()}
+      >
+        <PersonAddIcon />
+        <Button>초대</Button>
+      </div>
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
           <Typography variant="h3" component="h1">
@@ -74,7 +85,7 @@ const ChatRoomInvite = () => {
           </Button>
         </Box>
       </Modal>
-    </div>
+    </>
   );
 };
 

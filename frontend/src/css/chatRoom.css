@@ -3,8 +3,10 @@
   min-height: 80vh;
   border: 1px solid black;
 }
+
 .chattable {
   border: 1px solid black;
+  border-radius: 14px;
   display: flex;
 }
 
@@ -17,27 +19,31 @@
   padding: 1rem;
   height: auto;
   display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .chatid {
-  border: 1px solid green;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
   flex-grow: 1;
   flex-basis: 0;
 }
 
 .chattitle {
-  border: 1px solid red;
+  border-right: 1px solid black;
   flex-grow: 5;
   flex-basis: 0;
+  font-size: 1.2rem;
 }
 
 .chattype {
-  border: 1px solid blue;
+  border-right: 1px solid black;
   flex-grow: 1;
   flex-basis: 0;
 }
 .chatlike {
-  border: 1px solid teal;
+  border-right: 1px solid black;
   flex-grow: 1;
   flex-basis: 0;
 }
@@ -53,18 +59,36 @@
   height: 100%;
   min-height: 80vh;
 }
-
-.messageBox {
-  background-color: rgb(202, 224, 224);
+.chat-and-user {
+  /* background-color: rgb(202, 224, 224); */
   flex-grow: 8;
   flex-basis: 0;
-  overflow: auto;
+  /* overflow: auto; */
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   flex-wrap: nowrap;
   overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.messageBox {
+  width: 90%;
+  background-color: rgb(202, 224, 224);
+  /* flex-direction: column;
+  flex-grow: 8;
+  flex-basis: 0; */
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  /* flex-wrap: nowrap; */
   /* padding-left: 20px;
   padding-right: 20px; */
+}
+
+.userlistBox {
+  width: 10%;
+  overflow-y: auto;
 }
 
 .messages {
@@ -165,4 +189,11 @@
   display: block;
   margin: 8px 0 0;
   font-size: 1.4rem;
+}
+
+.tags {
+  display: inline;
+  padding: 10px;
+  color: #747474;
+  font-size: 1rem;
 }

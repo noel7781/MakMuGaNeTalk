@@ -4,8 +4,6 @@ import com.mugane.MakMuGaNeTalk.entity.ChatRoom;
 import com.mugane.MakMuGaNeTalk.entity.QChatRoom;
 import com.mugane.MakMuGaNeTalk.entity.QChatRoomLike;
 import com.mugane.MakMuGaNeTalk.entity.QChatRoomTag;
-import com.mugane.MakMuGaNeTalk.entity.QTag;
-import com.mugane.MakMuGaNeTalk.entity.QUser;
 import com.mugane.MakMuGaNeTalk.entity.QUserChatRoom;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.JPQLQuery;
@@ -23,8 +21,6 @@ public class ChatRoomSupportImpl extends QuerydslRepositorySupport implements Ch
 
     private final QChatRoom qChatRoom = QChatRoom.chatRoom;
     private final QChatRoomTag qChatRoomTag = QChatRoomTag.chatRoomTag;
-    private final QTag qTag = QTag.tag;
-    private final QUser qUser = QUser.user;
     private final QUserChatRoom qUserChatRoom = QUserChatRoom.userChatRoom;
     private final QChatRoomLike qChatRoomLike = QChatRoomLike.chatRoomLike;
 

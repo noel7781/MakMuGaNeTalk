@@ -34,7 +34,6 @@ public class UserRestController {
 
     private final UserService userService;
 
-    // 회원가입
     @PostMapping("/signup")
     public ResponseEntity<Long> signUp(@Validated @RequestBody SignUpRequestDto user,
         Errors errors) {
@@ -45,7 +44,6 @@ public class UserRestController {
         return ResponseEntity.status(HttpStatus.OK).body(userId);
     }
 
-    // 로그인
     @PostMapping("/signin")
     public ResponseEntity<SignInResponseDto> signIn(@Validated @RequestBody SignInRequestDto user,
         Errors errors) {
@@ -62,7 +60,6 @@ public class UserRestController {
 
     @PostMapping("/signout")
     public ResponseEntity<Void> signOut(@AuthenticationPrincipal UserDto user) {
-        log.warn("USER : {}", user);
         userService.deleteRefreshToken(user.getId());
         return ResponseEntity.ok().build();
     }
