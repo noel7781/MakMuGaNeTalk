@@ -44,4 +44,3 @@ springdoc:
 
 jwt:
   secret_key: ${JWT_SECRET}
-
