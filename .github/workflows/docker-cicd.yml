@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master, dev, feature/deploy ]
 env:
-  DOCKER_IMAGE: ghcr.io/noel7781/MakMuGaNeTalk
+  DOCKER_IMAGE: ghcr.io/noel7781/makmuganetalk
   VERSION: ${{ github.sha }}
 
 jobs:
