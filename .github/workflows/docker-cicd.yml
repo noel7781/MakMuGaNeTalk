@@ -52,5 +52,5 @@ jobs:
       - name: Docker run
         run: |
           docker ps -q --filter "name=mmgn" | grep -q . && docker stop mmgn && docker rm -fv mmgn
-          docker run -d -p 8080:8080 --name cicd --restart always ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }
+          docker run -d -p 8080:8080 --name cicd --restart always ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
 
