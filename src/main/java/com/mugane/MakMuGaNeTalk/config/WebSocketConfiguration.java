@@ -22,11 +22,13 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
     private String username;
     @Value("${spring.rabbitmq.password}")
     private String password;
+    @Value("${api.url}")
+    private String url;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-            .setAllowedOrigins("http://localhost:5173")
+            .setAllowedOrigins(url)
             .withSockJS();
     }
 
