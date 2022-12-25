@@ -61,9 +61,9 @@ jobs:
       - name: Docker run
         run: |
           docker ps -q --filter "name=mmgn" | grep -q . && docker stop mmgn && sudo docker rm -fv mmgn
-          docker run -d -p 8080:8080 --name mmgn -e GOOGLE_ID=${{ secrets.GOOGLE_ID }} -e GOOGLE_SECRET= ${{ secrets.GOOGLE_SECRET }}
+          docker run -d -p 8080:8080 -e GOOGLE_ID=${{ secrets.GOOGLE_ID }} -e GOOGLE_SECRET= ${{ secrets.GOOGLE_SECRET }}
           -e JWT_SECRET= ${{ secrets.JWT_SECRET  }} -e MQ_URL= ${{ secrets.MQ_URL }} -e MQ_USERNAME= ${{ secrets.MQ_USERNAME }}
           -e MQ_PASSWORD= ${{ secrets.MQ_PASSWORD }} -e MYSQL_DATABASE_URL= ${{ secrets.MYSQL_DATABASE_URL }} 
           -e MYSQL_USERNAME= ${{ secrets.MYSQL_USERNAME }} -e MYSQL_PASSWORD= ${{ secrets.MYSQL_PASSWORD }}
-          --restart always ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
+          --name mmgn --restart always ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
 
