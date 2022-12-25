@@ -2,7 +2,7 @@ name: CI/CD Docker
 
 on:
   push:
-    branches: [ master, dev, feature/deploy ]
+    branches: [ master, dev ]
 env:
   DOCKER_IMAGE: ghcr.io/noel7781/makmuganetalk
   VERSION: ${{ github.sha }}
@@ -66,4 +66,3 @@ jobs:
           -e "MQ_PASSWORD=${{ secrets.MQ_PASSWORD }}" -e "MYSQL_DATABASE_URL=${{ secrets.MYSQL_DATABASE_URL }}" \
           -e "MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }}" -e "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" \
           --restart always ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
-
