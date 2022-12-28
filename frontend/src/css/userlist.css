@@ -1,6 +1,7 @@
-ul {
+.userlists {
   padding: 0px;
   margin: 0px;
+  list-style: none;
 }
 .title {
   text-align: center;
