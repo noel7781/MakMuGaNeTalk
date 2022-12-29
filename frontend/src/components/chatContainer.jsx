@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { SET_TOKEN } from "../Store/Auth";
 import "../css/chatRoom.css";
 
+const { VITE_API_ROOT: API_BASE_URL } = import.meta.env;
+
 const ChatContainer = () => {
   const [contents, setContents] = useState([]);
   const [message, setMessage] = useState("");
@@ -24,7 +26,7 @@ const ChatContainer = () => {
 
   useEffect(() => {
     stompClient.current.webSocketFactory = function () {
-      return new sockjs("http://localhost:8080/ws");
+      return new sockjs(`${API_BASE_URL}/ws`);
     };
     stompClient.current.debug = () => {};
     const token = localStorage.getItem("accessToken");

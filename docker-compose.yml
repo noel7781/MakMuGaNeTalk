@@ -1,0 +1,8 @@
+services:
+  spring:
+    build: .
+    ports:
+      - 8080:8080
+    env_file:
+      - ./.env
+    container_name: mmgn

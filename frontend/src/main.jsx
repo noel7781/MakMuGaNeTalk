@@ -2,17 +2,19 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "./error-page";
-import Root from "./routes/root";
-import Index from "./routes";
-import Main from "./routes/main";
 import { CookiesProvider } from "react-cookie";
-import SignUp from "./routes/signup";
-import Mychat from "./routes/mychat";
-import Groupchat from "./routes/groupchat";
-import ChatContainer from "./components/chatContainer";
-import InviteAlarm from "./routes/invitealarm";
 import { Provider } from "react-redux";
 import store from "./Store";
+import Loading from "./components/ui/loading";
+
+const Root = React.lazy(() => import("./routes/root"));
+const Index = React.lazy(() => import("./routes"));
+const Main = React.lazy(() => import("./routes/main"));
+const SignUp = React.lazy(() => import("./routes/signup"));
+const Mychat = React.lazy(() => import("./routes/mychat"));
+const Groupchat = React.lazy(() => import("./routes/groupchat"));
+const ChatContainer = React.lazy(() => import("./components/chatContainer"));
+const InviteAlarm = React.lazy(() => import("./routes/invitealarm"));
 
 const router = createBrowserRouter([
   {
@@ -23,34 +25,65 @@ const router = createBrowserRouter([
       {
         errorElement: <ErrorPage />,
         children: [
-          { index: true, element: <Index /> },
+          {
+            index: true,
+            element: (
+              <React.Suspense fallback={<Loading />}>
+                <Index />
+              </React.Suspense>
+            ),
+          },
           {
             path: "signin",
             errorElement: <div>Login Error!</div>,
           },
           {
             path: "main",
-            element: <Main />,
+            element: (
+              <React.Suspense fallback={<Loading />}>
+                <Main />
+              </React.Suspense>
+            ),
           },
           {
             path: "signup",
-            element: <SignUp />,
+            element: (
+              <React.Suspense fallback={<Loading />}>
+                <SignUp />
+              </React.Suspense>
+            ),
           },
           {
             path: "my-chat",
-            element: <Mychat />,
+            element: (
+              <React.Suspense fallback={<Loading />}>
+                <Mychat />
+              </React.Suspense>
+            ),
           },
           {
             path: "group-chat",
-            element: <Groupchat />,
+            element: (
+              <React.Suspense fallback={<Loading />}>
+                <Groupchat />
+              </React.Suspense>
+            ),
           },
           {
             path: "chatRooms/:chatRoomId",
-            element: <ChatContainer />,
+            element: (
+              <React.Suspense fallback={<Loading />}>
+                <ChatContainer />
+              </React.Suspense>
+            ),
           },
           {
             path: "invite",
-            element: <InviteAlarm />,
+            element: (
+              <React.Suspense fallback={<Loading />}>
+                <InviteAlarm />
+              </React.Suspense>
+            ),
           },
         ],
       },

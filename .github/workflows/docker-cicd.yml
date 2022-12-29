@@ -1,0 +1,68 @@
+name: CI/CD Docker
+
+on:
+  push:
+    branches: [ master, dev ]
+env:
+  DOCKER_IMAGE: ghcr.io/noel7781/makmuganetalk
+  VERSION: ${{ github.sha }}
+  GOOGLE_ID: ${{ secrets.GOOGLE_ID }}
+  GOOGLE_SECRET: ${{ secrets.GOOGLE_SECRET }}
+  JWT_SECRET: ${{ secrets.JWT_SECRET  }}
+  MQ_URL: ${{ secrets.MQ_URL }}
+  MQ_USERNAME: ${{ secrets.MQ_USERNAME }}
+  MQ_PASSWORD: ${{ secrets.MQ_PASSWORD }}
+  MYSQL_DATABASE_URL: ${{ secrets.MYSQL_DATABASE_URL }}
+  MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
+  MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v2
+      - name: Set up docker buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Cache docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ env.VERSION }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      - name: Login to ghcr
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.TOKEN }}
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
+
+  deploy:
+    needs: build
+    name: Deploy
+    runs-on: [ self-hosted, label-dev ]
+    steps:
+      - name: Login to ghcr
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.TOKEN }}
+      - name: Docker run
+        run: |
+          docker ps -q --filter "name=mmgn" | grep -q . && docker stop mmgn && sudo docker rm -fv mmgn
+          docker run -d -p 8080:8080 --name mmgn -e "GOOGLE_ID=${{ secrets.GOOGLE_ID }}" -e "GOOGLE_SECRET=${{ secrets.GOOGLE_SECRET }}" \
+          -e "JWT_SECRET=${{ secrets.JWT_SECRET }}" -e "MQ_URL=${{ secrets.MQ_URL }}" -e "MQ_USERNAME=${{ secrets.MQ_USERNAME }}" \
+          -e "MQ_PASSWORD=${{ secrets.MQ_PASSWORD }}" -e "MYSQL_DATABASE_URL=${{ secrets.MYSQL_DATABASE_URL }}" \
+          -e "MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }}" -e "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" \
+          --restart always ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}

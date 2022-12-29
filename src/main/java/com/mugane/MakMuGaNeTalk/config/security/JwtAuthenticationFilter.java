@@ -28,7 +28,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             String path = request.getServletPath();
-            log.warn("path is {}", path);
             if (path.startsWith("/api/v1/users/signup")
                 || path.startsWith("/api/v1/users/signin")
                 || path.startsWith("/api/v1/users/reissue")
@@ -42,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             ) {
                 chain.doFilter(request, response);
             } else {
-                String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
+                String token = jwtTokenProvider.resolveToken(request);
                 boolean isTokenValid = jwtTokenProvider.validateToken(token);
 
                 if (token != null && isTokenValid) {

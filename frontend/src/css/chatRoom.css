@@ -42,6 +42,7 @@
   flex-grow: 1;
   flex-basis: 0;
 }
+
 .chatlike {
   border-right: 1px solid black;
   flex-grow: 1;
@@ -59,11 +60,10 @@
   height: 100%;
   min-height: 80vh;
 }
+
 .chat-and-user {
-  /* background-color: rgb(202, 224, 224); */
   flex-grow: 8;
   flex-basis: 0;
-  /* overflow: auto; */
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -74,16 +74,10 @@
 .messageBox {
   width: 90%;
   background-color: rgb(202, 224, 224);
-  /* flex-direction: column;
-  flex-grow: 8;
-  flex-basis: 0; */
   overflow-y: auto;
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  /* flex-wrap: nowrap; */
-  /* padding-left: 20px;
-  padding-right: 20px; */
 }
 
 .userlistBox {
@@ -92,27 +86,16 @@
 }
 
 .messages {
-  /* 최근 */
-  /* border: 1px solid tomato; */
-
   word-wrap: break-word;
   width: 100%;
   text-align: left;
   padding-bottom: 10px;
-
-  /* justify-content: flex-start; */
-  /* flex-wrap: nowrap; */
-  /* display: flex; */
 }
 
 .my-chat {
-  /* border: 1px solid green;
-    text-align: right; */
-  /* justify-content: flex-end; */
-
-  /* overflow: visible; */
   margin: 0 30px 0 0;
 }
+
 .my-chat-inner {
   float: right;
   padding-right: 30px;
@@ -129,6 +112,7 @@
   padding: 5px 10px 5px 12px;
   width: 100%;
 }
+
 .other-chat {
   display: inline-block;
   padding: 0 0 0 10px;
@@ -139,6 +123,7 @@
 .other-chat-inner {
   width: 57%;
 }
+
 .other-chat-inner p {
   background: #ebebeb none repeat scroll 0 0;
   border-radius: 6px;
@@ -163,27 +148,33 @@
   border: 1px solid #000;
   font-size: 1.5rem;
 }
+
 .send_text {
   width: calc(100% - 100px);
   height: 100%;
   border: none;
   resize: none;
 }
+
 .send_text:focus {
   outline: none;
 }
+
 .send_button {
   width: 100px;
   height: 100%;
   border-radius: 8px;
   background-color: #9ec4cf;
 }
+
 .chat-nickname {
   color: #cd31d0;
   display: block;
   margin: 8px 0 0;
   font-size: 1.8rem;
+  list-style: none;
 }
+
 .chat-time-date {
   color: #747474;
   display: block;
